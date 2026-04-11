@@ -70,11 +70,9 @@
 	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 		<div class="flex h-16 items-center justify-between">
 			<!-- Logo/Brand -->
-			<div class="flex items-center">
-				<h1 class="text-2xl font-bold text-white">
-					<span class="xrp-glow text-[#00AAE4]">XRPL</span> Perp DEX
-				</h1>
-			</div>
+			<a href="/" class="flex items-center space-x-3">
+				<img src="/logo.svg" alt="XRPL Perp DEX Logo" class="h-40 w-40" />
+			</a>
 
 			<!-- Navigation -->
 			<nav class="hidden md:flex md:items-center md:space-x-8">
@@ -104,9 +102,12 @@
 				{#if $walletStore.isConnected && $walletStore.address}
 					<div class="flex items-center space-x-4">
 						<div
-							class="rounded-lg border border-[#2A2A2A] bg-[#1A1A1A] px-4 py-2 font-mono text-sm text-[#00AAE4]"
+							class="flex items-center space-x-2 rounded-lg border border-[#2A2A2A] bg-[#1A1A1A] px-4 py-2"
 						>
-							{formatAddress($walletStore.address)}
+							<img src="/avatar.svg" alt="Wallet Avatar" class="h-6 w-6" />
+							<span class="font-mono text-sm text-[#00AAE4]">
+								{formatAddress($walletStore.address)}
+							</span>
 						</div>
 						<button
 							onclick={disconnectWallet}
