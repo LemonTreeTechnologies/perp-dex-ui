@@ -69,9 +69,9 @@
 							We tested it exactly <span class="font-semibold">twice</span> (maybe three times)
 						</li>
 						<li>There's a non-zero chance we forgot a minus sign somewhere</li>
-						<li>
-							Our "extensive security audit" consisted of one person saying "looks good to me 👍"
-						</li>
+						<li>Our auditor said "Absolutely not to launch it on the mainnet."</li>
+
+						<li>Our response: "But where is the fun in that?"</li>
 						<li>We're pretty sure it works, but also, we're running on 2 hours of sleep</li>
 					</ul>
 

@@ -2,14 +2,14 @@
 	import { onMount, onDestroy } from 'svelte';
 	import { walletStore } from '$lib/stores/wallet';
 	import { authApi, toFP8, fromFP8 } from '$lib/api/client';
-	import type { Balance, Transaction } from '$lib/api/client';
+	import type { Balance } from '$lib/api/client';
 	import DepositWarningModal from '$lib/components/DepositWarningModal.svelte';
 
 	// State
 	let balance: Balance | null = $state(null);
-	let transactions: Transaction[] = $state([]);
+	// let transactions: Transaction[] = $state([]);
 	let loading = $state(false);
-	let loadingTransactions = $state(false);
+	// let loadingTransactions = $state(false);
 	let error = $state<string | null>(null);
 	let withdrawAmount = $state('');
 	let withdrawDestination = $state('');
@@ -18,7 +18,12 @@
 	let activeCurrency: 'xrp' | 'rlusd' = $state('xrp');
 	let pollingInterval: ReturnType<typeof setInterval> | null = null;
 	let showWarningModal = $state(false);
-	let hasAcceptedWarning = $state(false);
+
+	// Load warning acceptance from localStorage
+	const WARNING_STORAGE_KEY = 'deposit-warning-accepted';
+	let hasAcceptedWarning = $state(
+		typeof window !== 'undefined' ? localStorage.getItem(WARNING_STORAGE_KEY) === 'true' : false
+	);
 
 	// Constants
 
@@ -62,23 +67,23 @@
 	}
 
 	// Fetch transactions
-	async function fetchTransactions() {
-		if (!$walletStore.isConnected || !$walletStore.address) {
-			return;
-		}
+	// async function fetchTransactions() {
+	// 	if (!$walletStore.isConnected || !$walletStore.address) {
+	// 		return;
+	// 	}
 
-		loadingTransactions = true;
+	// 	loadingTransactions = true;
 
-		try {
-			// Use token-based authentication (authApi will attach the token if present)
-			transactions = await authApi.getTransactions($walletStore.address);
-		} catch (err) {
-			console.error('Failed to fetch transactions:', err);
-			// Don't show error for transactions, it's not critical
-		} finally {
-			loadingTransactions = false;
-		}
-	}
+	// 	try {
+	// 		// Use token-based authentication (authApi will attach the token if present)
+	// 		transactions = await authApi.getTransactions($walletStore.address);
+	// 	} catch (err) {
+	// 		console.error('Failed to fetch transactions:', err);
+	// 		// Don't show error for transactions, it's not critical
+	// 	} finally {
+	// 		loadingTransactions = false;
+	// 	}
+	// }
 
 	// Handle withdrawal
 	async function handleWithdraw() {
@@ -109,7 +114,7 @@
 			withdrawDestination = '';
 			// Refresh balance and transactions
 			await fetchBalance();
-			await fetchTransactions();
+			// await fetchTransactions();
 		} catch (err) {
 			console.error('Withdrawal error:', err);
 			error = err instanceof Error ? err.message : 'Withdrawal failed';
@@ -121,7 +126,17 @@
 
 	// Lifecycle
 	onMount(() => {
-		// Don't auto-fetch on mount for debugging
+		// Fetch initial data
+		fetchBalance();
+		// fetchTransactions();
+
+		// Set up polling every 5 seconds
+		if ($walletStore.isConnected) {
+			pollingInterval = setInterval(() => {
+				fetchBalance();
+				// fetchTransactions();
+			}, 5000);
+		}
 	});
 
 	onDestroy(() => {
@@ -132,13 +147,21 @@
 
 	// Watch for wallet connection changes
 	$effect(() => {
-		// Don't auto-fetch, wait for manual button click
 		if (!$walletStore.isConnected) {
+			// Stop polling when wallet disconnects
 			if (pollingInterval) {
 				clearInterval(pollingInterval);
 				pollingInterval = null;
 			}
 			balance = null;
+		} else if ($walletStore.isConnected && !pollingInterval) {
+			// Start polling when wallet connects
+			fetchBalance();
+			// fetchTransactions();
+			pollingInterval = setInterval(() => {
+				fetchBalance();
+				// fetchTransactions();
+			}, 5000);
 		}
 	});
 
@@ -149,9 +172,20 @@
 		}
 	});
 
+	// Set withdrawal destination to connected wallet address
+	$effect(() => {
+		if ($walletStore.isConnected && $walletStore.address && !withdrawDestination) {
+			withdrawDestination = $walletStore.address;
+		}
+	});
+
 	function handleAcceptWarning() {
 		hasAcceptedWarning = true;
 		showWarningModal = false;
+		// Store acceptance in localStorage
+		if (typeof window !== 'undefined') {
+			localStorage.setItem(WARNING_STORAGE_KEY, 'true');
+		}
 	}
 
 	function handleCloseWarning() {
@@ -554,7 +588,7 @@
 		{/if}
 
 		<!-- Transaction History -->
-		<div class="mt-6">
+		<!-- <div class="mt-6">
 			<h2 class="mb-4 text-xl font-semibold text-white">Transaction History</h2>
 			<div class="overflow-hidden rounded-lg border border-[#2A2A2A] bg-[#121212]">
 				{#if loadingTransactions}
@@ -645,7 +679,7 @@
 					</table>
 				{/if}
 			</div>
-		</div>
+		</div> -->
 	{/if}
 </div>
 

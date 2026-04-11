@@ -12,6 +12,11 @@
 	let activeTab: 'positions' | 'orders' | 'trades' = $state('positions');
 	let positionsTableRef: PositionsTable | null = $state(null);
 	let ordersTableRef: OrdersTable | null = $state(null);
+	let orderFormRef: OrderForm | null = $state(null);
+
+	function handlePriceClick(price: string) {
+		orderFormRef?.setPrice(price);
+	}
 
 	async function refreshUserData() {
 		if (!$walletStore.isConnected || !$walletStore.address) {
@@ -96,14 +101,14 @@
 		<!-- Order Book -->
 		<div class="col-span-4">
 			<div class="flex h-[600px] flex-col rounded-lg border border-[#2A2A2A] bg-[#121212] p-4">
-				<OrderBook />
+				<OrderBook onPriceClick={handlePriceClick} />
 			</div>
 		</div>
 
 		<!-- Order Form -->
 		<div class="col-span-3">
 			<div class="flex h-[600px] flex-col rounded-lg border border-[#2A2A2A] bg-[#121212] p-4">
-				<OrderForm />
+				<OrderForm bind:this={orderFormRef} />
 			</div>
 		</div>
 	</div>
