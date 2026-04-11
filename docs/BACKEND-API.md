@@ -12,14 +12,65 @@ computation and key custody.
 
 ## Authentication
 
-Trading endpoints require XRPL secp256k1 signature auth via four headers:
+Trading endpoints require authentication. Two methods are supported:
+
+### Method 1: Session token (recommended for browser wallets)
+
+Sign once to get a session token, then use it for all subsequent requests. Best for Crossmark/GemWallet where each signature requires user interaction.
+
+#### Login
+
+```
+POST /v1/auth/login
+```
+
+Sign this request with XRPL headers (see Method 2 below). Returns a session token valid for 30 minutes.
+
+```json
+// Response
+{
+  "status": "success",
+  "token": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "expires_in": 1800,
+  "address": "rXXX..."
+}
+```
+
+#### Using the token
+
+Include `Authorization: Bearer <token>` on all subsequent requests:
+
+```javascript
+// After login — no more signing needed
+const balance = await fetch(
+  `https://api-perp.ph18.io/v1/account/balance?user_id=${address}`,
+  { headers: { 'Authorization': `Bearer ${token}` } }
+);
+
+const order = await fetch('https://api-perp.ph18.io/v1/orders', {
+  method: 'POST',
+  headers: {
+    'Authorization': `Bearer ${token}`,
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({ user_id: address, side: 'buy', type: 'limit', price: '1.35000000', size: '10.00000000' })
+});
+```
+
+The `user_id` in body/query **must** match the address associated with the token.
+
+When the token expires (30 min), call `/v1/auth/login` again.
+
+### Method 2: Per-request XRPL signature
+
+Sign every request with four headers. Required for `/v1/auth/login` itself, optional for all other endpoints if you have a session token.
 
 | Header             | Description                                     |
 | ------------------ | ----------------------------------------------- |
 | `X-XRPL-Address`   | User's XRPL r-address                           |
 | `X-XRPL-PublicKey` | Compressed secp256k1 public key (hex, 66 chars) |
 | `X-XRPL-Signature` | DER-encoded ECDSA signature (hex)               |
-| `X-XRPL-Timestamp` | Unix epoch seconds (max 30s drift from server)  |
+| `X-XRPL-Timestamp` | Unix epoch seconds (max 60s drift from server)  |
 
 ### Signing algorithm
 
@@ -38,39 +89,7 @@ Trading endpoints require XRPL secp256k1 signature auth via four headers:
 
 The `user_id` field in body/query **must** match `X-XRPL-Address`.
 
-### Dual-mode signing (important)
-
-The server accepts **two** signing modes:
-
-- **Mode 1 — SHA-256 direct:** `hash = SHA-256(payload + timestamp)`. Used by Python/CLI clients that have raw private key access.
-- **Mode 2 — SHA-512Half wrapped:** Browser wallet extensions (Crossmark, GemWallet) do not expose the private key. They internally apply SHA-512Half before ECDSA signing. The server auto-detects and accepts both modes.
-
-When using Crossmark's `sdk.methods.signInAndWait()`, the wallet handles signing internally — you do not need to implement the SHA-256 hash yourself. The examples below are for **Mode 1** (raw private key access) only.
-
-### JavaScript browser signing example (Mode 1 — raw key)
-
-```javascript
-import { SigningKey, sha256 } from 'ethers';
-
-const PRIVATE_KEY = '0x...'; // secp256k1 private key
-const signingKey = new SigningKey(PRIVATE_KEY);
-const ADDRESS = 'rXXX...'; // XRPL r-address
-
-function signRequest(bodyStr) {
-	const timestamp = Math.floor(Date.now() / 1000).toString();
-	const data = new TextEncoder().encode(bodyStr + timestamp);
-	const hash = sha256(data);
-	const sig = signingKey.sign(hash);
-	// Need DER encoding of (r, s) — use a DER encoding library
-	return {
-		'X-XRPL-Address': ADDRESS,
-		'X-XRPL-PublicKey': signingKey.compressedPublicKey.slice(2),
-		'X-XRPL-Signature': derEncode(sig.r, sig.s),
-		'X-XRPL-Timestamp': timestamp,
-		'Content-Type': 'application/json'
-	};
-}
-```
+**Browser wallet note:** Crossmark and GemWallet apply SHA-512Half (first 32 bytes of SHA-512) before ECDSA internally. The server accepts both direct SHA-256 signatures and SHA-512Half-wrapped signatures automatically — no special handling needed on the frontend.
 
 ### Node.js signing example
 

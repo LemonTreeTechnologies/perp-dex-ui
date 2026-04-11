@@ -65,22 +65,58 @@ python3 tools/xrpl_auth.py --secret spXXX... \
 
 ## Authentication
 
-All trading endpoints (orders, balance, cancel) require XRPL signature authentication.
+All trading endpoints (orders, balance, cancel) require authentication. Two methods are supported:
 
-### How it works
+### Method 1: Session token (recommended for browser wallets)
 
-1. You have an XRPL secp256k1 keypair (seed → private key + public key → r-address)
-2. For each request, you sign the request body (POST) or URI path (GET) with your private key
-3. You send 3 extra headers with every authenticated request
+Sign once with your wallet, get a Bearer token valid for 30 minutes. Best for Crossmark/GemWallet where each signature requires user interaction.
 
-### Headers
+**Step 1 — Login (sign once):**
+
+```
+POST /v1/auth/login
+Headers: X-XRPL-Address, X-XRPL-PublicKey, X-XRPL-Signature, X-XRPL-Timestamp
+```
+
+Response:
+```json
+{
+  "status": "success",
+  "token": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "expires_in": 1800,
+  "address": "rXXX..."
+}
+```
+
+**Step 2 — Use the token for all requests:**
+
+```javascript
+// No more signing needed!
+const headers = { 'Authorization': `Bearer ${token}` };
+
+// GET balance
+fetch(`/v1/account/balance?user_id=${address}`, { headers });
+
+// POST order
+fetch('/v1/orders', {
+  method: 'POST',
+  headers: { ...headers, 'Content-Type': 'application/json' },
+  body: JSON.stringify({ user_id: address, side: 'buy', ... })
+});
+```
+
+When the token expires, call `/v1/auth/login` again.
+
+### Method 2: Per-request XRPL signature
+
+Sign every request with four headers. Required for `/v1/auth/login` itself, optional elsewhere if you have a session token.
 
 | Header             | Value                                             | Example                             |
 | ------------------ | ------------------------------------------------- | ----------------------------------- |
 | `X-XRPL-Address`   | Your XRPL r-address                               | `rBy1xSMqCesQ11Nh23KoddAfa5vBNHEK7` |
 | `X-XRPL-PublicKey` | Compressed secp256k1 public key (hex, 66 chars)   | `03c768238bf134...`                 |
 | `X-XRPL-Signature` | DER-encoded ECDSA signature (hex)                 | `3045022100a461...`                 |
-| `X-XRPL-Timestamp` | Unix epoch seconds (**mandatory**, max 30s drift) | `1712500000`                        |
+| `X-XRPL-Timestamp` | Unix epoch seconds (**mandatory**, max 60s drift) | `1712500000`                        |
 
 ### Signing algorithm (step by step)
 
@@ -110,9 +146,11 @@ All trading endpoints (orders, balance, cancel) require XRPL signature authentic
 5. Same headers (including X-XRPL-Timestamp)
 ```
 
-**Important:** Timestamp must be within 30 seconds of server time. Requests with missing or expired timestamps are rejected.
+**Browser wallet note:** Crossmark and GemWallet apply SHA-512Half (first 32 bytes of SHA-512) before ECDSA internally. The server accepts both direct SHA-256 and SHA-512Half-wrapped signatures automatically.
 
-**Important:** The `user_id` field in the request body (or query parameter) MUST match the `X-XRPL-Address` header. The server rejects mismatches.
+**Important:** Timestamp must be within 60 seconds of server time. Requests with missing or expired timestamps are rejected.
+
+**Important:** The `user_id` field in the request body (or query parameter) MUST match the authenticated address (from signature or session token). The server rejects mismatches.
 
 ---
 

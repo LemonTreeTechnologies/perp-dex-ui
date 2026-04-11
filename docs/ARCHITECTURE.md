@@ -126,13 +126,12 @@ Dark theme with XRP brand colors. CSS variables defined in `src/routes/layout.cs
 
 ### XRPL signature authentication (main blocker)
 
-The auth header generation is not yet implemented. All `authApi.*` calls pass empty headers.
-Required:
+Two auth methods are available — **session token is recommended** for browser wallets:
 
-1. User has an XRPL secp256k1 keypair (seed → private key + public key → r-address)
-2. For each API request, sign the body (POST) or path (GET) with SHA-256 + ECDSA
-3. Include `X-XRPL-Address`, `X-XRPL-PublicKey`, `X-XRPL-Signature`, `X-XRPL-Timestamp` headers
-4. Timestamp must be within 30 seconds of server time
+1. **Session token (recommended):** Call `POST /v1/auth/login` once with Crossmark/GemWallet signature → get a Bearer token valid 30 min → use `Authorization: Bearer <token>` on all subsequent requests. No more signing needed until token expires.
+2. **Per-request signing:** Sign every request with 4 XRPL headers (SHA-256 + ECDSA). Server accepts both direct SHA-256 and SHA-512Half-wrapped signatures (Crossmark/GemWallet compatible).
+
+See [BACKEND-API.md](BACKEND-API.md#authentication) for full details and code examples.
 
 ### Deposit flow
 
