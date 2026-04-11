@@ -3,6 +3,7 @@
 	import { walletStore } from '$lib/stores/wallet';
 	import { authApi, toFP8, fromFP8 } from '$lib/api/client';
 	import type { Balance, Transaction } from '$lib/api/client';
+	import DepositWarningModal from '$lib/components/DepositWarningModal.svelte';
 
 	// State
 	let balance: Balance | null = $state(null);
@@ -16,6 +17,8 @@
 	let activeTab: 'deposit' | 'withdraw' = $state('deposit');
 	let activeCurrency: 'xrp' | 'rlusd' = $state('xrp');
 	let pollingInterval: ReturnType<typeof setInterval> | null = null;
+	let showWarningModal = $state(false);
+	let hasAcceptedWarning = $state(false);
 
 	// Constants
 
@@ -138,6 +141,24 @@
 			balance = null;
 		}
 	});
+
+	// Watch for deposit tab activation
+	$effect(() => {
+		if (activeTab === 'deposit' && activeCurrency === 'xrp' && !hasAcceptedWarning) {
+			showWarningModal = true;
+		}
+	});
+
+	function handleAcceptWarning() {
+		hasAcceptedWarning = true;
+		showWarningModal = false;
+	}
+
+	function handleCloseWarning() {
+		showWarningModal = false;
+		// Switch to withdraw tab if they don't accept
+		activeTab = 'withdraw';
+	}
 </script>
 
 <div class="container mx-auto px-4 py-8">
@@ -627,3 +648,10 @@
 		</div>
 	{/if}
 </div>
+
+<!-- Warning Modal -->
+<DepositWarningModal
+	bind:isOpen={showWarningModal}
+	onClose={handleCloseWarning}
+	onAccept={handleAcceptWarning}
+/>

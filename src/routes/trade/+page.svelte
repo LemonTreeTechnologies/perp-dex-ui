@@ -61,7 +61,7 @@
 	<!-- Market Header -->
 	<div class="flex items-center justify-between">
 		<div class="flex items-center space-x-4">
-			<h1 class="text-2xl font-bold text-white">XRP-RLUSD-PERP</h1>
+			<h1 class="text-2xl font-bold text-white">XRP-USD-PERP</h1>
 			{#if $currentPrice}
 				<div class="text-3xl font-bold text-[#00AAE4]">
 					${$currentPrice.toFixed(4)}

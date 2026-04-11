@@ -4,7 +4,7 @@ import { authStore } from '$lib/stores/auth';
 
 const BASE_URL = import.meta.env.VITE_API_URL || 'https://api-perp.ph18.io';
 const WS_URL = import.meta.env.VITE_WS_URL || 'wss://api-perp.ph18.io/ws';
-const MARKET = 'XRP-RLUSD-PERP';
+const MARKET = 'XRP-USD-PERP';
 
 /**
  * Get authentication headers - either token-based or XRPL signature-based

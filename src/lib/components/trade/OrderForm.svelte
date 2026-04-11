@@ -139,7 +139,7 @@
 			<!-- Price Input (only for limit orders) -->
 			{#if orderType === 'limit'}
 				<div>
-					<label class="mb-2 block text-sm font-medium text-[#B0B0B0]">Price (RLUSD)</label>
+					<label class="mb-2 block text-sm font-medium text-[#B0B0B0]">Price (USD)</label>
 					<input
 						type="number"
 						step="0.0001"
