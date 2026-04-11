@@ -207,7 +207,9 @@ export const authApi = {
 		const url = `${BASE_URL}/v1/account/balance?user_id=${userId}`;
 		const response = await fetch(url, { headers });
 
-		console.log('Balance response status:', response.status);
+		// console.log('Balance response URL:', url);
+		// console.log('Balance response status:', response.status);
+		// console.log('Balance response json:', await response.clone().json());
 		const data = await response.json();
 
 		if (data.status === 'success') {
@@ -322,6 +324,9 @@ export const authApi = {
 		const response = await fetch(`${BASE_URL}/v1/account/transactions?user_id=${userId}`, {
 			headers
 		});
+
+		console.log('Transactions response status:', response.status);
+		console.log('Transactions', response.body);
 		const data = await response.json();
 		if (data.status === 'success') {
 			return data.transactions || [];
