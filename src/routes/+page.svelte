@@ -1,5 +1,33 @@
 <script lang="ts">
 	import { walletStore } from '$lib/stores/wallet';
+	import { authApi } from '$lib/api/client';
+	import { generateGetAuthHeaders } from '$lib/utils/xrplAuth';
+
+	let isLoggingIn = $state(false);
+	let loginError = $state('');
+	let loginSuccess = $state(false);
+
+	async function handleLogin() {
+		isLoggingIn = true;
+		loginError = '';
+		loginSuccess = false;
+
+		try {
+			// Generate auth headers for the login endpoint
+			const headers = await generateGetAuthHeaders('v1/auth/login');
+			
+			// Call the login function
+			await authApi.login(headers);
+			
+			loginSuccess = true;
+			console.log('Login successful!');
+		} catch (error) {
+			console.error('Login failed:', error);
+			loginError = error instanceof Error ? error.message : 'Login failed';
+		} finally {
+			isLoggingIn = false;
+		}
+	}
 </script>
 
 <div class="space-y-8">
@@ -24,7 +52,25 @@
 			class="rounded-lg border border-[#00AAE4] bg-[#121212] p-8 shadow-[0_0_20px_rgba(0,170,228,0.2)]"
 		>
 			<h2 class="text-2xl font-semibold text-white">Welcome!</h2>
-			<p class="mt-2 text-[#B0B0B0]">Your wallet is connected. Trading interface coming soon...</p>
+			<p class="mt-2 text-[#B0B0B0]">Your wallet is connected.</p>
+			
+			<div class="mt-6 flex flex-col items-center gap-4">
+				<button
+					onclick={handleLogin}
+					disabled={isLoggingIn}
+					class="rounded-md bg-[#00AAE4] px-6 py-3 font-semibold text-white transition-colors hover:bg-[#0099CC] disabled:cursor-not-allowed disabled:opacity-50"
+				>
+					{isLoggingIn ? 'Logging in...' : 'Login'}
+				</button>
+				
+				{#if loginSuccess}
+					<p class="text-green-400">Login successful!</p>
+				{/if}
+				
+				{#if loginError}
+					<p class="text-red-400">{loginError}</p>
+				{/if}
+			</div>
 		</div>
 	{/if}
 </div>

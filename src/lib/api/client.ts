@@ -177,6 +177,20 @@ export const authApi = {
 		throw new Error(data.message || 'Failed to fetch orders');
 	},
 
+	async login(headers: Record<string, string>): Promise<Order[]> {
+		console.log('Attempting login with headers:', headers);
+		const response = await fetch(`${BASE_URL}/v1/auth/login`, {
+			headers
+		});
+		console.log('Login response status:', response.status);
+		const data = await response.json();
+		console.log(data);
+		if (data.status === 'success') {
+			return data.orders;
+		}
+		throw new Error(data.message || 'Failed to fetch orders');
+	},
+
 	async submitOrder(order: OrderRequest, headers: Record<string, string>) {
 		const response = await fetch(`${BASE_URL}/v1/orders`, {
 			method: 'POST',
