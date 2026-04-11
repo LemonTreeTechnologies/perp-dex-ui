@@ -54,6 +54,17 @@ This document describes how the UI fits into the overall xrpl-perp-dex system.
 - **XRPL Multisig**: 2-of-3 SignerListSet — no single operator can steal funds
 - **No sidechain**: settles directly on XRPL L1
 
+## Implementation status
+
+| Feature                                      | Route     | Status      |
+| -------------------------------------------- | --------- | ----------- |
+| Wallet connect (GemWallet, Crossmark, Xaman) | `/`       | Done        |
+| Verify Enclave (DCAP attestation)            | `/verify` | Done        |
+| Trading interface                            | —         | Not started |
+| Market data display                          | —         | Not started |
+| Portfolio / positions                        | —         | Not started |
+| Vault management                             | —         | Not started |
+
 ## What the UI needs to implement
 
 ### Authentication flow

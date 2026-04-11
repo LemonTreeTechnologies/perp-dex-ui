@@ -147,6 +147,8 @@ Body: { "user_data": "0xdeadbeef" }
 
 Returns Intel-signed SGX Quote v3 proving enclave integrity. `user_data` is a challenge nonce (up to 64 bytes hex) — include a random value to prevent replay. Returns 503 on hardware without DCAP support.
 
+**Implemented in UI:** `/verify` page (`src/routes/verify/+page.svelte`) — generates random nonce, calls this endpoint, parses SGX Quote v3 to display MRENCLAVE/MRSIGNER/quote size. See [SGX Quote v3 parsing](#verify-enclave-page-implementation) below.
+
 ### Attestation Commitment
 
 ```
@@ -475,3 +477,54 @@ XRPL ledger (1s interval) and automatically credits the user's balance in the en
 no deposit API endpoint for frontend to call — just initiate the XRPL Payment and the balance
 appears. Poll `GET /v1/account/balance` or listen for `position_changed` WS events to detect
 when the deposit is credited.
+
+---
+
+## Verify Enclave Page Implementation
+
+**Route:** `/verify` (`src/routes/verify/+page.svelte`)
+**Status:** Implemented
+
+The Verify Enclave page lets anyone confirm the SGX enclave is genuine via DCAP remote attestation. No authentication required.
+
+### Flow
+
+1. User clicks "Verify Enclave"
+2. Frontend generates a random 32-byte nonce via `crypto.getRandomValues()`
+3. Calls `POST /v1/attestation/quote` with `{ user_data: nonce }`
+4. Parses the SGX Quote v3 binary response to extract identity hashes
+5. Displays results
+
+### SGX Quote v3 parsing
+
+```
+Byte offset    Field
+[0..2]         Version (0x0003)
+[2..4]         Attestation key type
+[112..144]     MRENCLAVE (32 bytes) — hash of the enclave binary code
+[144..176]     MRSIGNER  (32 bytes) — hash of the enclave signer identity
+```
+
+### UI fields displayed
+
+| Field           | Description                                                                                 |
+| --------------- | ------------------------------------------------------------------------------------------- |
+| Status          | "Intel SGX Verified" or error message                                                       |
+| MRENCLAVE       | 32-byte hex hash — compare against the published enclave build to confirm code authenticity |
+| MRSIGNER        | 32-byte hex hash — identity of who built/signed the enclave                                 |
+| Quote Size      | Expected: 4,734 bytes for SGX Quote v3 with cert chain                                      |
+| Challenge Nonce | The random value sent — proves the quote is fresh (not replayed)                            |
+
+### Error states
+
+| HTTP Status   | UI Message                                                                                |
+| ------------- | ----------------------------------------------------------------------------------------- |
+| 503           | "Attestation requires Intel SGX hardware (Azure DCsv3). This node does not support DCAP." |
+| 502           | "Enclave offline. Please try again later."                                                |
+| Network error | "Network error" with details                                                              |
+
+### Key files
+
+- `src/routes/verify/+page.svelte` — page component with attestation logic
+- `src/lib/config.ts` — API base URL
+- `src/lib/components/Header.svelte` — nav link to `/verify`

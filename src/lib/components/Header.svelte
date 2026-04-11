@@ -82,9 +82,7 @@
 				<a href={resolve('/')} class="text-gray-700 hover:text-gray-900">Trade</a>
 				<a href={resolve('/')} class="text-gray-700 hover:text-gray-900">Portfolio</a>
 				<a href={resolve('/')} class="text-gray-700 hover:text-gray-900">Markets</a>
-				<a href={resolve('/verify')} class="text-gray-700 hover:text-gray-900"
-					>Verify Enclave</a
-				>
+				<a href={resolve('/verify')} class="text-gray-700 hover:text-gray-900">Verify Enclave</a>
 			</nav>
 
 			<!-- Wallet Connection -->
