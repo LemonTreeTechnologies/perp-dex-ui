@@ -64,9 +64,9 @@
 
 <div class="space-y-4">
 	<!-- Market Header -->
-	<div class="flex items-center justify-between">
-		<div class="flex items-center space-x-4">
-			<h1 class="text-2xl font-bold text-white">XRP-USD-PERP</h1>
+	<div class="flex flex-wrap items-center justify-between gap-2">
+		<div class="flex flex-wrap items-center gap-2 sm:gap-4">
+			<h1 class="text-xl font-bold text-white sm:text-2xl">XRP-USD-PERP</h1>
 			{#if $currentPrice}
 				<div class="text-3xl font-bold text-[#00AAE4]">
 					${$currentPrice.toFixed(4)}
@@ -90,24 +90,28 @@
 	</div>
 
 	<!-- Main Trading Interface -->
-	<div class="grid grid-cols-12 gap-4">
+	<div class="grid grid-cols-1 gap-4 lg:grid-cols-12">
 		<!-- Chart -->
-		<div class="col-span-5">
-			<div class="flex h-[600px] flex-col rounded-lg border border-[#2A2A2A] bg-[#121212] p-4">
+		<div class="lg:col-span-5">
+			<div
+				class="flex h-[400px] flex-col rounded-lg border border-[#2A2A2A] bg-[#121212] p-4 lg:h-[600px]"
+			>
 				<PriceChart />
 			</div>
 		</div>
 
 		<!-- Order Book -->
-		<div class="col-span-4">
-			<div class="flex h-[600px] flex-col rounded-lg border border-[#2A2A2A] bg-[#121212] p-4">
+		<div class="lg:col-span-4">
+			<div
+				class="flex h-[400px] flex-col rounded-lg border border-[#2A2A2A] bg-[#121212] p-4 lg:h-[600px]"
+			>
 				<OrderBook onPriceClick={handlePriceClick} />
 			</div>
 		</div>
 
 		<!-- Order Form -->
-		<div class="col-span-3">
-			<div class="flex h-[600px] flex-col rounded-lg border border-[#2A2A2A] bg-[#121212] p-4">
+		<div class="lg:col-span-3">
+			<div class="flex flex-col rounded-lg border border-[#2A2A2A] bg-[#121212] p-4 lg:h-[600px]">
 				<OrderForm bind:this={orderFormRef} />
 			</div>
 		</div>

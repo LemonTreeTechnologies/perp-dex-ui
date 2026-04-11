@@ -115,7 +115,7 @@
 		</div>
 	{:else}
 		<!-- Navigation cards -->
-		<div class="grid gap-4 sm:grid-cols-3 lg:grid-cols-5">
+		<div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
 			<a
 				href="/trade"
 				class="group rounded-lg border border-[#2A2A2A] bg-[#121212] p-6 text-center transition-all hover:border-[#00AAE4] hover:shadow-[0_0_20px_rgba(0,170,228,0.2)]"

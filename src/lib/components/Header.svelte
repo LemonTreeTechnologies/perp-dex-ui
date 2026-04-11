@@ -5,6 +5,7 @@
 	import { generatePostAuthHeaders } from '$lib/utils/xrplAuth';
 
 	let isLoggingIn = $state(false);
+	let mobileMenuOpen = $state(false);
 
 	async function handleLogin() {
 		isLoggingIn = true;
@@ -105,8 +106,8 @@
 				<img src="/logo.svg" alt="XRPL Perp DEX Logo" class="h-40 w-40" />
 			</a>
 
-			<!-- Navigation -->
-			<nav class="hidden md:flex md:items-center md:space-x-8">
+			<!-- Desktop Navigation -->
+			<nav class="hidden lg:flex lg:items-center lg:space-x-6">
 				<a
 					href="/trade"
 					data-sveltekit-preload-data
@@ -125,30 +126,31 @@
 				<a
 					href="/verify"
 					data-sveltekit-preload-data
-					class="text-[#B0B0B0] transition-colors hover:text-[#00AAE4]">Verify Enclave</a
+					class="text-[#B0B0B0] transition-colors hover:text-[#00AAE4]">Verify</a
 				>
 				<a
 					href="/about"
 					data-sveltekit-preload-data
-					class="text-[#B0B0B0] transition-colors hover:text-[#00AAE4]">How It Works</a
+					class="text-[#B0B0B0] transition-colors hover:text-[#00AAE4]">About</a
 				>
 			</nav>
-			<!-- Wallet Connection -->
-			<div class="flex items-center">
+
+			<!-- Wallet + Mobile Menu -->
+			<div class="flex items-center space-x-2">
 				{#if $walletStore.isConnected && $walletStore.address}
-					<div class="flex items-center space-x-4">
+					<div class="hidden items-center space-x-2 sm:flex">
 						<div
-							class="flex items-center space-x-2 rounded-lg border border-[#2A2A2A] bg-[#1A1A1A] px-4 py-2"
+							class="flex items-center space-x-2 rounded-lg border border-[#2A2A2A] bg-[#1A1A1A] px-3 py-1.5"
 						>
-							<img src="/avatar.svg" alt="Wallet Avatar" class="h-6 w-6" />
-							<span class="font-mono text-sm text-[#00AAE4]">
+							<img src="/avatar.svg" alt="Wallet Avatar" class="h-5 w-5" />
+							<span class="font-mono text-xs text-[#00AAE4]">
 								{formatAddress($walletStore.address)}
 							</span>
 						</div>
 						{#if $authStore.token}
 							<button
 								onclick={handleLogout}
-								class="rounded-lg border border-[#404040] bg-[#2A2A2A] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#404040]"
+								class="rounded-lg border border-[#404040] bg-[#2A2A2A] px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-[#404040]"
 							>
 								Logout
 							</button>
@@ -156,27 +158,129 @@
 							<button
 								onclick={handleLogin}
 								disabled={isLoggingIn}
-								class="rounded-lg bg-[#00AAE4] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#0099CC] disabled:cursor-not-allowed disabled:opacity-50"
+								class="rounded-lg bg-[#00AAE4] px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-[#0099CC] disabled:cursor-not-allowed disabled:opacity-50"
 							>
 								{isLoggingIn ? 'Logging in...' : 'Login'}
 							</button>
 						{/if}
 						<button
 							onclick={disconnectWallet}
-							class="rounded-lg border border-[#404040] bg-[#2A2A2A] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#404040]"
+							class="rounded-lg border border-[#404040] bg-[#2A2A2A] px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-[#404040]"
 						>
 							Disconnect
 						</button>
 					</div>
+					<!-- Mobile: compact wallet -->
+					<div class="flex items-center space-x-2 sm:hidden">
+						<span class="font-mono text-xs text-[#00AAE4]">
+							{formatAddress($walletStore.address)}
+						</span>
+					</div>
 				{:else}
 					<button
 						onclick={connectWallet}
-						class="rounded-lg bg-[#00AAE4] px-6 py-2 text-sm font-medium text-white transition-all hover:bg-[#0088B8] hover:shadow-[0_0_20px_rgba(0,170,228,0.4)]"
+						class="rounded-lg bg-[#00AAE4] px-4 py-2 text-sm font-medium text-white transition-all hover:bg-[#0088B8]"
 					>
-						Connect Wallet
+						Connect
 					</button>
 				{/if}
+
+				<!-- Hamburger (mobile) -->
+				<button
+					onclick={() => (mobileMenuOpen = !mobileMenuOpen)}
+					class="rounded-lg p-2 text-[#B0B0B0] transition-colors hover:text-white lg:hidden"
+					aria-label="Toggle menu"
+				>
+					<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						{#if mobileMenuOpen}
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M6 18L18 6M6 6l12 12"
+							/>
+						{:else}
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M4 6h16M4 12h16M4 18h16"
+							/>
+						{/if}
+					</svg>
+				</button>
 			</div>
 		</div>
 	</div>
+
+	<!-- Mobile Menu -->
+	{#if mobileMenuOpen}
+		<div class="border-t border-[#2A2A2A] bg-[#121212] lg:hidden">
+			<nav class="mx-auto max-w-7xl space-y-1 px-4 py-3">
+				<a
+					href="/trade"
+					onclick={() => (mobileMenuOpen = false)}
+					class="block rounded-lg px-3 py-2 text-[#B0B0B0] transition-colors hover:bg-[#1A1A1A] hover:text-[#00AAE4]"
+					>Trade</a
+				>
+				<a
+					href="/portfolio"
+					onclick={() => (mobileMenuOpen = false)}
+					class="block rounded-lg px-3 py-2 text-[#B0B0B0] transition-colors hover:bg-[#1A1A1A] hover:text-[#00AAE4]"
+					>Portfolio</a
+				>
+				<a
+					href="/vaults"
+					onclick={() => (mobileMenuOpen = false)}
+					class="block rounded-lg px-3 py-2 text-[#B0B0B0] transition-colors hover:bg-[#1A1A1A] hover:text-[#00AAE4]"
+					>Vaults</a
+				>
+				<a
+					href="/verify"
+					onclick={() => (mobileMenuOpen = false)}
+					class="block rounded-lg px-3 py-2 text-[#B0B0B0] transition-colors hover:bg-[#1A1A1A] hover:text-[#00AAE4]"
+					>Verify Enclave</a
+				>
+				<a
+					href="/about"
+					onclick={() => (mobileMenuOpen = false)}
+					class="block rounded-lg px-3 py-2 text-[#B0B0B0] transition-colors hover:bg-[#1A1A1A] hover:text-[#00AAE4]"
+					>How It Works</a
+				>
+			</nav>
+			{#if $walletStore.isConnected && $walletStore.address}
+				<div class="border-t border-[#2A2A2A] px-4 py-3">
+					<div class="flex items-center justify-between">
+						<div class="flex items-center space-x-2">
+							<img src="/avatar.svg" alt="Wallet Avatar" class="h-5 w-5" />
+							<span class="font-mono text-xs text-[#00AAE4]"
+								>{formatAddress($walletStore.address)}</span
+							>
+						</div>
+						<div class="flex space-x-2">
+							{#if $authStore.token}
+								<button
+									onclick={handleLogout}
+									class="rounded-lg border border-[#404040] bg-[#2A2A2A] px-3 py-1.5 text-xs text-white"
+									>Logout</button
+								>
+							{:else}
+								<button
+									onclick={handleLogin}
+									disabled={isLoggingIn}
+									class="rounded-lg bg-[#00AAE4] px-3 py-1.5 text-xs text-white disabled:opacity-50"
+									>{isLoggingIn ? '...' : 'Login'}</button
+								>
+							{/if}
+							<button
+								onclick={disconnectWallet}
+								class="rounded-lg border border-[#404040] bg-[#2A2A2A] px-3 py-1.5 text-xs text-white"
+								>Disconnect</button
+							>
+						</div>
+					</div>
+				</div>
+			{/if}
+		</div>
+	{/if}
 </header>
