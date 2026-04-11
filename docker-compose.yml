@@ -32,7 +32,12 @@ services:
       target: production
     container_name: perp-dex-ui-prod
     ports:
-      - "8080:80"
+      - "80:80"
+      - "443:443"
+    volumes:
+      # Persist Caddy data (certificates, etc.)
+      - caddy_data:/data
+      - caddy_config:/config
     restart: unless-stopped
     networks:
       - perp-dex-network
@@ -42,3 +47,7 @@ services:
 networks:
   perp-dex-network:
     driver: bridge
+
+volumes:
+  caddy_data:
+  caddy_config:

@@ -10,28 +10,28 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci
+RUN yarn install --frozen-lockfile
 
 # Copy source code
 COPY . .
 
 # Build the application
-RUN npm run build
+RUN yarn build
 
-# Stage 2: Production image with nginx
-FROM nginx:alpine AS production
+# Stage 2: Production image with Caddy
+FROM caddy:2-alpine AS production
 
 # Copy built files from builder stage
-COPY --from=builder /app/build /usr/share/nginx/html
+COPY --from=builder /app/build /usr/share/caddy
 
-# Copy nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy Caddyfile
+COPY Caddyfile /etc/caddy/Caddyfile
 
-# Expose port 80
-EXPOSE 80
+# Expose ports 80 and 443
+EXPOSE 80 443
 
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Start Caddy
+CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
 
 # Stage 3: Development image (optional)
 FROM node:20-alpine AS development
@@ -42,7 +42,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install all dependencies (including dev dependencies)
-RUN npm ci
+RUN yarn install --frozen-lockfile
 
 # Copy source code
 COPY . .

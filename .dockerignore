@@ -52,6 +52,9 @@ docker-compose*.yml
 logs/
 *.log
 
+# Config files (replaced)
+nginx.conf
+
 # OS
 Thumbs.db
 
