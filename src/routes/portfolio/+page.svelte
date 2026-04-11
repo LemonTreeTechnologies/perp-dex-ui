@@ -17,6 +17,10 @@
 	let activeCurrency: 'xrp' | 'rlusd' = $state('xrp');
 	let pollingInterval: ReturnType<typeof setInterval> | null = null;
 
+	// Constants
+
+	const escrowAddress = 'r4rwwSM9PUu7VcvPRWdu9pmZpmhCZS9mmc';
+
 	// Computed values
 	const totalBalance = $derived(() => {
 		if (!balance) return '0.00';
@@ -62,11 +66,8 @@
 		loadingTransactions = true;
 
 		try {
-			// const headers = await generateAuthHeaders(
-			// 	'GET',
-			// 	`/v1/account/transactions?user_id=${$walletStore.address}`
-			// );
-			// transactions = await authApi.getTransactions($walletStore.address, headers);
+			// Use token-based authentication (authApi will attach the token if present)
+			transactions = await authApi.getTransactions($walletStore.address);
 		} catch (err) {
 			console.error('Failed to fetch transactions:', err);
 			// Don't show error for transactions, it's not critical
@@ -141,16 +142,6 @@
 <div class="container mx-auto px-4 py-8">
 	<div class="mb-6 flex items-center justify-between">
 		<h1 class="text-3xl font-bold text-white">Portfolio</h1>
-
-		{#if $walletStore.isConnected}
-			<button
-				onclick={() => fetchBalance()}
-				disabled={loading}
-				class="rounded-lg bg-[#00AAE4] px-6 py-2 text-sm font-medium text-white transition-all hover:bg-[#0088B8] disabled:cursor-not-allowed disabled:opacity-50"
-			>
-				{loading ? 'Loading...' : 'Fetch Balance (Debug)'}
-			</button>
-		{/if}
 	</div>
 
 	{#if error}
@@ -320,12 +311,12 @@
 								<code
 									class="flex-1 rounded bg-[#0A0A0A] px-4 py-3 font-mono text-sm text-[#00AAE4]"
 								>
-									rEscrowAddressPlaceholder123456789
+									{escrowAddress}
 								</code>
 								<button
 									class="rounded-lg bg-[#2A2A2A] px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-[#404040]"
 									onclick={() => {
-										navigator.clipboard.writeText('rEscrowAddressPlaceholder123456789');
+										navigator.clipboard.writeText(escrowAddress);
 										alert('Address copied to clipboard!');
 									}}
 								>
@@ -333,7 +324,6 @@
 								</button>
 							</div>
 						</div>
-
 						<div class="rounded-lg border border-yellow-500/20 bg-yellow-500/10 p-4">
 							<div class="mb-2 flex items-center space-x-2">
 								<svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
