@@ -62,11 +62,11 @@
 			const response = await authApi.submitOrder(orderRequest, headers);
 
 			successMessage = `Order submitted successfully! Order ID: ${response.order_id || 'N/A'}`;
-			
+
 			// Clear form on success
 			price = orderType === 'limit' && $currentPrice ? $currentPrice.toFixed(4) : '';
 			size = '';
-			
+
 			// Clear success message after 5 seconds
 			setTimeout(() => {
 				successMessage = '';
@@ -211,7 +211,9 @@
 
 			<!-- Success Message -->
 			{#if successMessage}
-				<div class="rounded-lg border border-green-500/50 bg-green-500/10 p-3 text-sm text-green-400">
+				<div
+					class="rounded-lg border border-green-500/50 bg-green-500/10 p-3 text-sm text-green-400"
+				>
 					{successMessage}
 				</div>
 			{/if}
