@@ -1,3 +1,5 @@
+install:
+	yarn install
 fmt:
 	yarn run format
 lint: 
