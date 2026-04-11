@@ -171,7 +171,7 @@ Every major blockchain has its perps DEX.
 - Real-time order book, price chart, WebSocket feed
 - Intel SGX enclave with DCAP remote attestation
 - 2-of-3 multisig escrow — no single operator controls funds
-- Automated market making and delta-neutral vaults running
+- Automated market making vault running (delta-neutral and delta-one planned)
 - Funding rate mechanism (8-hour intervals)
 - Liquidation engine
 
