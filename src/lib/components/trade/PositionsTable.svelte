@@ -5,20 +5,25 @@
 	let positions: Position[] = $state([]);
 	let loading = $state(false);
 	let error = $state('');
+	let initialLoadDone = $state(false);
 
-	export async function loadPositions() {
+	export async function loadPositions(silent = false) {
 		if (!$walletStore.isConnected || !$walletStore.address) {
 			error = 'Please connect your wallet first';
 			return;
 		}
 
 		try {
-			loading = true;
+			// Only show loading indicator on initial load, not on auto-refresh
+			if (!silent && !initialLoadDone) {
+				loading = true;
+			}
 			error = '';
 
 			// Use token-based auth - authApi will attach the token if available
 			const balance = await authApi.getBalance($walletStore.address);
 			positions = balance.positions || [];
+			initialLoadDone = true;
 		} catch (err) {
 			console.error('Failed to load positions:', err);
 			error = err instanceof Error ? err.message : 'Failed to load positions';

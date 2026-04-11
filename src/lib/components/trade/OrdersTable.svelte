@@ -5,19 +5,24 @@
 	let orders: Order[] = $state([]);
 	let loading = $state(false);
 	let error = $state('');
+	let initialLoadDone = $state(false);
 
-	export async function loadOrders() {
+	export async function loadOrders(silent = false) {
 		if (!$walletStore.isConnected || !$walletStore.address) {
 			error = 'Please connect your wallet first';
 			return;
 		}
 
 		try {
-			loading = true;
+			// Only show loading indicator on initial load, not on auto-refresh
+			if (!silent && !initialLoadDone) {
+				loading = true;
+			}
 			error = '';
 
 			// Use token-based auth - authApi will use stored token when available
 			orders = await authApi.getOrders($walletStore.address);
+			initialLoadDone = true;
 		} catch (err) {
 			console.error('Failed to load orders:', err);
 			error = err instanceof Error ? err.message : 'Failed to load orders';
