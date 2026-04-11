@@ -36,10 +36,14 @@ Makefile shortcuts: `make fmt`, `make lint`, `make build`, `make all` (fmt + lin
 
 ## Architecture
 
-- **Routing:** SvelteKit file-based routing in `src/routes/`. Each route has `+page.svelte` (component) and optionally `+layout.svelte` (wrapper) and `+layout.ts` (data/config).
-- **Shared code:** `src/lib/` — accessible via the `$lib` alias. Components, utilities, and assets go here.
+- **Routing:** SvelteKit file-based routing in `src/routes/`. Routes: `/` (landing), `/trade` (trading interface), `/verify` (enclave attestation).
+- **Shared code:** `src/lib/` — accessible via the `$lib` alias. Components, utilities, stores, and API client go here.
+- **API client:** `src/lib/api/client.ts` — typed wrappers for all backend endpoints. Public (`api.*`) and authenticated (`authApi.*`). Configurable via `VITE_API_URL` / `VITE_WS_URL` env vars.
+- **Stores:** `walletStore` (wallet connection), `marketDataStore` (WebSocket-driven real-time market data), `currentPrice` (derived best price).
+- **Trade components:** `src/lib/components/trade/` — OrderBook, OrderForm, PositionsTable, OrdersTable, PriceChart, TradesTable.
 - **Prerendering:** Enabled globally in `src/routes/+layout.ts` — this is a fully static site.
 - **Svelte 5 runes:** Forced on for all non-node_modules files in `svelte.config.js`. Use `$state`, `$derived`, `$effect` etc.
+- **Theme:** Dark theme with XRP brand colors. CSS variables in `src/routes/layout.css`. Inter font (UI), JetBrains Mono (numbers/addresses).
 - **Testing:** Vitest with two project configs — client tests use jsdom, server tests use node environment. Playwright available for browser tests.
 
 ## Code Style
@@ -57,6 +61,8 @@ Makefile shortcuts: `make fmt`, `make lint`, `make build`, `make all` (fmt + lin
 - Nix shell available (`shell.nix`) providing Node 22 + corepack + Rust toolchain
 - ES modules only (`"type": "module"` in package.json)
 - Environment variables use `VITE_` prefix for client-side access
+- `VITE_API_URL` — override API base URL (default: `https://api-perp.ph18.io`)
+- `VITE_WS_URL` — override WebSocket URL (default: `wss://api-perp.ph18.io/ws`)
 
 ## Backend Integration Notes
 
