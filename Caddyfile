@@ -1,0 +1,50 @@
+# Production configuration for xperp.fi
+xperp.fi, www.xperp.fi {
+    # Automatic HTTPS with Let's Encrypt
+    # Caddy will automatically obtain and renew certificates
+
+    # Serve files from the build directory
+    root * /usr/share/caddy
+
+    # Enable gzip compression
+    encode gzip
+
+    # SPA routing - serve index.html for all routes
+    try_files {path} /index.html
+
+    # Security headers
+    header {
+        X-Frame-Options "SAMEORIGIN"
+        X-Content-Type-Options "nosniff"
+        X-XSS-Protection "1; mode=block"
+        Referrer-Policy "strict-origin-when-cross-origin"
+    }
+
+    # Cache static assets
+    @static {
+        path *.js *.css *.png *.jpg *.jpeg *.gif *.ico *.svg *.woff *.woff2 *.ttf *.eot
+    }
+    header @static Cache-Control "public, max-age=31536000, immutable"
+
+    # Don't cache HTML files
+    @html {
+        path *.html
+    }
+    header @html Cache-Control "no-cache, no-store, must-revalidate"
+
+    # Health check endpoint
+    handle /health {
+        respond "healthy" 200
+    }
+
+    # Serve files
+    file_server
+}
+
+# Development/localhost configuration (no HTTPS)
+:80 {
+    root * /usr/share/caddy
+    encode gzip
+    try_files {path} /index.html
+    file_server
+}
