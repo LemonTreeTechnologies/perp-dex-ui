@@ -1,6 +1,6 @@
 <script lang="ts">
 	// TODO: replace with the actual escrow account address
-	const ESCROW_ADDRESS = 'rEscrowXRPLAddress...';
+	const ESCROW_ADDRESS = 'r33cKcGyCZH6x2RRxmSkVfcjKHX3Z3pPEh';
 	const TESTNET_EXPLORER = `https://testnet.xrpl.org/accounts/${ESCROW_ADDRESS}`;
 </script>
 
