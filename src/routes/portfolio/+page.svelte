@@ -19,8 +19,7 @@
 
 	// Constants
 
-	const escrowAddress = "r4rwwSM9PUu7VcvPRWdu9pmZpmhCZS9mmc";
-
+	const escrowAddress = 'r4rwwSM9PUu7VcvPRWdu9pmZpmhCZS9mmc';
 
 	// Computed values
 	const totalBalance = $derived(() => {
@@ -306,25 +305,26 @@
 							</p>
 						</div>
 
-					<div class="rounded-lg border border-[#2A2A2A] bg-[#1A1A1A] p-6">
-						<div class="mb-3 text-sm font-medium text-[#B0B0B0]">Escrow Address</div>
-						<div class="flex items-center space-x-3">
-							<code
-								class="flex-1 rounded bg-[#0A0A0A] px-4 py-3 font-mono text-sm text-[#00AAE4]"
-							>
-								{escrowAddress}
-							</code>
-							<button
-								class="rounded-lg bg-[#2A2A2A] px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-[#404040]"
-								onclick={() => {
-									navigator.clipboard.writeText(escrowAddress);
-									alert('Address copied to clipboard!');
-								}}
-							>
-								Copy
-							</button>
+						<div class="rounded-lg border border-[#2A2A2A] bg-[#1A1A1A] p-6">
+							<div class="mb-3 text-sm font-medium text-[#B0B0B0]">Escrow Address</div>
+							<div class="flex items-center space-x-3">
+								<code
+									class="flex-1 rounded bg-[#0A0A0A] px-4 py-3 font-mono text-sm text-[#00AAE4]"
+								>
+									{escrowAddress}
+								</code>
+								<button
+									class="rounded-lg bg-[#2A2A2A] px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-[#404040]"
+									onclick={() => {
+										navigator.clipboard.writeText(escrowAddress);
+										alert('Address copied to clipboard!');
+									}}
+								>
+									Copy
+								</button>
+							</div>
 						</div>
-					</div>						<div class="rounded-lg border border-yellow-500/20 bg-yellow-500/10 p-4">
+						<div class="rounded-lg border border-yellow-500/20 bg-yellow-500/10 p-4">
 							<div class="mb-2 flex items-center space-x-2">
 								<svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
 									<path
