@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  # Development environment
+  perp-dex-ui-dev:
+    build:
+      context: .
+      target: development
+    container_name: perp-dex-ui-dev
+    ports:
+      - "5173:5173"
+    volumes:
+      # Mount source code for hot reloading
+      - ./src:/app/src
+      - ./static:/app/static
+      - ./svelte.config.js:/app/svelte.config.js
+      - ./vite.config.ts:/app/vite.config.ts
+      - ./tsconfig.json:/app/tsconfig.json
+      # Preserve node_modules
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    networks:
+      - perp-dex-network
+    profiles:
+      - dev
+
+  # Production environment
+  perp-dex-ui-prod:
+    build:
+      context: .
+      target: production
+    container_name: perp-dex-ui-prod
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+    networks:
+      - perp-dex-network
+    profiles:
+      - prod
+
+networks:
+  perp-dex-network:
+    driver: bridge
