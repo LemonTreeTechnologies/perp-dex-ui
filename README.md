@@ -1,42 +1,46 @@
-# sv
+# perp-dex-ui
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+Frontend for [xrpl-perp-dex](https://github.com/77ph/xrpl-perp-dex) — a perpetual futures DEX on XRPL mainnet with TEE (Intel SGX) computation and RLUSD settlement.
 
-## Creating a project
-
-If you're seeing this, you've probably already done this step. Congrats!
+## Quick Start
 
 ```sh
-# create a new project
-npx sv create my-app
+yarn install
+yarn dev
 ```
 
-To recreate this project with the same configuration:
+## Documentation
 
-```sh
-# recreate this project
-npx sv@0.15.1 create --template minimal --types ts --add prettier eslint tailwindcss="plugins:typography,forms" vitest="usages:unit,component" sveltekit-adapter="adapter:static" --install yarn ./
-```
+| Document                                     | Description                                                                  |
+| -------------------------------------------- | ---------------------------------------------------------------------------- |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | System architecture — how the UI connects to orchestrator, enclave, and XRPL |
+| [docs/BACKEND-API.md](docs/BACKEND-API.md)   | Full API reference — REST endpoints, WebSocket events, authentication        |
+| [CLAUDE.md](CLAUDE.md)                       | Developer guidance for Claude Code                                           |
 
-## Developing
+## Stack
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+- **[SvelteKit](https://svelte.dev/docs/kit)** with static adapter (prerendered)
+- **[Svelte 5](https://svelte.dev/docs/svelte)** with runes (`$state`, `$derived`, `$effect`)
+- **[Tailwind CSS v4](https://tailwindcss.com/)** with forms and typography plugins
+- **TypeScript** in strict mode
+- **Vitest** + **Playwright** for testing
 
-```sh
-npm run dev
+## Commands
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+| Task       | Command       |
+| ---------- | ------------- |
+| Dev server | `yarn dev`    |
+| Build      | `yarn build`  |
+| Lint       | `yarn lint`   |
+| Format     | `yarn format` |
+| Type check | `yarn check`  |
+| Test       | `yarn test`   |
 
-## Building
+Makefile shortcuts: `make fmt`, `make lint`, `make build`, `make all`.
 
-To create a production version of your app:
+## Related Repositories
 
-```sh
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+| Repo                                                                   | Description                                                              |
+| ---------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| [xrpl-perp-dex](https://github.com/77ph/xrpl-perp-dex)                 | Rust orchestrator — trading API, order book, price feed, P2P replication |
+| [xrpl-perp-dex-enclave](https://github.com/77ph/xrpl-perp-dex-enclave) | SGX enclave — margin engine, key custody, DCAP attestation               |
