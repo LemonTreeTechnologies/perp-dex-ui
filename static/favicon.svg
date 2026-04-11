@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="80" height="80" role="img" aria-label="XPerp mark">
+  <title>XPerp</title>
+  <desc>XPerp infinity-loop mark</desc>
+  <g transform="translate(40, 40)">
+    <path d="M -28 -20 Q -7 0 -28 20 Q 0 28 28 20 Q 7 0 28 -20 Q 0 -28 -28 -20 Z"
+          fill="none" stroke="#00aae4" stroke-width="4" stroke-linejoin="round"/>
+    <circle cx="0" cy="0" r="3" fill="#00aae4"/>
+  </g>
+</svg>
