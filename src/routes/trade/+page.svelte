@@ -18,13 +18,13 @@
 			return;
 		}
 
-		// Refresh positions and orders
+		// Refresh positions and orders silently (no loading flash)
 		const promises = [];
 		if (positionsTableRef) {
-			promises.push(positionsTableRef.loadPositions().catch(console.error));
+			promises.push(positionsTableRef.loadPositions(true).catch(console.error));
 		}
 		if (ordersTableRef) {
-			promises.push(ordersTableRef.loadOrders().catch(console.error));
+			promises.push(ordersTableRef.loadOrders(true).catch(console.error));
 		}
 		await Promise.allSettled(promises);
 	}
