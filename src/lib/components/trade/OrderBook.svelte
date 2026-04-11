@@ -3,6 +3,12 @@
 	import { marketDataStore } from '$lib/stores/marketData';
 	import { api } from '$lib/api/client';
 
+	interface Props {
+		onPriceClick?: (price: string) => void;
+	}
+
+	let { onPriceClick }: Props = $props();
+
 	let orderbook = $derived($marketDataStore.orderbook);
 	let displayMode = $state<'size' | 'value'>('size');
 
@@ -80,13 +86,16 @@
 					{@const amount =
 						displayMode === 'size' ? parseFloat(size) : parseFloat(price) * parseFloat(size)}
 					{@const barWidth = (amount / maxAskValue) * 100}
-					<div class="relative flex justify-between font-mono text-sm">
+					<button
+						class="relative flex w-full justify-between font-mono text-sm transition-opacity hover:opacity-70"
+						onclick={() => onPriceClick?.(price)}
+					>
 						<div class="absolute inset-y-0 right-0 bg-red-500/10" style="width: {barWidth}%"></div>
 						<span class="relative z-10 text-red-400">{parseFloat(price).toFixed(4)}</span>
 						<span class="relative z-10 text-[#B0B0B0]">
 							{displayMode === 'size' ? parseFloat(size).toFixed(2) : amount.toFixed(2)}
 						</span>
-					</div>
+					</button>
 				{/each}
 			</div>
 
@@ -104,7 +113,10 @@
 					{@const amount =
 						displayMode === 'size' ? parseFloat(size) : parseFloat(price) * parseFloat(size)}
 					{@const barWidth = (amount / maxBidValue) * 100}
-					<div class="relative flex justify-between font-mono text-sm">
+					<button
+						class="relative flex w-full justify-between font-mono text-sm transition-opacity hover:opacity-70"
+						onclick={() => onPriceClick?.(price)}
+					>
 						<div
 							class="absolute inset-y-0 right-0 bg-green-500/10"
 							style="width: {barWidth}%"
@@ -113,7 +125,7 @@
 						<span class="relative z-10 text-[#B0B0B0]">
 							{displayMode === 'size' ? parseFloat(size).toFixed(2) : amount.toFixed(2)}
 						</span>
-					</div>
+					</button>
 				{/each}
 			</div>
 		</div>

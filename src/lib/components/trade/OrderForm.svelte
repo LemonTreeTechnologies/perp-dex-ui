@@ -12,6 +12,15 @@
 	let error = $state('');
 	let successMessage = $state('');
 
+	// Expose method to set price from outside
+	export function setPrice(newPrice: string) {
+		// Switch to limit order if not already
+		if (orderType !== 'limit') {
+			orderType = 'limit';
+		}
+		price = parseFloat(newPrice).toFixed(4);
+	}
+
 	// Auto-fill price with current market price for limit orders
 	$effect(() => {
 		if (orderType === 'limit' && !price && $currentPrice) {
