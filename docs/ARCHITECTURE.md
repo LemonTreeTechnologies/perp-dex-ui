@@ -39,7 +39,7 @@ This document describes how the UI fits into the overall xrpl-perp-dex system.
                      │ XRPL native multisig
                      ▼
 ┌─────────────────────────────────────────────────────────────┐
-│  XRPL Mainnet                                               │
+│  XRPL Testnet (mainnet planned)                              │
 │  ├── RLUSD collateral (SignerListSet escrow)                │
 │  ├── P&L settlement                                         │
 │  └── Deposit / withdrawal transactions                      │
@@ -48,7 +48,7 @@ This document describes how the UI fits into the overall xrpl-perp-dex system.
 
 ## Key Properties
 
-- **Anti-MEV**: orders encrypted with enclave's attested public key; operator sees only ciphertext
+- **Anti-MEV** _(planned, not yet implemented)_: order encryption with enclave's attested public key. Currently orders are plaintext over HTTPS — the operator can see order contents.
 - **RLUSD-native**: all collateral, settlement, and fees denominated in RLUSD on XRPL
 - **DCAP Attestation**: Intel-signed proof that enclave runs genuine, untampered code
 - **XRPL Multisig**: 2-of-3 SignerListSet — no single operator can steal funds

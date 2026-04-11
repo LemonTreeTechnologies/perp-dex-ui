@@ -95,7 +95,7 @@
 					>
 						<div class="text-center">
 							<div class="text-sm font-bold text-[#00AAE4]">XRPL</div>
-							<div class="mt-1 text-xs font-medium text-white">Mainnet</div>
+							<div class="mt-1 text-xs font-medium text-white">Testnet</div>
 						</div>
 					</div>
 					<div class="mt-2 text-center text-xs text-[#808080]">RLUSD settlement</div>

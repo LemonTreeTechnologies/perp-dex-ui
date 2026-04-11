@@ -9,7 +9,7 @@ settlement. Built with SvelteKit, Svelte 5 (runes mode), Tailwind CSS v4, and Ty
 Uses Vite for bundling and `@sveltejs/adapter-static` for static site generation.
 
 **Backend:** [xrpl-perp-dex](https://github.com/77ph/xrpl-perp-dex) — Rust orchestrator + SGX enclave
-**API base:** `https://api-perp.ph18.io` | **Market:** `XRP-RLUSD-PERP`
+**API base:** `https://api-perp.ph18.io` | **Market:** `XRP-RLUSD-PERP` | **Network:** XRPL Testnet
 
 ## Key Documentation
 
@@ -66,7 +66,7 @@ Makefile shortcuts: `make fmt`, `make lint`, `make build`, `make all` (fmt + lin
 
 ## Backend Integration Notes
 
-- **Auth:** All trading endpoints require XRPL secp256k1 signature (4 headers: Address, PublicKey, Signature, Timestamp). See [docs/BACKEND-API.md](docs/BACKEND-API.md#authentication).
+- **Auth:** All trading endpoints require XRPL secp256k1 signature (4 headers: Address, PublicKey, Signature, Timestamp). Server accepts dual-mode signing: SHA-256 direct (CLI) or SHA-512Half wrapped (browser wallets like Crossmark). See [docs/BACKEND-API.md](docs/BACKEND-API.md#authentication).
 - **Number format:** All prices/sizes are FP8 strings — exactly 8 decimal places (e.g. `"0.55000000"`). Server rejects numeric values.
 - **WebSocket:** `wss://api-perp.ph18.io/ws` — auto-subscribed to public channels on connect. Subscribe to `user:rXXX` for per-user events. Stateless — re-subscribe on every reconnect.
 - **Deposits:** Users send XRPL Payment to escrow address. Orchestrator auto-credits balance. No deposit API call from UI.
