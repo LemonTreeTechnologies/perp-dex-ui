@@ -60,6 +60,11 @@ style: |
     text-align: center;
     font-size: 1.2em;
   }
+  section.lead img {
+    display: block;
+    margin: 0 auto;
+    max-height: none;
+  }
   em {
     color: #aaaacc;
     font-style: normal;
@@ -68,7 +73,9 @@ style: |
 
 <!-- _class: lead -->
 
-<img src="../static/logo.svg" alt="XPerp" style="height: 320px; display: block; margin: 0 auto 0.5em;" />
+<div style="text-align: center;">
+<img src="../static/logo.svg" alt="XPerp" width="480" />
+</div>
 
 **The First Perpetual Futures DEX on XRPL**
 
