@@ -95,21 +95,41 @@ Perpetual futures are the single largest product in crypto.
 XRPL — with its speed, cost, and community — has zero share of this market today. XPerp
 captures it.
 
+## Community demand is real
+
+The XRPL ecosystem is actively asking for derivatives. In March 2026, a sidechain proposal for
+options trading on XRPL was shared by Denis Angell (XRPL Labs engineer) with the caption
+"Something big." Community reaction was immediate — ChartNerdTA on X posted "HUGEEE!" and
+the proposal generated significant engagement across XRP communities.
+
+That proposal targets _options_ and requires building an entirely new sidechain with a
+cross-chain bridge. XPerp targets _perpetual futures_ — a market 2,300x larger ($92.9T vs
+$40B) — and is already live on XRPL today. No sidechain needed, no bridge risk.
+
+The crypto derivatives market is, as [U.Today](https://u.today/new-xrp-ledger-sidechain-proposal-aims-to-bring-options-trading-to-xrpl)
+put it, "almost entirely dominated by centralized exchanges and a handful of chains that were
+not built with derivatives in mind." XRPL has zero derivatives infrastructure. The gap is
+acknowledged by the community itself. We're filling it.
+
 ## The Moat
 
 **First mover on XRPL derivatives.** There is no other perpetual futures protocol on the XRP
-Ledger. The XRPL community has been waiting for DeFi on their own chain.
+Ledger. The community has been waiting for DeFi on their own chain — and the recent sidechain
+proposal proves it. We're not competing with Hyperliquid for Ethereum traders or Jupiter for
+Solana traders. We're serving an entirely underserved audience that already exists.
 
-We're not competing with Hyperliquid for Ethereum traders or Jupiter for Solana traders. We're
-serving an entirely underserved audience that already exists — millions of XRP holders with no
-native derivatives access.
+**The Hyperliquid playbook, applied to XRPL.** Hyperliquid proved that a purpose-built exchange
+with a native order book can dominate DeFi derivatives — it captured billions in daily volume
+and reached a $9 billion valuation. We follow the same CLOB model but on XRPL, serving a
+community that has no native alternative.
+
+**No sidechain, no bridge.** The competing XRPL derivatives proposal requires a new sidechain
+and a cross-chain bridge — introducing bridge risk and fragmented liquidity. XPerp settles
+directly on XRPL L1. No bridges, no wrapped tokens, no L2 withdrawal delays.
 
 **Hardware-verified security.** Our SGX enclave architecture means the code running the margin
 engine is verifiable by anyone through Intel DCAP attestation. No other perp DEX offers this
 level of computational transparency.
-
-**XRPL-native settlement.** No bridges, no wrapped tokens, no L2 withdrawal delays. Deposits
-and withdrawals settle directly on XRPL L1 in seconds.
 
 ## The Close
 
@@ -202,4 +222,7 @@ My Neobank
 _Sources:_
 
 - _Perp market statistics: [HHPTY — XRPL derivatives analysis](https://www.hhpty.com/xrpl-wants-a-hyperliquid-like-sidechain-for-the-40b-options-trading-market-but-one-design-choice-could-decide-everything/)_
+- _XRPL sidechain proposal & community reaction: [U.Today](https://u.today/new-xrp-ledger-sidechain-proposal-aims-to-bring-options-trading-to-xrpl)_
+- _Deribit dominance & XRPL positioning: [Live Bitcoin News](https://www.livebitcoinnews.com/can-xrpl-dethrone-deribit-with-its-own-chain/)_
+- _Hyperliquid $9B valuation: [Live Bitcoin News](https://www.livebitcoinnews.com/can-xrpl-dethrone-deribit-with-its-own-chain/)_
 - _XRP wallet count: [XRPScan](https://xrpscan.com/balances) (verify current number before publishing)_
