@@ -324,19 +324,27 @@
 						</div>
 					</div>
 
-					<!-- Action Button -->
-					<button
-						onclick={() => openDepositModal(vault)}
-						disabled={vault.status === 'coming-soon'}
-						class="w-full rounded-lg px-4 py-3 text-sm font-medium transition-all disabled:cursor-not-allowed disabled:opacity-50"
-						class:bg-[#00AAE4]={vault.status === 'active'}
-						class:hover:bg-[#0088B8]={vault.status === 'active'}
-						class:hover:shadow-[0_0_20px_rgba(0,170,228,0.4)]={vault.status === 'active'}
-						class:bg-[#2A2A2A]={vault.status === 'coming-soon'}
-						class:text-white={true}
-					>
-						{vault.status === 'active' ? 'Deposit' : 'Coming Soon'}
-					</button>
+					<!-- Action Buttons -->
+					<div class="flex space-x-2">
+						<button
+							onclick={() => openDepositModal(vault)}
+							disabled={vault.status === 'coming-soon'}
+							class="flex-1 rounded-lg px-4 py-3 text-sm font-medium transition-all disabled:cursor-not-allowed disabled:opacity-50"
+							class:bg-[#00AAE4]={vault.status === 'active'}
+							class:hover:bg-[#0088B8]={vault.status === 'active'}
+							class:hover:shadow-[0_0_20px_rgba(0,170,228,0.4)]={vault.status === 'active'}
+							class:bg-[#2A2A2A]={vault.status === 'coming-soon'}
+							class:text-white={true}
+						>
+							{vault.status === 'active' ? 'Deposit' : 'Coming Soon'}
+						</button>
+						<a
+							href="/vaults/{vault.id}"
+							class="flex-1 rounded-lg border border-[#2A2A2A] bg-[#1A1A1A] px-4 py-3 text-center text-sm font-medium text-white transition-colors hover:border-[#00AAE4] hover:bg-[#2A2A2A]"
+						>
+							View Details
+						</a>
+					</div>
 				</div>
 			{/each}
 		</div>
