@@ -70,7 +70,7 @@ See [DOCKER.md](DOCKER.md) for detailed Docker documentation.
 
 ## Related Repositories
 
-| Repo                                                                   | Description                                                              |
-| ---------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| [xrpl-perp-dex](https://github.com/77ph/xrpl-perp-dex)                 | Rust orchestrator — trading API, order book, price feed, P2P replication |
-| [xrpl-perp-dex-enclave](https://github.com/77ph/xrpl-perp-dex-enclave) | SGX enclave — margin engine, key custody, DCAP attestation               |
+| Repo                                                   | Description                                                              |
+| ------------------------------------------------------ | ------------------------------------------------------------------------ |
+| [xrpl-perp-dex](https://github.com/77ph/xrpl-perp-dex) | Rust orchestrator — trading API, order book, price feed, P2P replication |
+| SGX Enclave (private)                                  | Margin engine, ECDSA key custody, DCAP attestation                       |

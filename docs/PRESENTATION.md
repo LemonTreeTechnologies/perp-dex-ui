@@ -68,7 +68,9 @@ style: |
 
 <!-- _class: lead -->
 
-# XPerp
+<img src="../static/logo.svg" alt="XPerp" style="height: 120px; margin: 0 auto 1em;" />
+
+# <span style="color: #00AAE4">X</span>Perp
 
 **The First Perpetual Futures DEX on XRPL**
 
@@ -150,7 +152,7 @@ XRPL Wallet ──► Orchestrator (Rust) ──► SGX Enclave ──► XRPL M
 - **Operators geographically distributed** — Hetzner bare metal + 2x Azure DCsv3
 - **DCAP remote attestation** — anyone can verify the enclave runs genuine code
 
-Visit **[perp.ph18.io/verify](https://perp.ph18.io/verify)** to verify the enclave yourself.
+Visit **<a href="https://xperp.fi/verify" target="_blank">xperp.fi/verify</a>** to verify the enclave yourself.
 
 ---
 
@@ -215,7 +217,7 @@ Every major chain has its perps DEX:
 | 4IRE (200+ engineers)            | Integration capacity for wallet linking + settlement  |
 
 ```
-Fiat (EUR) → My Neobank → XRP → XPerp (trade) → XRP profits → My Neobank → EUR (bank)
+Fiat (EUR) → My Neobank → XRP → XPerp (trade) → XRP profits → My Neobank → EUR
 ```
 
 **Complete user journey: bank to trade to bank. No centralized exchange involved.**
@@ -257,11 +259,8 @@ Fiat (EUR) → My Neobank → XRP → XPerp (trade) → XRP profits → My Neoba
 
 # Try It Now
 
-**[perp.ph18.io](https://perp.ph18.io)**
+**<a href="https://xperp.fi" target="_blank">xperp.fi</a>**
 
-Verify the enclave: [perp.ph18.io/verify](https://perp.ph18.io/verify)
-API: [api-perp.ph18.io](https://api-perp.ph18.io)
-UI: [github.com/LemonTreeTechnologies/perp-dex-ui](https://github.com/LemonTreeTechnologies/perp-dex-ui)
-Orchestrator: [github.com/77ph/xrpl-perp-dex](https://github.com/77ph/xrpl-perp-dex)
+<a href="https://xperp.fi/verify" target="_blank">Verify the Enclave</a> · <a href="https://api-perp.ph18.io" target="_blank">API</a> · <a href="https://github.com/LemonTreeTechnologies/perp-dex-ui" target="_blank">Frontend and UI</a> · <a href="https://github.com/77ph/xrpl-perp-dex" target="_blank">Orchestrator</a>
 
 _XPerp Team · Hack the Block Paris · April 2026_

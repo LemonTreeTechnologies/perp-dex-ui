@@ -145,7 +145,7 @@ Not started — see [BACKEND-API.md](BACKEND-API.md#vault-api-planned) for plann
 
 ## Related repositories
 
-| Repo                                                                   | Description                                        |
-| ---------------------------------------------------------------------- | -------------------------------------------------- |
-| [xrpl-perp-dex](https://github.com/77ph/xrpl-perp-dex)                 | Orchestrator (Rust) — trading API, order book, P2P |
-| [xrpl-perp-dex-enclave](https://github.com/77ph/xrpl-perp-dex-enclave) | SGX enclave — margin engine, key custody, DCAP     |
+| Repo                                                   | Description                                        |
+| ------------------------------------------------------ | -------------------------------------------------- |
+| [xrpl-perp-dex](https://github.com/77ph/xrpl-perp-dex) | Orchestrator (Rust) — trading API, order book, P2P |
+| SGX Enclave (private)                                  | Margin engine, ECDSA key custody, DCAP attestation |
