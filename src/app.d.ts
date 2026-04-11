@@ -8,6 +8,24 @@ declare global {
 		// interface PageState {}
 		// interface Platform {}
 	}
+
+	interface Window {
+		xrpl?: any;
+		gemWallet?: {
+			connect: () => Promise<{
+				result?: {
+					address: string;
+					publicKey: string;
+				};
+			}>;
+		};
+		crossmark?: {
+			connect: () => Promise<{
+				address: string;
+				publicKey: string;
+			}>;
+		};
+	}
 }
 
 export {};
