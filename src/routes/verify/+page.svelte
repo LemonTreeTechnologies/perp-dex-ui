@@ -223,18 +223,12 @@
 		</div>
 
 		<div class="rounded-lg border border-gray-200 bg-gray-50 p-6">
-			<h3 class="text-sm font-semibold text-gray-900">How to verify</h3>
-			<p class="mt-2 text-sm text-gray-600">
-				The <strong>MRENCLAVE</strong> is a SHA-256 hash of the exact code running inside the SGX
-				enclave. Compare it against the hash printed during the
-				<a
-					href="https://github.com/77ph/xrpl-perp-dex-enclave"
-					class="text-blue-600 hover:underline"
-					target="_blank"
-					rel="noopener noreferrer">published enclave build</a
-				>
-				to confirm the enclave is running authentic, unmodified code. The challenge nonce proves this
-				quote is fresh and not replayed.
+			<h3 class="text-sm font-semibold text-[#B0B0B0]">How to verify</h3>
+			<p class="mt-2 text-sm text-[#808080]">
+				The <strong class="text-white">MRENCLAVE</strong> is a SHA-256 hash of the exact code running
+				inside the SGX enclave. Compare it against the published enclave binary hash to confirm the enclave
+				is running authentic, unmodified code. The challenge nonce proves this quote is fresh and not
+				replayed.
 			</p>
 		</div>
 	{/if}

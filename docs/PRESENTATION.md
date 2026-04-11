@@ -150,7 +150,7 @@ XRPL Wallet ──► Orchestrator (Rust) ──► SGX Enclave ──► XRPL M
 - **Operators geographically distributed** — Hetzner bare metal + 2x Azure DCsv3
 - **DCAP remote attestation** — anyone can verify the enclave runs genuine code
 
-Visit **[xperp.fi/verify](https://xperp.fi/verify)** to verify the enclave yourself.
+Visit **<a href="https://xperp.fi/verify" target="_blank">xperp.fi/verify</a>** to verify the enclave yourself.
 
 ---
 
@@ -257,8 +257,8 @@ Fiat (EUR) → My Neobank → XRP → XPerp (trade) → XRP profits → My Neoba
 
 # Try It Now
 
-**[xperp.fi](https://xperp.fi)**
+**<a href="https://xperp.fi" target="_blank">xperp.fi</a>**
 
-[Verify the Enclave](https://xperp.fi/verify) · [API](https://api-perp.ph18.io) · [Frontend and UI](https://github.com/LemonTreeTechnologies/perp-dex-ui) · [Orchestrator](https://github.com/77ph/xrpl-perp-dex)
+<a href="https://xperp.fi/verify" target="_blank">Verify the Enclave</a> · <a href="https://api-perp.ph18.io" target="_blank">API</a> · <a href="https://github.com/LemonTreeTechnologies/perp-dex-ui" target="_blank">Frontend and UI</a> · <a href="https://github.com/77ph/xrpl-perp-dex" target="_blank">Orchestrator</a>
 
 _XPerp Team · Hack the Block Paris · April 2026_
