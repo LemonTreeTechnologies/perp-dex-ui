@@ -9,8 +9,23 @@ declare global {
 		// interface Platform {}
 	}
 
+	interface CrossmarkSignInResponse {
+		address?: string;
+		publicKey?: string;
+		response?: {
+			data?: {
+				address: string;
+				publicKey?: string;
+			};
+		};
+	}
+
+	interface CrossmarkUser {
+		address?: string;
+		[key: string]: unknown;
+	}
+
 	interface Window {
-		xrpl?: any;
 		gemWallet?: {
 			connect: () => Promise<{
 				result?: {
@@ -20,11 +35,18 @@ declare global {
 			}>;
 		};
 		crossmark?: {
-			connect: () => Promise<{
-				address: string;
-				publicKey: string;
-			}>;
+			methods?: {
+				signInAndWait: (options?: Record<string, unknown>) => Promise<CrossmarkSignInResponse>;
+				getAddress: () => string | undefined;
+				getUser: () => CrossmarkUser;
+				isConnected: () => boolean;
+			};
+			session?: {
+				address?: string;
+				user?: CrossmarkUser;
+			};
 		};
+		xaman?: unknown;
 	}
 }
 

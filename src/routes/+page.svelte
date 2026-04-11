@@ -15,16 +15,12 @@
 	{#if !$walletStore.isConnected}
 		<div class="rounded-lg bg-blue-50 p-8 text-center">
 			<h2 class="text-2xl font-semibold text-gray-900">Get Started</h2>
-			<p class="mt-2 text-gray-600">
-				Connect your XRPL wallet to start trading perpetual futures
-			</p>
+			<p class="mt-2 text-gray-600">Connect your XRPL wallet to start trading perpetual futures</p>
 		</div>
 	{:else}
 		<div class="rounded-lg bg-white p-8 shadow">
 			<h2 class="text-2xl font-semibold text-gray-900">Welcome!</h2>
-			<p class="mt-2 text-gray-600">
-				Your wallet is connected. Trading interface coming soon...
-			</p>
+			<p class="mt-2 text-gray-600">Your wallet is connected. Trading interface coming soon...</p>
 		</div>
 	{/if}
 </div>

@@ -2,11 +2,6 @@
 	import { walletStore } from '$lib/stores/wallet';
 
 	async function connectWallet() {
-		if (typeof window.xrpl === 'undefined') {
-			alert('Please install an XRPL wallet extension (e.g., Crossmark, Xaman, or GemWallet)');
-			return;
-		}
-
 		try {
 			// Try GemWallet first
 			if (window.gemWallet) {
@@ -17,20 +12,40 @@
 						publicKey: response.result.publicKey,
 						isConnected: true
 					});
+					return;
 				}
 			}
 			// Try Crossmark
-			else if (window.crossmark) {
-				const response = await window.crossmark.connect();
-				if (response) {
+			else if (window.crossmark?.methods) {
+				console.log('Connecting with Crossmark...');
+				const signInResponse = await window.crossmark.methods.signInAndWait();
+				console.log('Crossmark response:', signInResponse);
+
+				// Crossmark returns the user data directly
+				if (signInResponse?.address) {
 					walletStore.set({
-						address: response.address,
-						publicKey: response.publicKey,
+						address: signInResponse.address,
+						publicKey: signInResponse.publicKey || '',
 						isConnected: true
 					});
+					return;
+				} else if (signInResponse?.response?.data?.address) {
+					// Alternative response format
+					walletStore.set({
+						address: signInResponse.response.data.address,
+						publicKey: signInResponse.response.data.publicKey || '',
+						isConnected: true
+					});
+					return;
 				}
+			}
+			// Try Xaman (formerly Xumm)
+			else if (window.xaman) {
+				// Xaman uses a different flow - typically redirects
+				alert('Xaman wallet detected. Please use the Xaman app to connect.');
+				return;
 			} else {
-				alert('No compatible XRPL wallet found. Please install GemWallet or Crossmark.');
+				alert('No compatible XRPL wallet found. Please install GemWallet or Crossmark extension.');
 			}
 		} catch (error) {
 			console.error('Failed to connect wallet:', error);
@@ -63,18 +78,16 @@
 
 			<!-- Navigation (placeholder for future menu items) -->
 			<nav class="hidden md:flex md:items-center md:space-x-8">
-				<a href="/" class="text-gray-700 hover:text-gray-900">Trade</a>
-				<a href="/portfolio" class="text-gray-700 hover:text-gray-900">Portfolio</a>
-				<a href="/markets" class="text-gray-700 hover:text-gray-900">Markets</a>
+				<button type="button" class="text-gray-700 hover:text-gray-900">Trade</button>
+				<button type="button" class="text-gray-700 hover:text-gray-900">Portfolio</button>
+				<button type="button" class="text-gray-700 hover:text-gray-900">Markets</button>
 			</nav>
 
 			<!-- Wallet Connection -->
 			<div class="flex items-center">
 				{#if $walletStore.isConnected && $walletStore.address}
 					<div class="flex items-center space-x-4">
-						<div
-							class="rounded-lg bg-gray-100 px-4 py-2 font-mono text-sm text-gray-700"
-						>
+						<div class="rounded-lg bg-gray-100 px-4 py-2 font-mono text-sm text-gray-700">
 							{formatAddress($walletStore.address)}
 						</div>
 						<button
