@@ -15,6 +15,7 @@ Uses Vite for bundling and `@sveltejs/adapter-static` for static site generation
 
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — system architecture and how the UI fits in
 - [docs/BACKEND-API.md](docs/BACKEND-API.md) — full API reference (REST + WebSocket + auth)
+- [docs/PITCH.md](docs/PITCH.md) — product pitch, market context, My Neobank partnership
 
 ## Commands
 

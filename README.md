@@ -15,6 +15,7 @@ yarn dev
 | -------------------------------------------- | ---------------------------------------------------------------------------- |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | System architecture — how the UI connects to orchestrator, enclave, and XRPL |
 | [docs/BACKEND-API.md](docs/BACKEND-API.md)   | Full API reference — REST endpoints, WebSocket events, authentication        |
+| [docs/PITCH.md](docs/PITCH.md)               | Product pitch — problem, solution, market, partnership with My Neobank       |
 | [CLAUDE.md](CLAUDE.md)                       | Developer guidance for Claude Code                                           |
 
 ## Stack
