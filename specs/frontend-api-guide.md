@@ -79,12 +79,13 @@ Headers: X-XRPL-Address, X-XRPL-PublicKey, X-XRPL-Signature, X-XRPL-Timestamp
 ```
 
 Response:
+
 ```json
 {
-  "status": "success",
-  "token": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-  "expires_in": 1800,
-  "address": "rXXX..."
+	"status": "success",
+	"token": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+	"expires_in": 1800,
+	"address": "rXXX..."
 }
 ```
 

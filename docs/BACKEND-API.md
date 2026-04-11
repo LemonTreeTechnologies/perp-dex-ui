@@ -29,10 +29,10 @@ Sign this request with XRPL headers (see Method 2 below). Returns a session toke
 ```json
 // Response
 {
-  "status": "success",
-  "token": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-  "expires_in": 1800,
-  "address": "rXXX..."
+	"status": "success",
+	"token": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+	"expires_in": 1800,
+	"address": "rXXX..."
 }
 ```
 
@@ -42,18 +42,23 @@ Include `Authorization: Bearer <token>` on all subsequent requests:
 
 ```javascript
 // After login — no more signing needed
-const balance = await fetch(
-  `https://api-perp.ph18.io/v1/account/balance?user_id=${address}`,
-  { headers: { 'Authorization': `Bearer ${token}` } }
-);
+const balance = await fetch(`https://api-perp.ph18.io/v1/account/balance?user_id=${address}`, {
+	headers: { Authorization: `Bearer ${token}` }
+});
 
 const order = await fetch('https://api-perp.ph18.io/v1/orders', {
-  method: 'POST',
-  headers: {
-    'Authorization': `Bearer ${token}`,
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({ user_id: address, side: 'buy', type: 'limit', price: '1.35000000', size: '10.00000000' })
+	method: 'POST',
+	headers: {
+		Authorization: `Bearer ${token}`,
+		'Content-Type': 'application/json'
+	},
+	body: JSON.stringify({
+		user_id: address,
+		side: 'buy',
+		type: 'limit',
+		price: '1.35000000',
+		size: '10.00000000'
+	})
 });
 ```
 
