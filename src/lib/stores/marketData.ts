@@ -26,7 +26,7 @@ function createMarketDataStore() {
 	let ws: WebSocket | null = null;
 	let reconnectTimeout: ReturnType<typeof setTimeout> | null = null;
 	let pollingInterval: ReturnType<typeof setInterval> | null = null;
-	let refreshCallbacks: (() => Promise<void>)[] = [];
+	const refreshCallbacks: (() => Promise<void>)[] = [];
 
 	function connect() {
 		if (ws?.readyState === WebSocket.OPEN) return;
