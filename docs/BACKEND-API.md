@@ -38,7 +38,16 @@ Trading endpoints require XRPL secp256k1 signature auth via four headers:
 
 The `user_id` field in body/query **must** match `X-XRPL-Address`.
 
-### JavaScript browser signing example
+### Dual-mode signing (important)
+
+The server accepts **two** signing modes:
+
+- **Mode 1 — SHA-256 direct:** `hash = SHA-256(payload + timestamp)`. Used by Python/CLI clients that have raw private key access.
+- **Mode 2 — SHA-512Half wrapped:** Browser wallet extensions (Crossmark, GemWallet) do not expose the private key. They internally apply SHA-512Half before ECDSA signing. The server auto-detects and accepts both modes.
+
+When using Crossmark's `sdk.methods.signInAndWait()`, the wallet handles signing internally — you do not need to implement the SHA-256 hash yourself. The examples below are for **Mode 1** (raw private key access) only.
+
+### JavaScript browser signing example (Mode 1 — raw key)
 
 ```javascript
 import { SigningKey, sha256 } from 'ethers';
@@ -148,14 +157,6 @@ Body: { "user_data": "0xdeadbeef" }
 Returns Intel-signed SGX Quote v3 proving enclave integrity. `user_data` is a challenge nonce (up to 64 bytes hex) — include a random value to prevent replay. Returns 503 on hardware without DCAP support.
 
 **Implemented in UI:** `/verify` page (`src/routes/verify/+page.svelte`) — generates random nonce, calls this endpoint, parses SGX Quote v3 to display MRENCLAVE/MRSIGNER/quote size. See [SGX Quote v3 parsing](#verify-enclave-page-implementation) below.
-
-### Attestation Commitment
-
-```
-GET /v1/attestation/commitment
-```
-
-Returns Sepolia on-chain state proof info.
 
 ---
 
@@ -312,7 +313,12 @@ ws.onclose = () => setTimeout(reconnect, 1000);
 
 ---
 
-## Vault API (planned)
+## Vault API (planned — no REST endpoints yet)
+
+> **Note:** The Market Making and Delta Neutral vaults are running internally as automated strategies
+> (they place orders on the CLOB), but there are **no user-facing REST endpoints** for vault deposits,
+> withdrawals, or balance queries yet. The endpoints below are the planned API contract. Do not build
+> vault deposit/withdraw UI until these endpoints are implemented.
 
 ### User endpoints
 
@@ -408,17 +414,17 @@ Exploits interest rate discrepancy between borrowing USD and perpetual funding r
 
 ## Market Parameters (XRP-RLUSD-PERP)
 
-| Parameter           | Value                            |
-| ------------------- | -------------------------------- |
-| Settlement          | RLUSD                            |
-| Collateral          | RLUSD (100% LTV) + XRP (90% LTV) |
-| Max leverage        | 20x                              |
-| Taker fee           | 0.05%                            |
-| Maker fee           | 0%                               |
-| Maintenance margin  | 0.5%                             |
-| Liquidation penalty | 0.5%                             |
-| Funding interval    | 8 hours                          |
-| Funding rate cap    | ±0.05% per period                |
+| Parameter           | Value                                                                 |
+| ------------------- | --------------------------------------------------------------------- |
+| Settlement          | RLUSD                                                                 |
+| Collateral          | RLUSD only (XRP collateral with 90% LTV planned, not yet implemented) |
+| Max leverage        | 20x                                                                   |
+| Taker fee           | 0.05%                                                                 |
+| Maker fee           | 0%                                                                    |
+| Maintenance margin  | 0.5%                                                                  |
+| Liquidation penalty | 0.5%                                                                  |
+| Funding interval    | 8 hours                                                               |
+| Funding rate cap    | ±0.05% per period                                                     |
 
 ### Formulas (for UI display)
 
