@@ -16,6 +16,6 @@ docker-dev:
 	docker compose --profile dev up
 
 docker-prod:
-	docker compose --profile prod up
+	docker compose --profile prod up -d
 
 .PHONY: install fmt lint build dev all docker-dev docker-prod
