@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import { walletStore } from '$lib/stores/wallet';
 
 	async function connectWallet() {
@@ -76,11 +77,12 @@
 				</h1>
 			</div>
 
-			<!-- Navigation (placeholder for future menu items) -->
+			<!-- Navigation -->
 			<nav class="hidden md:flex md:items-center md:space-x-8">
-				<button type="button" class="text-gray-700 hover:text-gray-900">Trade</button>
-				<button type="button" class="text-gray-700 hover:text-gray-900">Portfolio</button>
-				<button type="button" class="text-gray-700 hover:text-gray-900">Markets</button>
+				<a href={resolve('/')} class="text-gray-700 hover:text-gray-900">Trade</a>
+				<a href={resolve('/')} class="text-gray-700 hover:text-gray-900">Portfolio</a>
+				<a href={resolve('/')} class="text-gray-700 hover:text-gray-900">Markets</a>
+				<a href={resolve('/verify')} class="text-gray-700 hover:text-gray-900">Verify Enclave</a>
 			</nav>
 
 			<!-- Wallet Connection -->
