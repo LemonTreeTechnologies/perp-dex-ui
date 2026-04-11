@@ -37,11 +37,11 @@ Makefile shortcuts: `make fmt`, `make lint`, `make build`, `make all` (fmt + lin
 
 ## Architecture
 
-- **Routing:** SvelteKit file-based routing in `src/routes/`. Routes: `/` (landing), `/trade` (trading), `/portfolio` (balance/deposit/withdraw), `/verify` (attestation), `/about` (how it works), `/markets` (placeholder).
+- **Routing:** SvelteKit file-based routing in `src/routes/`. Routes: `/` (landing), `/trade` (trading), `/portfolio` (balance/deposit/withdraw), `/vaults`, `/verify` (attestation), `/about` (how it works).
 - **Shared code:** `src/lib/` — accessible via the `$lib` alias. Components, utilities, stores, and API client go here.
-- **API client:** `src/lib/api/client.ts` — typed wrappers for all backend endpoints. Public (`api.*`) and authenticated (`authApi.*`). Configurable via `VITE_API_URL` / `VITE_WS_URL` env vars.
-- **Stores:** `walletStore` (wallet connection), `marketDataStore` (WebSocket-driven real-time market data), `currentPrice` (derived best price).
-- **Auth utility:** `src/lib/utils/xrplAuth.ts` — generates `X-XRPL-*` auth headers using connected wallet (Crossmark/GemWallet) for signing. Uses `@noble/hashes`.
+- **API client:** `src/lib/api/client.ts` — typed wrappers for all backend endpoints. Public (`api.*`) and authenticated (`authApi.*` with JWT token + XRPL signature fallback). Configurable via `VITE_API_URL` / `VITE_WS_URL` env vars.
+- **Stores:** `walletStore` (wallet connection), `authStore` (JWT token with localStorage persistence), `marketDataStore` (WebSocket-driven real-time market data), `currentPrice` (derived best price).
+- **Auth flow:** Connect wallet → XRPL signature via `src/lib/utils/xrplAuth.ts` → `POST /v1/auth/login` → JWT token stored in `authStore`. Token used for all subsequent API calls.
 - **Trade components:** `src/lib/components/trade/` — OrderBook, OrderForm, PositionsTable, OrdersTable, PriceChart, TradesTable.
 - **Prerendering:** Enabled globally in `src/routes/+layout.ts` — this is a fully static site.
 - **Svelte 5 runes:** Forced on for all non-node_modules files in `svelte.config.js`. Use `$state`, `$derived`, `$effect` etc.

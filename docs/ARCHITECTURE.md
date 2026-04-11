@@ -56,22 +56,21 @@ This document describes how the UI fits into the overall xrpl-perp-dex system.
 
 ## Implementation status
 
-| Feature                                      | Route        | Status                                                            |
-| -------------------------------------------- | ------------ | ----------------------------------------------------------------- |
-| Wallet connect (GemWallet, Crossmark, Xaman) | `/`          | Done                                                              |
-| Verify Enclave (DCAP attestation)            | `/verify`    | Done                                                              |
-| How It Works (about page)                    | `/about`     | Done — architecture diagram, multisig, DCAP, escrow link          |
-| Trading page layout                          | `/trade`     | Done — 3-col layout (chart, orderbook, form) + bottom tabs        |
-| Price chart (Binance XRPUSDT candles)        | `/trade`     | Done — 500-min SVG chart, 30s refresh, funding rate display       |
-| Order book (real-time bids/asks)             | `/trade`     | Done — top 10 levels, depth bars, size/value toggle               |
-| Trade history (recent market trades)         | `/trade`     | Done — last 20 trades from WebSocket                              |
-| Order form (long/short, limit/market)        | `/trade`     | Done — UI complete, **auth TODO**                                 |
-| Positions table                              | `/trade`     | Done — UI complete, **auth TODO**                                 |
-| Open orders table                            | `/trade`     | Done — UI complete, **auth TODO**                                 |
-| Portfolio (balance, deposit, withdraw)       | `/portfolio` | Done — balance display, XRP deposit instructions, withdrawal form |
-| XRPL signature auth                          | —            | Done — `src/lib/utils/xrplAuth.ts` (Crossmark + GemWallet)        |
-| Markets page                                 | `/markets`   | Placeholder                                                       |
-| Vault management                             | —            | Not started                                                       |
+| Feature                                      | Route        | Status                                                      |
+| -------------------------------------------- | ------------ | ----------------------------------------------------------- |
+| Wallet connect (GemWallet, Crossmark, Xaman) | `/`          | Done                                                        |
+| Verify Enclave (DCAP attestation)            | `/verify`    | Done                                                        |
+| How It Works (about page)                    | `/about`     | Done — architecture diagram, multisig, DCAP, escrow link    |
+| Trading page layout                          | `/trade`     | Done — 3-col layout (chart, orderbook, form) + bottom tabs  |
+| Price chart (Binance XRPUSDT candles)        | `/trade`     | Done — 500-min SVG chart, 30s refresh, funding rate display |
+| Order book (real-time bids/asks)             | `/trade`     | Done — top 10 levels, depth bars, size/value toggle         |
+| Trade history (recent market trades)         | `/trade`     | Done — last 20 trades from WebSocket                        |
+| Order form (long/short, limit/market)        | `/trade`     | Done — click-to-fill from orderbook, token auth             |
+| Positions table                              | `/trade`     | Done — token auth                                           |
+| Open orders table                            | `/trade`     | Done — token auth                                           |
+| Portfolio (balance, deposit, withdraw)       | `/portfolio` | Done — deposit with warning modal, withdrawal form          |
+| XRPL signature auth + token login            | —            | Done — XRPL sign → `POST /v1/auth/login` → JWT token        |
+| Vaults page                                  | `/vaults`    | Done                                                        |
 
 ## Frontend architecture
 
@@ -80,7 +79,7 @@ This document describes how the UI fits into the overall xrpl-perp-dex system.
 Typed API client wrapping all backend endpoints:
 
 - **`api.*`** — public endpoints (no auth): `getOrderBook`, `getTicker`, `getTrades`, `getMarkets`, `getFundingRate`
-- **`authApi.*`** — authenticated endpoints: `getBalance`, `getOrders`, `submitOrder`, `cancelOrder`, `cancelAllOrders`, `withdraw`, `getTransactions`
+- **`authApi.*`** — authenticated endpoints: `login`, `getBalance`, `getOrders`, `submitOrder`, `cancelOrder`, `cancelAllOrders`, `withdraw`, `getTransactions`. Auth uses JWT token (from `POST /v1/auth/login`) with XRPL signature fallback.
 - **`createWebSocket()`** — WebSocket connection factory
 - **`toFP8()` / `fromFP8()`** — FP8 string conversion helpers
 
@@ -92,6 +91,7 @@ WebSocket: `VITE_WS_URL` env var or `wss://api-perp.ph18.io/ws` default.
 | Store             | File                           | Purpose                                                                                                                                     |
 | ----------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | `walletStore`     | `src/lib/stores/wallet.ts`     | Wallet connection state (address, publicKey, isConnected)                                                                                   |
+| `authStore`       | `src/lib/stores/auth.ts`       | JWT token auth state with localStorage persistence and expiry management                                                                    |
 | `marketDataStore` | `src/lib/stores/marketData.ts` | WebSocket-driven real-time market data (ticker, trades, orderbook, connection status). Also fetches initial orderbook via REST as fallback. |
 | `currentPrice`    | `src/lib/stores/marketData.ts` | Derived store — best available price (mark > mid > last trade)                                                                              |
 
@@ -105,14 +105,14 @@ Generates `X-XRPL-*` auth headers for authenticated API calls. Signs with the co
 
 ### Trade components (`src/lib/components/trade/`)
 
-| Component               | Data source                                                                | Auth required         |
-| ----------------------- | -------------------------------------------------------------------------- | --------------------- |
-| `PriceChart.svelte`     | Binance API (XRPUSDT klines) + `api.getFundingRate()`, 30s poll            | No                    |
-| `OrderBook.svelte`      | `marketDataStore.orderbook` (WebSocket) + REST fallback, size/value toggle | No                    |
-| `TradesTable.svelte`    | `marketDataStore.trades` (WebSocket)                                       | No                    |
-| `OrderForm.svelte`      | `walletStore` + `currentPrice`                                             | Yes — uses `xrplAuth` |
-| `PositionsTable.svelte` | `authApi.getBalance`                                                       | Yes — uses `xrplAuth` |
-| `OrdersTable.svelte`    | `authApi.getOrders`                                                        | Yes — uses `xrplAuth` |
+| Component               | Data source                                                                | Auth required    |
+| ----------------------- | -------------------------------------------------------------------------- | ---------------- |
+| `PriceChart.svelte`     | Binance API (XRPUSDT klines) + `api.getFundingRate()`, 30s poll            | No               |
+| `OrderBook.svelte`      | `marketDataStore.orderbook` (WebSocket) + REST fallback, size/value toggle | No               |
+| `TradesTable.svelte`    | `marketDataStore.trades` (WebSocket)                                       | No               |
+| `OrderForm.svelte`      | `walletStore` + `currentPrice` + click-to-fill from orderbook              | Yes — token auth |
+| `PositionsTable.svelte` | `authApi.getBalance`                                                       | Yes — token auth |
+| `OrdersTable.svelte`    | `authApi.getOrders`                                                        | Yes — token auth |
 
 ### Theme
 
