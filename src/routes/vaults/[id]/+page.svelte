@@ -87,7 +87,12 @@
 				'Spread optimization'
 			],
 			acceptedAssets: ['XRP'],
-			revenueStreams: ['Spread earnings', 'Fee rebates', 'Funding rate payments', 'Perpetual positions'],
+			revenueStreams: [
+				'Spread earnings',
+				'Fee rebates',
+				'Funding rate payments',
+				'Perpetual positions'
+			],
 			status: 'active'
 		},
 		'do-vault-1': {
@@ -230,7 +235,7 @@
 		try {
 			// TODO: Implement actual deposit logic
 			await new Promise((resolve) => setTimeout(resolve, 2000));
-			
+
 			alert(`Successfully deposited ${depositAmount} XRP to ${vault.name}!`);
 			depositAmount = '';
 		} catch (err) {
@@ -257,7 +262,7 @@
 		try {
 			// TODO: Implement actual withdraw logic
 			await new Promise((resolve) => setTimeout(resolve, 2000));
-			
+
 			alert(`Successfully withdrew ${withdrawAmount} XRP from ${vault.name}!`);
 			withdrawAmount = '';
 		} catch (err) {
@@ -285,7 +290,12 @@
 				class="inline-flex items-center space-x-2 text-[#B0B0B0] transition-colors hover:text-[#00AAE4]"
 			>
 				<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M15 19l-7-7 7-7"
+					/>
 				</svg>
 				<span>Back to Vaults</span>
 			</a>
@@ -299,11 +309,15 @@
 					<p class="text-lg text-[#B0B0B0]">{vault.description}</p>
 				</div>
 				<div class="flex items-center space-x-3">
-					<span class={`rounded px-3 py-1 text-sm font-medium border ${getRiskBgColor(vault.riskLevel)} ${getRiskColor(vault.riskLevel)}`}>
+					<span
+						class={`rounded border px-3 py-1 text-sm font-medium ${getRiskBgColor(vault.riskLevel)} ${getRiskColor(vault.riskLevel)}`}
+					>
 						{vault.riskLevel} Risk
 					</span>
 					{#if vault.status === 'coming-soon'}
-						<span class="rounded border border-[#B0B0B0]/20 bg-[#2A2A2A] px-3 py-1 text-sm font-medium text-[#B0B0B0]">
+						<span
+							class="rounded border border-[#B0B0B0]/20 bg-[#2A2A2A] px-3 py-1 text-sm font-medium text-[#B0B0B0]"
+						>
 							Coming Soon
 						</span>
 					{/if}
@@ -368,7 +382,7 @@
 					</div>
 
 					<div class="border-t border-[#2A2A2A] pt-4">
-						<h3 class="mb-3 text-sm font-semibold uppercase text-[#B0B0B0]">Revenue Breakdown</h3>
+						<h3 class="mb-3 text-sm font-semibold text-[#B0B0B0] uppercase">Revenue Breakdown</h3>
 						<div class="grid grid-cols-1 gap-3 md:grid-cols-3">
 							<div class="rounded-lg border border-[#2A2A2A] bg-[#1A1A1A] p-3">
 								<div class="mb-1 text-xs text-[#B0B0B0]">Total Fees Earned</div>
@@ -397,7 +411,8 @@
 									<th class="pb-3 text-left text-sm font-semibold text-[#B0B0B0]">Side</th>
 									<th class="pb-3 text-right text-sm font-semibold text-[#B0B0B0]">Size</th>
 									<th class="pb-3 text-right text-sm font-semibold text-[#B0B0B0]">Entry Price</th>
-									<th class="pb-3 text-right text-sm font-semibold text-[#B0B0B0]">Current Price</th>
+									<th class="pb-3 text-right text-sm font-semibold text-[#B0B0B0]">Current Price</th
+									>
 									<th class="pb-3 text-right text-sm font-semibold text-[#B0B0B0]">PnL</th>
 									<th class="pb-3 text-right text-sm font-semibold text-[#B0B0B0]">Leverage</th>
 								</tr>
@@ -408,11 +423,15 @@
 										<td class="py-3 text-left font-medium text-white">{position.market}</td>
 										<td class="py-3 text-left">
 											{#if position.side === 'Long'}
-												<span class="rounded bg-green-500/10 px-2 py-1 text-xs font-medium text-green-400">
+												<span
+													class="rounded bg-green-500/10 px-2 py-1 text-xs font-medium text-green-400"
+												>
 													{position.side}
 												</span>
 											{:else}
-												<span class="rounded bg-red-500/10 px-2 py-1 text-xs font-medium text-red-400">
+												<span
+													class="rounded bg-red-500/10 px-2 py-1 text-xs font-medium text-red-400"
+												>
 													{position.side}
 												</span>
 											{/if}
@@ -529,7 +548,9 @@
 											step="0.01"
 											class="w-full rounded-lg border border-[#2A2A2A] bg-[#1A1A1A] px-4 py-3 pr-16 text-white placeholder-[#808080] focus:border-[#00AAE4] focus:outline-none"
 										/>
-										<span class="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium text-[#B0B0B0]">
+										<span
+											class="absolute top-1/2 right-4 -translate-y-1/2 text-sm font-medium text-[#B0B0B0]"
+										>
 											XRP
 										</span>
 									</div>
@@ -540,10 +561,18 @@
 
 								<button
 									onclick={handleDeposit}
-									disabled={processing || !$walletStore.isConnected || !depositAmount || parseFloat(depositAmount) <= 0 || vault.status === 'coming-soon'}
+									disabled={processing ||
+										!$walletStore.isConnected ||
+										!depositAmount ||
+										parseFloat(depositAmount) <= 0 ||
+										vault.status === 'coming-soon'}
 									class="w-full rounded-lg bg-[#00AAE4] px-4 py-3 text-sm font-medium text-white transition-all hover:bg-[#0088B8] hover:shadow-[0_0_20px_rgba(0,170,228,0.4)] disabled:cursor-not-allowed disabled:opacity-50"
 								>
-									{processing ? 'Processing...' : !$walletStore.isConnected ? 'Connect Wallet' : 'Deposit'}
+									{processing
+										? 'Processing...'
+										: !$walletStore.isConnected
+											? 'Connect Wallet'
+											: 'Deposit'}
 								</button>
 							</div>
 						{:else}
@@ -563,7 +592,9 @@
 											step="0.01"
 											class="w-full rounded-lg border border-[#2A2A2A] bg-[#1A1A1A] px-4 py-3 pr-16 text-white placeholder-[#808080] focus:border-[#00AAE4] focus:outline-none"
 										/>
-										<span class="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium text-[#B0B0B0]">
+										<span
+											class="absolute top-1/2 right-4 -translate-y-1/2 text-sm font-medium text-[#B0B0B0]"
+										>
 											XRP
 										</span>
 									</div>

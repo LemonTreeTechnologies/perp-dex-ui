@@ -61,7 +61,12 @@
 				'Spread optimization'
 			],
 			acceptedAssets: ['XRP'],
-			revenueStreams: ['Spread earnings', 'Fee rebates', 'Funding rate payments', 'Perpetual positions'],
+			revenueStreams: [
+				'Spread earnings',
+				'Fee rebates',
+				'Funding rate payments',
+				'Perpetual positions'
+			],
 			status: 'active'
 		},
 		{
@@ -152,7 +157,7 @@
 		try {
 			// TODO: Implement actual deposit logic
 			await new Promise((resolve) => setTimeout(resolve, 2000));
-			
+
 			alert(`Successfully deposited ${depositAmount} XRP to ${selectedVault.name}!`);
 			depositAmount = '';
 			selectedVault = null;
@@ -254,11 +259,15 @@
 						<div>
 							<h3 class="mb-1 text-xl font-semibold text-white">{vault.name}</h3>
 							<div class="flex items-center space-x-2">
-								<span class={`rounded px-2 py-1 text-xs font-medium border ${getRiskBgColor(vault.riskLevel)} ${getRiskColor(vault.riskLevel)}`}>
+								<span
+									class={`rounded border px-2 py-1 text-xs font-medium ${getRiskBgColor(vault.riskLevel)} ${getRiskColor(vault.riskLevel)}`}
+								>
 									{vault.riskLevel} Risk
 								</span>
 								{#if vault.status === 'coming-soon'}
-									<span class="rounded border border-[#B0B0B0]/20 bg-[#2A2A2A] px-2 py-1 text-xs font-medium text-[#B0B0B0]">
+									<span
+										class="rounded border border-[#B0B0B0]/20 bg-[#2A2A2A] px-2 py-1 text-xs font-medium text-[#B0B0B0]"
+									>
 										Coming Soon
 									</span>
 								{/if}
@@ -301,7 +310,7 @@
 
 					<!-- Features -->
 					<div class="mb-4">
-						<div class="mb-2 text-xs font-semibold uppercase text-[#B0B0B0]">Key Features</div>
+						<div class="mb-2 text-xs font-semibold text-[#B0B0B0] uppercase">Key Features</div>
 						<div class="space-y-1">
 							{#each vault.features.slice(0, 3) as feature, i (i)}
 								<div class="flex items-start space-x-2">
@@ -372,7 +381,9 @@
 						<tr class="border-b border-[#2A2A2A] bg-[#1A1A1A]">
 							<th class="px-6 py-4 text-left text-sm font-semibold text-[#B0B0B0]">Vault</th>
 							<th class="px-6 py-4 text-right text-sm font-semibold text-[#B0B0B0]">Deposited</th>
-							<th class="px-6 py-4 text-right text-sm font-semibold text-[#B0B0B0]">Current Value</th>
+							<th class="px-6 py-4 text-right text-sm font-semibold text-[#B0B0B0]"
+								>Current Value</th
+							>
 							<th class="px-6 py-4 text-right text-sm font-semibold text-[#B0B0B0]">PnL</th>
 							<th class="px-6 py-4 text-right text-sm font-semibold text-[#B0B0B0]">APY</th>
 							<th class="px-6 py-4 text-right text-sm font-semibold text-[#B0B0B0]">Actions</th>
@@ -430,7 +441,12 @@
 					class="text-[#B0B0B0] transition-colors hover:text-white"
 				>
 					<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M6 18L18 6M6 6l12 12"
+						/>
 					</svg>
 				</button>
 			</div>
@@ -471,7 +487,12 @@
 								stroke="currentColor"
 								viewBox="0 0 24 24"
 							>
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M5 13l4 4L19 7"
+								/>
 							</svg>
 							<span class="text-sm text-[#B0B0B0]">{stream}</span>
 						</div>
@@ -494,7 +515,9 @@
 						step="0.01"
 						class="w-full rounded-lg border border-[#2A2A2A] bg-[#1A1A1A] px-4 py-3 pr-16 text-white placeholder-[#808080] focus:border-[#00AAE4] focus:outline-none"
 					/>
-					<span class="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium text-[#B0B0B0]">
+					<span
+						class="absolute top-1/2 right-4 -translate-y-1/2 text-sm font-medium text-[#B0B0B0]"
+					>
 						XRP
 					</span>
 				</div>

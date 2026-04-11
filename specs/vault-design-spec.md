@@ -1,11 +1,10 @@
-# Vault Design 
+# Vault Design
 
 The purpose of this document is to outline the design of the liquidity vaults.
 
 These vaults are designed to offer a number of mechanisms by which users can deposit their assets and earn yield, while also enabling the protocol to place orders onto the book.
 
 We have designed several vaults with different risk profiles and we will add more as the project evolves.
-
 
 NOTE: Protocol Vaults are special actors in the ecosystem such that they receive a rebate on orders that are executed against their orders. This means that they can earn a spread on the orders they place, as well as earn fees from the trades that are executed against their orders. This is a key feature of the vaults and is a component of the yield that users can earn by depositing their assets into the vaults. The rebate is a percentage of the fees that are paid by the taker when they execute a trade against the vault's orders. This rebate is designed to incentivize the vaults to provide liquidity to the order book and to earn yield for their users.
 
@@ -23,7 +22,7 @@ Revenue Streams for Vaults:
 
 The vaults accept the following liqudity:
 
-1) XRP: The native asset of the XRP Ledger. It is used for transaction fees and is the native currency of the ledger.
+1. XRP: The native asset of the XRP Ledger. It is used for transaction fees and is the native currency of the ledger.
 
 ## TODO: Add more assets as we expand the vault offerings.
 
@@ -50,6 +49,7 @@ The strategy for this vault is designed to be low risk and contains the followin
 - Min Delta: This parameter determines the minimum delta that the vault can pick up as a result of its orders being executed. This is designed to ensure that the vault does not take on too little risk by picking up small deltas from executed orders.
 
 ### 2. Delta Neutral Vault
+
 This vault is primarily a short strategy vault that allows users to deposit their XRP and earn yield by providing liquidity to the order book while maintaining a delta neutral position. The vault will place orders on the book and earn a spread between the buy and sell prices, while also earning fees from the trades that are executed. The vault will aim to take positions in perpetual contracts to maintain a delta neutral position, which means that the vault's overall exposure to the underlying asset's price movements is minimized, and enables the vault to earn yield from both the spread and the funding rates.
 
 The strategy for this vault is designed to be medium risk and contains the following parameters:
@@ -66,23 +66,20 @@ The strategy for this vault is designed to be medium risk and contains the follo
 
 - Min Delta: This parameter determines the minimum delta that the vault can pick up as a result of its orders being executed. This is designed to ensure that the vault does not take on too little risk by picking up small deltas from executed orders.
 
-
 ### 3. Delta One Vault
 
 This is a vault which benefits from the interest rate discrepency between borrowing USD and the funding rate on the perpetuals. The vault will place orders on the book and earn a spread between the buy and sell prices, while also earning fees from the trades that are executed. The vault will aim to take positions in perpetual contracts to maintain a delta one position, which means that the vault's overall exposure to the underlying asset's price movements is maintained, and enables the vault to earn yield from both the spread and the funding rates.
 
 The flow of this vault is as follows;
 
-1) The User deposits XRP into the vault.
-2) The vault uses this collateral to borrow USD from the lending protocol.
-3) The vault then uses the borrowed USD to buy spot XRP on the exchange.
-4) The vault then shorts the perpetual contract on the exchange, which allows it to earn the funding rate while maintaining a delta one position.
+1. The User deposits XRP into the vault.
+2. The vault uses this collateral to borrow USD from the lending protocol.
+3. The vault then uses the borrowed USD to buy spot XRP on the exchange.
+4. The vault then shorts the perpetual contract on the exchange, which allows it to earn the funding rate while maintaining a delta one position.
 
 Note, this particular vault is designed to be higher risk than the other vaults, as it involves borrowing and taking on leverage, which can amplify losses if the market moves against the vault's positions. However, it also has the potential to earn higher yields due to the interest rate discrepancy between borrowing USD and the funding rate on the perpetuals.
 
 Note, there are several missing pieces to this vault;
 
-1) Spot RLUSD / XRP market on the exchange: This is needed for the vault to be able to buy spot XRP using the borrowed USD.
-2) Lending protocol integration: The vault needs to be able to borrow USD using the XRP collateral that is deposited by the users. This requires integration with a lending protocol that supports borrowing USD against XRP collateral.
-
-
+1. Spot RLUSD / XRP market on the exchange: This is needed for the vault to be able to buy spot XRP using the borrowed USD.
+2. Lending protocol integration: The vault needs to be able to borrow USD using the XRP collateral that is deposited by the users. This requires integration with a lending protocol that supports borrowing USD against XRP collateral.
