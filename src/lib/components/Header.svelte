@@ -72,27 +72,41 @@
 			<!-- Logo/Brand -->
 			<div class="flex items-center">
 				<h1 class="text-2xl font-bold text-white">
-					<span class="text-[#00AAE4] xrp-glow">XRPL</span> Perp DEX
+					<span class="xrp-glow text-[#00AAE4]">XRPL</span> Perp DEX
 				</h1>
 			</div>
 
 			<!-- Navigation (placeholder for future menu items) -->
 			<nav class="hidden md:flex md:items-center md:space-x-8">
-				<button type="button" class="text-[#B0B0B0] hover:text-white transition-colors">Trade</button>
-				<button type="button" class="text-[#B0B0B0] hover:text-white transition-colors">Portfolio</button>
-				<button type="button" class="text-[#B0B0B0] hover:text-white transition-colors">Markets</button>
+				<a
+					href="/trade"
+					data-sveltekit-preload-data
+					class="text-[#B0B0B0] transition-colors hover:text-white">Trade</a
+				>
+				<a
+					href="/portfolio"
+					data-sveltekit-preload-data
+					class="text-[#B0B0B0] transition-colors hover:text-white">Portfolio</a
+				>
+				<a
+					href="/markets"
+					data-sveltekit-preload-data
+					class="text-[#B0B0B0] transition-colors hover:text-white">Markets</a
+				>
 			</nav>
 
 			<!-- Wallet Connection -->
 			<div class="flex items-center">
 				{#if $walletStore.isConnected && $walletStore.address}
 					<div class="flex items-center space-x-4">
-						<div class="rounded-lg bg-[#1A1A1A] border border-[#2A2A2A] px-4 py-2 font-mono text-sm text-[#00AAE4]">
+						<div
+							class="rounded-lg border border-[#2A2A2A] bg-[#1A1A1A] px-4 py-2 font-mono text-sm text-[#00AAE4]"
+						>
 							{formatAddress($walletStore.address)}
 						</div>
 						<button
 							onclick={disconnectWallet}
-							class="rounded-lg bg-[#2A2A2A] hover:bg-[#404040] px-4 py-2 text-sm font-medium text-white transition-colors border border-[#404040]"
+							class="rounded-lg border border-[#404040] bg-[#2A2A2A] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#404040]"
 						>
 							Disconnect
 						</button>
