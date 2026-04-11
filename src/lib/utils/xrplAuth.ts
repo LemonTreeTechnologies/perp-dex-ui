@@ -103,9 +103,16 @@ export async function generateGetAuthHeaders(path: string): Promise<Record<strin
 
 /**
  * Generate auth headers for POST/DELETE requests with a body
- * @param body - JSON request body as object
+ * @param body - JSON request body as object, string, or null
  */
-export async function generatePostAuthHeaders(body: object): Promise<Record<string, string>> {
-	const bodyString = JSON.stringify(body);
-	return generateAuthHeaders('POST', bodyString);
+export async function generatePostAuthHeaders(
+	body: object | string | null
+): Promise<Record<string, string>> {
+	if (body === null) {
+		body = '';
+	} else if (typeof body === 'object') {
+		body = JSON.stringify(body);
+	}
+	console.log('Generating POST auth headers with body:', body);
+	return generateAuthHeaders('POST', body);
 }
