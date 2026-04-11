@@ -2,7 +2,6 @@
 	import { onMount, onDestroy } from 'svelte';
 	import { walletStore } from '$lib/stores/wallet';
 	import { authApi, toFP8, fromFP8 } from '$lib/api/client';
-	import { generateAuthHeaders } from '$lib/utils/xrplAuth';
 	import type { Balance, Transaction } from '$lib/api/client';
 
 	// State
@@ -44,11 +43,8 @@
 		error = null;
 
 		try {
-			const headers = await generateAuthHeaders(
-				'GET',
-				`/v1/account/balance?user_id=${$walletStore.address}`
-			);
-			balance = await authApi.getBalance($walletStore.address, headers);
+			// Use token-based authentication (authApi will attach the token if present)
+			balance = await authApi.getBalance($walletStore.address);
 		} catch (err) {
 			console.error('Failed to fetch balance:', err);
 			error = err instanceof Error ? err.message : 'Failed to fetch balance';
@@ -101,20 +97,7 @@
 
 		try {
 			const amount = toFP8(withdrawAmount);
-			const requestBody = JSON.stringify({
-				user_id: $walletStore.address,
-				amount,
-				destination: withdrawDestination
-			});
-
-			const headers = await generateAuthHeaders('POST', requestBody);
-
-			const data = await authApi.withdraw(
-				$walletStore.address,
-				amount,
-				withdrawDestination,
-				headers
-			);
+			const data = await authApi.withdraw($walletStore.address, amount, withdrawDestination);
 
 			alert(`Withdrawal successful! TX Hash: ${data.xrpl_tx_hash}`);
 			withdrawAmount = '';

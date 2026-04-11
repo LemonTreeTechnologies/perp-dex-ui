@@ -2,7 +2,6 @@
 	import { walletStore } from '$lib/stores/wallet';
 	import { currentPrice } from '$lib/stores/marketData';
 	import { authApi, toFP8, type OrderRequest } from '$lib/api/client';
-	import { generateAuthHeaders } from '$lib/utils/xrplAuth';
 
 	let orderType: 'market' | 'limit' = $state('limit');
 	let side: 'long' | 'short' = $state('long');
@@ -56,10 +55,8 @@
 				orderRequest.price = toFP8(price);
 			}
 
-			const requestBody = JSON.stringify(orderRequest);
-			const headers = await generateAuthHeaders('POST', requestBody);
-
-			const response = await authApi.submitOrder(orderRequest, headers);
+			// Use token-based auth - authApi will attach the token if available
+			const response = await authApi.submitOrder(orderRequest);
 
 			successMessage = `Order submitted successfully! Order ID: ${response.order_id || 'N/A'}`;
 

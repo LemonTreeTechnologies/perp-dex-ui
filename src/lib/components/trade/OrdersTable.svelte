@@ -1,13 +1,12 @@
 <script lang="ts">
 	import { walletStore } from '$lib/stores/wallet';
 	import { authApi, type Order } from '$lib/api/client';
-	import { generateAuthHeaders } from '$lib/utils/xrplAuth';
 
 	let orders: Order[] = $state([]);
 	let loading = $state(false);
 	let error = $state('');
 
-	async function loadOrders() {
+	export async function loadOrders() {
 		if (!$walletStore.isConnected || !$walletStore.address) {
 			error = 'Please connect your wallet first';
 			return;
@@ -17,11 +16,8 @@
 			loading = true;
 			error = '';
 
-			const headers = await generateAuthHeaders(
-				'GET',
-				`/v1/orders?user_id=${$walletStore.address}`
-			);
-			orders = await authApi.getOrders($walletStore.address, headers);
+			// Use token-based auth - authApi will use stored token when available
+			orders = await authApi.getOrders($walletStore.address);
 		} catch (err) {
 			console.error('Failed to load orders:', err);
 			error = err instanceof Error ? err.message : 'Failed to load orders';
@@ -36,8 +32,7 @@
 		}
 
 		try {
-			const headers = await generateAuthHeaders('DELETE', `/v1/orders/${orderId}`);
-			await authApi.cancelOrder(orderId, headers);
+			await authApi.cancelOrder(orderId);
 			await loadOrders();
 		} catch (err) {
 			console.error('Failed to cancel order:', err);
@@ -49,15 +44,6 @@
 <div class="space-y-4">
 	<div class="flex items-center justify-between">
 		<h3 class="text-sm font-medium text-white">Open Orders</h3>
-		{#if $walletStore.isConnected}
-			<button
-				onclick={loadOrders}
-				disabled={loading}
-				class="rounded bg-[#00AAE4] px-3 py-1 text-xs font-medium text-white transition-all hover:bg-[#0088B8] disabled:cursor-not-allowed disabled:opacity-50"
-			>
-				{loading ? 'Loading...' : 'Fetch Orders'}
-			</button>
-		{/if}
 	</div>
 
 	{#if !$walletStore.isConnected}
@@ -65,7 +51,7 @@
 	{:else if error}
 		<div class="text-center text-red-400">{error}</div>
 	{:else if orders.length === 0 && !loading}
-		<div class="text-center text-[#B0B0B0]">No open orders. Click "Fetch Orders" to load.</div>
+		<div class="text-center text-[#B0B0B0]">No open orders</div>
 	{:else}
 		<div class="overflow-x-auto">
 			<table class="w-full">

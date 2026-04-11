@@ -1,13 +1,12 @@
 <script lang="ts">
 	import { walletStore } from '$lib/stores/wallet';
 	import { authApi, type Position } from '$lib/api/client';
-	import { generateAuthHeaders } from '$lib/utils/xrplAuth';
 
 	let positions: Position[] = $state([]);
 	let loading = $state(false);
 	let error = $state('');
 
-	async function loadPositions() {
+	export async function loadPositions() {
 		if (!$walletStore.isConnected || !$walletStore.address) {
 			error = 'Please connect your wallet first';
 			return;
@@ -17,11 +16,8 @@
 			loading = true;
 			error = '';
 
-			const headers = await generateAuthHeaders(
-				'GET',
-				`/v1/account/balance?user_id=${$walletStore.address}`
-			);
-			const balance = await authApi.getBalance($walletStore.address, headers);
+			// Use token-based auth - authApi will attach the token if available
+			const balance = await authApi.getBalance($walletStore.address);
 			positions = balance.positions || [];
 		} catch (err) {
 			console.error('Failed to load positions:', err);
@@ -45,15 +41,6 @@
 <div class="space-y-4">
 	<div class="flex items-center justify-between">
 		<h3 class="text-sm font-medium text-white">Open Positions</h3>
-		{#if $walletStore.isConnected}
-			<button
-				onclick={loadPositions}
-				disabled={loading}
-				class="rounded bg-[#00AAE4] px-3 py-1 text-xs font-medium text-white transition-all hover:bg-[#0088B8] disabled:cursor-not-allowed disabled:opacity-50"
-			>
-				{loading ? 'Loading...' : 'Fetch Positions'}
-			</button>
-		{/if}
 	</div>
 
 	{#if !$walletStore.isConnected}
@@ -61,9 +48,7 @@
 	{:else if error}
 		<div class="text-center text-red-400">{error}</div>
 	{:else if positions.length === 0 && !loading}
-		<div class="text-center text-[#B0B0B0]">
-			No open positions. Click "Fetch Positions" to load.
-		</div>
+		<div class="text-center text-[#B0B0B0]">No open positions</div>
 	{:else}
 		<div class="overflow-x-auto">
 			<table class="w-full">
