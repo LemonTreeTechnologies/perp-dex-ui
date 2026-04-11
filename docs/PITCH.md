@@ -81,6 +81,27 @@ We're not porting an EVM perps protocol to yet another chain. We're building for
 - **Native infrastructure:** XRPL has had a protocol-level DEX since 2012 — the ecosystem
   understands on-chain trading
 
+## Liquidity Vaults
+
+A perp DEX is only as useful as its liquidity. XPerp ships with built-in vault strategies
+that bootstrap the order book from day one — users don't arrive to an empty exchange.
+
+**Market Making Vault (live).** Deposits XRP and places two-sided orders around the mid
+price. Earns yield from bid-ask spread and protocol fee rebates. Low risk — the vault
+controls delta exposure within configurable bounds and rebalances automatically.
+
+**Delta Neutral Vault (planned).** Same liquidity provision, but actively hedges to
+maintain near-zero net exposure to XRP price movements. Earns spread plus funding rate
+differentials. Medium risk.
+
+**Delta One Vault (planned).** Exploits the gap between borrowing rates and perpetual
+funding rates. Higher risk, higher potential yield. Requires spot RLUSD/XRP market and
+lending protocol integration — planned for post-launch.
+
+Vaults are protocol-level participants: they receive fee rebates on filled orders that
+regular traders don't get. This makes vault-provided liquidity structurally profitable
+and aligns LP incentives with exchange health.
+
 ## The Market
 
 Perpetual futures are the single largest product in crypto.
@@ -150,7 +171,7 @@ Every major blockchain has its perps DEX.
 - Real-time order book, price chart, WebSocket feed
 - Intel SGX enclave with DCAP remote attestation
 - 2-of-3 multisig escrow — no single operator controls funds
-- Automated market making and delta-neutral vaults running
+- Automated market making vault running (delta-neutral and delta-one planned)
 - Funding rate mechanism (8-hour intervals)
 - Liquidation engine
 
