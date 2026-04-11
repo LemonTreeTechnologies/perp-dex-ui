@@ -42,9 +42,7 @@
 			</div>
 
 			<!-- Title -->
-			<h2 class="mb-4 text-center text-3xl font-bold text-white">
-				⚠️ HACKATHON ALERT! ⚠️
-			</h2>
+			<h2 class="mb-4 text-center text-3xl font-bold text-white">⚠️ HACKATHON ALERT! ⚠️</h2>
 
 			<!-- Warning Message -->
 			<div class="mb-6 space-y-4 text-center">
@@ -64,8 +62,12 @@
 					</p>
 
 					<ul class="mb-4 ml-6 list-disc space-y-2 text-white">
-						<li>This code was written on <span class="font-semibold">energy drinks and hope</span></li>
-						<li>We tested it exactly <span class="font-semibold">twice</span> (maybe three times)</li>
+						<li>
+							This code was written on <span class="font-semibold">energy drinks and hope</span>
+						</li>
+						<li>
+							We tested it exactly <span class="font-semibold">twice</span> (maybe three times)
+						</li>
 						<li>There's a non-zero chance we forgot a minus sign somewhere</li>
 						<li>
 							Our "extensive security audit" consisted of one person saying "looks good to me 👍"
