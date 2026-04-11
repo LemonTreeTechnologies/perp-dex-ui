@@ -9,7 +9,7 @@ settlement. Built with SvelteKit, Svelte 5 (runes mode), Tailwind CSS v4, and Ty
 Uses Vite for bundling and `@sveltejs/adapter-static` for static site generation.
 
 **Backend:** [xrpl-perp-dex](https://github.com/77ph/xrpl-perp-dex) — Rust orchestrator + SGX enclave
-**API base:** `https://api-perp.ph18.io` | **Market:** `XRP-PERP` | **Network:** XRPL Testnet
+**API base:** `https://api-perp.ph18.io` | **Market:** `XRP-PERP` | **Network:** XRPL Mainnet
 
 ## Key Documentation
 

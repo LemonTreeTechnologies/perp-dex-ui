@@ -15,7 +15,7 @@ This document flags differences between what the UI documentation describes and 
 | 3 Azure DCsv3 enclaves (node-1, node-2, node-3) | All 3 running, reachable via SSH tunnels                        |
 | DCAP attestation                                | Working — proxied from Hetzner nginx to Azure node-1            |
 | 2-of-3 multisig withdrawal                      | Working — Hetzner collects signatures from Azure enclaves       |
-| XRPL testnet deposit monitoring                 | Working — auto-credits on Payment to escrow                     |
+| XRPL mainnet deposit monitoring                 | Working — auto-credits on Payment to escrow                     |
 | Order book (CLOB)                               | Working — 3-level pyramid (38/76/152 XRP)                       |
 | Market Making vault (vault:mm)                  | Running                                                         |
 | Delta Neutral vault (vault:dn)                  | Running                                                         |
@@ -28,13 +28,9 @@ This document flags differences between what the UI documentation describes and 
 
 ## Issues Found in Documentation
 
-### 1. "XRPL Mainnet" — actually testnet
+### 1. ~~"XRPL Mainnet" — actually testnet~~ **Resolved: now on mainnet**
 
-**File:** `docs/ARCHITECTURE.md`, line 43
-
-The architecture diagram says "XRPL Mainnet". We are currently running on **XRPL Testnet**. The escrow address `r33cKcGyCZH6x2RRxmSkVfcjKHX3Z3pPEh` is a testnet address.
-
-**Impact:** Users might think real funds are at stake. The UI should clearly indicate testnet mode.
+We have moved to XRPL Mainnet. All documentation updated to reflect mainnet. The escrow address `r33cKcGyCZH6x2RRxmSkVfcjKHX3Z3pPEh` is now a mainnet address.
 
 ### 2. "Anti-MEV: orders encrypted with enclave's attested public key" — not implemented
 

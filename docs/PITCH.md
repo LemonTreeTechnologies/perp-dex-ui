@@ -50,7 +50,7 @@ Intel SGX Enclave (hardware-secured)
   - DCAP attestation — anyone can verify the code
       |
       v
-XRPL Testnet (mainnet planned)
+XRPL Mainnet
   - XRP native settlement (RLUSD planned for production)
   - 2-of-3 multisig escrow — no single operator controls funds
 ```
@@ -144,7 +144,7 @@ Every major blockchain has its perps DEX.
 
 ## What's Live Today
 
-- Perpetual futures trading on XRPL Testnet (XRP-PERP, native XRP collateral)
+- Perpetual futures trading on XRPL Mainnet (XRP-PERP, native XRP collateral)
 - Up to 20x leverage, limit and market orders
 - XRPL wallet integration (Crossmark, GemWallet)
 - Real-time order book, price chart, WebSocket feed

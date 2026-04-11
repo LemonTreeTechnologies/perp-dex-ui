@@ -1,6 +1,6 @@
 <script lang="ts">
 	const ESCROW_ADDRESS = 'r33cKcGyCZH6x2RRxmSkVfcjKHX3Z3pPEh';
-	const TESTNET_EXPLORER = `https://testnet.xrpl.org/accounts/${ESCROW_ADDRESS}`;
+	const EXPLORER_URL = `https://livenet.xrpl.org/accounts/${ESCROW_ADDRESS}`;
 </script>
 
 <div class="mx-auto max-w-4xl space-y-12 py-4">
@@ -95,7 +95,7 @@
 					>
 						<div class="text-center">
 							<div class="text-sm font-bold text-[#00AAE4]">XRPL</div>
-							<div class="mt-1 text-xs font-medium text-white">Testnet</div>
+							<div class="mt-1 text-xs font-medium text-white">Mainnet</div>
 						</div>
 					</div>
 					<div class="mt-2 text-center text-xs text-[#808080]">RLUSD settlement</div>
@@ -189,12 +189,12 @@
 						Deposits, withdrawals, and P&L settlement happen directly on-chain — fully auditable.
 					</p>
 					<a
-						href={TESTNET_EXPLORER}
+						href={EXPLORER_URL}
 						target="_blank"
 						rel="noopener noreferrer"
 						class="inline-flex items-center space-x-2 rounded-lg border border-[#2A2A2A] bg-[#1A1A1A] px-5 py-2.5 text-sm font-medium text-[#00AAE4] transition-colors hover:border-[#00AAE4]"
 					>
-						<span>View Escrow on XRPL Testnet Explorer</span>
+						<span>View Escrow on XRPL Explorer</span>
 						<span>&#8599;</span>
 					</a>
 				</div>

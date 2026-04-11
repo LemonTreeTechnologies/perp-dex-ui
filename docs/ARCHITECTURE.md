@@ -39,7 +39,7 @@ This document describes how the UI fits into the overall xrpl-perp-dex system.
                      │ XRPL native multisig
                      ▼
 ┌─────────────────────────────────────────────────────────────┐
-│  XRPL Testnet (mainnet planned)                              │
+│  XRPL Mainnet                                                │
 │  ├── XRP collateral (SignerListSet escrow)                  │
 │  ├── P&L settlement                                         │
 │  └── Deposit / withdrawal transactions                      │
