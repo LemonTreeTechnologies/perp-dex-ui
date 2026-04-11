@@ -59,7 +59,9 @@
 				close: parseFloat(candle[4]),
 				volume: parseFloat(candle[5])
 			}));
-			console.log(`Fetched ${chartData.length} candles, latest price: ${chartData[chartData.length - 1]?.close}`);
+			console.log(
+				`Fetched ${chartData.length} candles, latest price: ${chartData[chartData.length - 1]?.close}`
+			);
 		} catch (err) {
 			error = err instanceof Error ? err.message : 'Failed to load chart data';
 			console.error('Failed to fetch price data:', err);

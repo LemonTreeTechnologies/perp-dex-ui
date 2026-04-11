@@ -28,7 +28,7 @@
 		console.log('OrderBook component mounted, starting polling');
 		// Start polling orderbook every 1 second
 		marketDataStore.startPolling();
-		
+
 		if (!orderbook) {
 			try {
 				const data = await api.getOrderBook();

@@ -163,10 +163,10 @@ function createMarketDataStore() {
 		if (pollingInterval) {
 			clearInterval(pollingInterval);
 		}
-		
+
 		// Fetch immediately first
 		fetchOrderbook();
-		
+
 		// Poll orderbook every 1 second
 		pollingInterval = setInterval(() => {
 			fetchOrderbook();
