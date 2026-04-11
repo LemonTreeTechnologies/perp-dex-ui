@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { walletStore } from '$lib/stores/wallet';
 	import { currentPrice } from '$lib/stores/marketData';
-	import { toFP8 } from '$lib/api/client';
+	import { authApi, toFP8, type OrderRequest } from '$lib/api/client';
+	import { generateAuthHeaders } from '$lib/utils/xrplAuth';
 
 	let orderType: 'market' | 'limit' = $state('limit');
 	let side: 'long' | 'short' = $state('long');
@@ -10,6 +11,7 @@
 	let leverage = $state(1);
 	let isSubmitting = $state(false);
 	let error = $state('');
+	let successMessage = $state('');
 
 	// Auto-fill price with current market price for limit orders
 	$effect(() => {
@@ -36,21 +38,41 @@
 
 		isSubmitting = true;
 		error = '';
+		successMessage = '';
 
 		try {
-			// TODO: Implement XRPL signature authentication
-			// For now, this is a placeholder
-			console.log('Submitting order:', {
+			const orderRequest: OrderRequest = {
 				user_id: $walletStore.address,
-				side,
+				side: side,
 				type: orderType,
-				price: orderType === 'limit' ? toFP8(price) : undefined,
 				size: toFP8(size),
-				leverage
-			});
+				leverage: leverage,
+				time_in_force: 'gtc',
+				reduce_only: false
+			};
 
-			error = 'Order submission requires XRPL signature authentication (not yet implemented)';
+			// Add price for limit orders
+			if (orderType === 'limit') {
+				orderRequest.price = toFP8(price);
+			}
+
+			const requestBody = JSON.stringify(orderRequest);
+			const headers = await generateAuthHeaders('POST', requestBody);
+
+			const response = await authApi.submitOrder(orderRequest, headers);
+
+			successMessage = `Order submitted successfully! Order ID: ${response.order_id || 'N/A'}`;
+			
+			// Clear form on success
+			price = orderType === 'limit' && $currentPrice ? $currentPrice.toFixed(4) : '';
+			size = '';
+			
+			// Clear success message after 5 seconds
+			setTimeout(() => {
+				successMessage = '';
+			}, 5000);
 		} catch (err) {
+			console.error('Order submission error:', err);
 			error = err instanceof Error ? err.message : 'Failed to submit order';
 		} finally {
 			isSubmitting = false;
@@ -184,6 +206,13 @@
 			{#if error}
 				<div class="rounded-lg border border-red-500/50 bg-red-500/10 p-3 text-sm text-red-400">
 					{error}
+				</div>
+			{/if}
+
+			<!-- Success Message -->
+			{#if successMessage}
+				<div class="rounded-lg border border-green-500/50 bg-green-500/10 p-3 text-sm text-green-400">
+					{successMessage}
 				</div>
 			{/if}
 
