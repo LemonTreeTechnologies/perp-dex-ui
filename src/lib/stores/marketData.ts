@@ -26,6 +26,7 @@ function createMarketDataStore() {
 	let ws: WebSocket | null = null;
 	let reconnectTimeout: ReturnType<typeof setTimeout> | null = null;
 	let pollingInterval: ReturnType<typeof setInterval> | null = null;
+	const refreshCallbacks: (() => Promise<void>)[] = [];
 
 	function connect() {
 		if (ws?.readyState === WebSocket.OPEN) return;
@@ -152,6 +153,9 @@ function createMarketDataStore() {
 			const orderbook = await api.getOrderBook();
 			console.log('Fetched orderbook:', orderbook);
 			update((state) => ({ ...state, orderbook }));
+
+			// Call all registered refresh callbacks (positions, orders, etc.)
+			await Promise.allSettled(refreshCallbacks.map((cb) => cb()));
 		} catch (error) {
 			console.error('Failed to fetch orderbook:', error);
 		}
@@ -181,6 +185,17 @@ function createMarketDataStore() {
 		}
 	}
 
+	function registerRefreshCallback(callback: () => Promise<void>) {
+		refreshCallbacks.push(callback);
+	}
+
+	function unregisterRefreshCallback(callback: () => Promise<void>) {
+		const index = refreshCallbacks.indexOf(callback);
+		if (index > -1) {
+			refreshCallbacks.splice(index, 1);
+		}
+	}
+
 	return {
 		subscribe,
 		connect,
@@ -188,7 +203,9 @@ function createMarketDataStore() {
 		subscribeToUser,
 		fetchInitialData,
 		startPolling,
-		stopPolling
+		stopPolling,
+		registerRefreshCallback,
+		unregisterRefreshCallback
 	};
 }
 

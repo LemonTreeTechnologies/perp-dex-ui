@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { walletStore } from '$lib/stores/wallet';
+	import { authStore } from '$lib/stores/auth';
 	import { authApi } from '$lib/api/client';
 	import { generatePostAuthHeaders } from '$lib/utils/xrplAuth';
 
@@ -16,17 +17,26 @@
 			// Generate auth headers for the login endpoint
 			const headers = await generatePostAuthHeaders(null);
 
-			// Call the login function
-			await authApi.login(headers);
+			// Call the login function to get the token
+			const token = await authApi.login(headers);
+
+			// Store the token in the auth store (expires in 1 hour by default)
+			authStore.setToken(token, 3600);
 
 			loginSuccess = true;
-			console.log('Login successful!');
+			console.log('Login successful! Token stored.');
 		} catch (error) {
 			console.error('Login failed:', error);
 			loginError = error instanceof Error ? error.message : 'Login failed';
 		} finally {
 			isLoggingIn = false;
 		}
+	}
+
+	function handleLogout() {
+		authStore.clearToken();
+		loginSuccess = false;
+		console.log('Logged out. Token cleared.');
 	}
 </script>
 
@@ -55,16 +65,24 @@
 			<p class="mt-2 text-[#B0B0B0]">Your wallet is connected.</p>
 
 			<div class="mt-6 flex flex-col items-center gap-4">
-				<button
-					onclick={handleLogin}
-					disabled={isLoggingIn}
-					class="rounded-md bg-[#00AAE4] px-6 py-3 font-semibold text-white transition-colors hover:bg-[#0099CC] disabled:cursor-not-allowed disabled:opacity-50"
-				>
-					{isLoggingIn ? 'Logging in...' : 'Login'}
-				</button>
-
-				{#if loginSuccess}
-					<p class="text-green-400">Login successful!</p>
+				{#if !loginSuccess}
+					<button
+						onclick={handleLogin}
+						disabled={isLoggingIn}
+						class="rounded-md bg-[#00AAE4] px-6 py-3 font-semibold text-white transition-colors hover:bg-[#0099CC] disabled:cursor-not-allowed disabled:opacity-50"
+					>
+						{isLoggingIn ? 'Logging in...' : 'Login'}
+					</button>
+				{:else}
+					<div class="flex flex-col items-center gap-3">
+						<p class="text-green-400">✓ Login successful!</p>
+						<button
+							onclick={handleLogout}
+							class="rounded-md bg-red-500 px-6 py-2 text-sm font-semibold text-white transition-colors hover:bg-red-600"
+						>
+							Logout
+						</button>
+					</div>
 				{/if}
 
 				{#if loginError}

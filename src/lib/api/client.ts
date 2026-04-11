@@ -1,7 +1,33 @@
 // API Client for XRPL Perp DEX
+import { get } from 'svelte/store';
+import { authStore } from '$lib/stores/auth';
+
 const BASE_URL = import.meta.env.VITE_API_URL || 'https://api-perp.ph18.io';
 const WS_URL = import.meta.env.VITE_WS_URL || 'wss://api-perp.ph18.io/ws';
 const MARKET = 'XRP-RLUSD-PERP';
+
+/**
+ * Get authentication headers - either token-based or XRPL signature-based
+ * @param xrplHeaders - Optional XRPL signature headers (for login or fallback)
+ * @returns Headers with Authorization or XRPL auth headers
+ */
+function getAuthHeaders(xrplHeaders?: Record<string, string>): Record<string, string> {
+	const auth = get(authStore);
+
+	// If we have a valid token, use it
+	if (auth.token && authStore.isTokenValid()) {
+		return {
+			Authorization: `Bearer ${auth.token}`
+		};
+	}
+
+	// Otherwise, use XRPL signature headers (for login or if token expired)
+	if (xrplHeaders) {
+		return xrplHeaders;
+	}
+
+	throw new Error('No valid authentication available. Please login again.');
+}
 
 export interface OrderBookLevel {
 	price: string;
@@ -148,52 +174,67 @@ export const api = {
 	}
 };
 
-// Authenticated API endpoints (require XRPL signature)
+// Authenticated API endpoints (support both token and XRPL signature auth)
 export const authApi = {
-	async getBalance(userId: string, headers: Record<string, string>): Promise<Balance> {
-		console.log('Fetching balance with headers:', headers);
-		const url = `${BASE_URL}/v1/account/balance?user_id=${userId}`;
-		const response = await fetch(url, {
-			headers
+	/**
+	 * Login with XRPL signature to get a JWT token
+	 * This is the only endpoint that REQUIRES XRPL signature headers
+	 */
+	async login(xrplHeaders: Record<string, string>): Promise<string> {
+		console.log('Attempting login with XRPL headers:', xrplHeaders);
+
+		const response = await fetch(`${BASE_URL}/v1/auth/login`, {
+			method: 'POST',
+			headers: xrplHeaders
 		});
-		console.log('Balance response status:', response.status);
-		console.log('Balance response headers:', response.headers);
-		console.log('Balance response body:', await response.clone().text());
+		console.log('Login response status:', response.status);
 		const data = await response.json();
+		console.log('Login response:', data);
+
+		if (data.status === 'success') {
+			return data.token;
+		}
+		throw new Error(data.message || 'Failed to login');
+	},
+
+	/**
+	 * Get user balance - uses token if available, falls back to XRPL signature
+	 */
+	async getBalance(userId: string, xrplHeaders?: Record<string, string>): Promise<Balance> {
+		const headers = getAuthHeaders(xrplHeaders);
+		console.log('Fetching balance with headers:', headers);
+
+		const url = `${BASE_URL}/v1/account/balance?user_id=${userId}`;
+		const response = await fetch(url, { headers });
+
+		console.log('Balance response status:', response.status);
+		const data = await response.json();
+
 		if (data.status === 'success') {
 			return data.data;
 		}
 		throw new Error(data.message || 'Failed to fetch balance');
 	},
 
-	async getOrders(userId: string, headers: Record<string, string>): Promise<Order[]> {
-		const response = await fetch(`${BASE_URL}/v1/orders?user_id=${userId}`, {
-			headers
-		});
+	/**
+	 * Get user orders - uses token if available, falls back to XRPL signature
+	 */
+	async getOrders(userId: string, xrplHeaders?: Record<string, string>): Promise<Order[]> {
+		const headers = getAuthHeaders(xrplHeaders);
+		const response = await fetch(`${BASE_URL}/v1/orders?user_id=${userId}`, { headers });
 		const data = await response.json();
+
 		if (data.status === 'success') {
 			return data.orders;
 		}
 		throw new Error(data.message || 'Failed to fetch orders');
 	},
 
-	async login(headers: Record<string, string>): Promise<Order[]> {
-		console.log('Attempting login with headers:', headers);
-
-		const response = await fetch(`${BASE_URL}/v1/auth/login`, {
-			method: 'POST',
-			headers
-		});
-		console.log('Login response status:', response.status);
-		const data = await response.json();
-		console.log(data);
-		if (data.status === 'success') {
-			return data.orders;
-		}
-		throw new Error(data.message || 'Failed to fetch orders');
-	},
-
-	async submitOrder(order: OrderRequest, headers: Record<string, string>) {
+	/**
+	 * Submit order - uses token if available, falls back to XRPL signature
+	 */
+	async submitOrder(order: OrderRequest, xrplHeaders?: Record<string, string>) {
+		const headers = getAuthHeaders(xrplHeaders);
 		const response = await fetch(`${BASE_URL}/v1/orders`, {
 			method: 'POST',
 			headers: {
@@ -209,7 +250,11 @@ export const authApi = {
 		throw new Error(data.message || 'Failed to submit order');
 	},
 
-	async cancelOrder(orderId: number, headers: Record<string, string>) {
+	/**
+	 * Cancel order - uses token if available, falls back to XRPL signature
+	 */
+	async cancelOrder(orderId: number, xrplHeaders?: Record<string, string>) {
+		const headers = getAuthHeaders(xrplHeaders);
 		const response = await fetch(`${BASE_URL}/v1/orders/${orderId}`, {
 			method: 'DELETE',
 			headers
@@ -221,7 +266,11 @@ export const authApi = {
 		throw new Error(data.message || 'Failed to cancel order');
 	},
 
-	async cancelAllOrders(userId: string, headers: Record<string, string>) {
+	/**
+	 * Cancel all orders - uses token if available, falls back to XRPL signature
+	 */
+	async cancelAllOrders(userId: string, xrplHeaders?: Record<string, string>) {
+		const headers = getAuthHeaders(xrplHeaders);
 		const response = await fetch(`${BASE_URL}/v1/orders?user_id=${userId}`, {
 			method: 'DELETE',
 			headers
@@ -233,12 +282,16 @@ export const authApi = {
 		throw new Error(data.message || 'Failed to cancel all orders');
 	},
 
+	/**
+	 * Withdraw - uses token if available, falls back to XRPL signature
+	 */
 	async withdraw(
 		userId: string,
 		amount: string,
 		destination: string,
-		headers: Record<string, string>
+		xrplHeaders?: Record<string, string>
 	) {
+		const headers = getAuthHeaders(xrplHeaders);
 		const response = await fetch(`${BASE_URL}/v1/withdraw`, {
 			method: 'POST',
 			headers: {
@@ -258,7 +311,14 @@ export const authApi = {
 		throw new Error(data.message || 'Failed to withdraw');
 	},
 
-	async getTransactions(userId: string, headers: Record<string, string>): Promise<Transaction[]> {
+	/**
+	 * Get transactions - uses token if available, falls back to XRPL signature
+	 */
+	async getTransactions(
+		userId: string,
+		xrplHeaders?: Record<string, string>
+	): Promise<Transaction[]> {
+		const headers = getAuthHeaders(xrplHeaders);
 		const response = await fetch(`${BASE_URL}/v1/account/transactions?user_id=${userId}`, {
 			headers
 		});

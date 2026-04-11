@@ -10,6 +10,24 @@
 	import TradesTable from '$lib/components/trade/TradesTable.svelte';
 
 	let activeTab: 'positions' | 'orders' | 'trades' = $state('positions');
+	let positionsTableRef: PositionsTable | null = $state(null);
+	let ordersTableRef: OrdersTable | null = $state(null);
+
+	async function refreshUserData() {
+		if (!$walletStore.isConnected || !$walletStore.address) {
+			return;
+		}
+
+		// Refresh positions and orders
+		const promises = [];
+		if (positionsTableRef) {
+			promises.push(positionsTableRef.loadPositions().catch(console.error));
+		}
+		if (ordersTableRef) {
+			promises.push(ordersTableRef.loadOrders().catch(console.error));
+		}
+		await Promise.allSettled(promises);
+	}
 
 	onMount(() => {
 		// Connect to WebSocket for real-time data
@@ -21,9 +39,13 @@
 		if ($walletStore.isConnected && $walletStore.address) {
 			marketDataStore.subscribeToUser($walletStore.address);
 		}
+
+		// Register refresh callback for polling
+		marketDataStore.registerRefreshCallback(refreshUserData);
 	});
 
 	onDestroy(() => {
+		marketDataStore.unregisterRefreshCallback(refreshUserData);
 		marketDataStore.disconnect();
 	});
 
@@ -125,9 +147,9 @@
 		<!-- Tab Content -->
 		<div class="p-4">
 			{#if activeTab === 'positions'}
-				<PositionsTable />
+				<PositionsTable bind:this={positionsTableRef} />
 			{:else if activeTab === 'orders'}
-				<OrdersTable />
+				<OrdersTable bind:this={ordersTableRef} />
 			{:else}
 				<TradesTable />
 			{/if}
