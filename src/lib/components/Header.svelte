@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { resolve } from '$app/paths';
 	import { walletStore } from '$lib/stores/wallet';
 
 	async function connectWallet() {
@@ -79,12 +78,27 @@
 
 			<!-- Navigation -->
 			<nav class="hidden md:flex md:items-center md:space-x-8">
-				<a href={resolve('/')} class="text-gray-700 hover:text-gray-900">Trade</a>
-				<a href={resolve('/')} class="text-gray-700 hover:text-gray-900">Portfolio</a>
-				<a href={resolve('/')} class="text-gray-700 hover:text-gray-900">Markets</a>
-				<a href={resolve('/verify')} class="text-gray-700 hover:text-gray-900">Verify Enclave</a>
+				<a
+					href="/trade"
+					data-sveltekit-preload-data
+					class="text-[#B0B0B0] transition-colors hover:text-[#00AAE4]">Trade</a
+				>
+				<a
+					href="/portfolio"
+					data-sveltekit-preload-data
+					class="text-[#B0B0B0] transition-colors hover:text-[#00AAE4]">Portfolio</a
+				>
+				<a
+					href="/markets"
+					data-sveltekit-preload-data
+					class="text-[#B0B0B0] transition-colors hover:text-[#00AAE4]">Markets</a
+				>
+				<a
+					href="/verify"
+					data-sveltekit-preload-data
+					class="text-[#B0B0B0] transition-colors hover:text-[#00AAE4]">Verify Enclave</a
+				>
 			</nav>
-
 			<!-- Wallet Connection -->
 			<div class="flex items-center">
 				{#if $walletStore.isConnected && $walletStore.address}

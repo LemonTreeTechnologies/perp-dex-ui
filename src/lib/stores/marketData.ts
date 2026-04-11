@@ -1,6 +1,6 @@
 // WebSocket store for real-time market data
 import { writable, derived } from 'svelte/store';
-import { createWebSocket, type Trade, type Ticker, type OrderBook } from '$lib/api/client';
+import { createWebSocket, api, type Trade, type Ticker, type OrderBook } from '$lib/api/client';
 
 interface WebSocketMessage {
 	type: string;
@@ -131,11 +131,22 @@ function createMarketDataStore() {
 		}
 	}
 
+	async function fetchInitialData() {
+		try {
+			// Fetch initial orderbook via REST API
+			const orderbook = await api.getOrderBook();
+			update((state) => ({ ...state, orderbook }));
+		} catch (error) {
+			console.error('Failed to fetch initial orderbook:', error);
+		}
+	}
+
 	return {
 		subscribe,
 		connect,
 		disconnect,
-		subscribeToUser
+		subscribeToUser,
+		fetchInitialData
 	};
 }
 

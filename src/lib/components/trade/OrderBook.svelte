@@ -1,20 +1,81 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { marketDataStore } from '$lib/stores/marketData';
+	import { api } from '$lib/api/client';
 
 	let orderbook = $derived($marketDataStore.orderbook);
+	let displayMode = $state<'size' | 'value'>('size');
+
+	// Calculate max values for bar visualization
+	let maxBidValue = $derived.by(() => {
+		if (!orderbook || !orderbook.bids.length) return 0;
+		const values = orderbook.bids.slice(0, 10).map(([price, size]) => {
+			return displayMode === 'size' ? parseFloat(size) : parseFloat(price) * parseFloat(size);
+		});
+		return Math.max(...values);
+	});
+
+	let maxAskValue = $derived.by(() => {
+		if (!orderbook || !orderbook.asks.length) return 0;
+		const values = orderbook.asks.slice(0, 10).map(([price, size]) => {
+			return displayMode === 'size' ? parseFloat(size) : parseFloat(price) * parseFloat(size);
+		});
+		return Math.max(...values);
+	});
+
+	// Fetch orderbook on mount as fallback if WebSocket hasn't populated it yet
+	onMount(async () => {
+		if (!orderbook) {
+			try {
+				const data = await api.getOrderBook();
+				// Manually update the store if needed
+				console.log('Fetched orderbook via API:', data);
+			} catch (err) {
+				console.error('Failed to fetch orderbook:', err);
+			}
+		}
+	});
 </script>
 
-<div class="space-y-4">
-	<h3 class="text-lg font-semibold text-white">Order Book</h3>
+<div class="flex h-full flex-col space-y-4">
+	<div class="flex items-center justify-between">
+		<h3 class="text-lg font-semibold text-white">Order Book</h3>
+		<div class="flex space-x-1 rounded-lg bg-[#1A1A1A] p-1">
+			<button
+				onclick={() => (displayMode = 'size')}
+				class="rounded px-3 py-1 text-xs font-medium transition-colors"
+				class:bg-[#00AAE4]={displayMode === 'size'}
+				class:text-white={displayMode === 'size'}
+				class:text-[#808080]={displayMode !== 'size'}
+			>
+				Size
+			</button>
+			<button
+				onclick={() => (displayMode = 'value')}
+				class="rounded px-3 py-1 text-xs font-medium transition-colors"
+				class:bg-[#00AAE4]={displayMode === 'value'}
+				class:text-white={displayMode === 'value'}
+				class:text-[#808080]={displayMode !== 'value'}
+			>
+				Value
+			</button>
+		</div>
+	</div>
 
 	{#if orderbook}
-		<div class="space-y-2">
+		<div class="flex flex-1 flex-col space-y-2 overflow-hidden">
 			<!-- Asks (Sell orders) - in reverse order (lowest ask at bottom) -->
-			<div class="space-y-0.5">
+			<div class="flex-1 space-y-0.5 overflow-y-auto">
 				{#each orderbook.asks.slice(0, 10).reverse() as [price, size], i (i)}
-					<div class="flex justify-between font-mono text-sm">
-						<span class="text-red-400">{parseFloat(price).toFixed(4)}</span>
-						<span class="text-[#B0B0B0]">{parseFloat(size).toFixed(2)}</span>
+					{@const amount =
+						displayMode === 'size' ? parseFloat(size) : parseFloat(price) * parseFloat(size)}
+					{@const barWidth = (amount / maxAskValue) * 100}
+					<div class="relative flex justify-between font-mono text-sm">
+						<div class="absolute inset-y-0 right-0 bg-red-500/10" style="width: {barWidth}%"></div>
+						<span class="relative z-10 text-red-400">{parseFloat(price).toFixed(4)}</span>
+						<span class="relative z-10 text-[#B0B0B0]">
+							{displayMode === 'size' ? parseFloat(size).toFixed(2) : amount.toFixed(2)}
+						</span>
 					</div>
 				{/each}
 			</div>
@@ -28,16 +89,25 @@
 			{/if}
 
 			<!-- Bids (Buy orders) -->
-			<div class="space-y-0.5">
+			<div class="flex-1 space-y-0.5 overflow-y-auto">
 				{#each orderbook.bids.slice(0, 10) as [price, size], i (i)}
-					<div class="flex justify-between font-mono text-sm">
-						<span class="text-green-400">{parseFloat(price).toFixed(4)}</span>
-						<span class="text-[#B0B0B0]">{parseFloat(size).toFixed(2)}</span>
+					{@const amount =
+						displayMode === 'size' ? parseFloat(size) : parseFloat(price) * parseFloat(size)}
+					{@const barWidth = (amount / maxBidValue) * 100}
+					<div class="relative flex justify-between font-mono text-sm">
+						<div
+							class="absolute inset-y-0 right-0 bg-green-500/10"
+							style="width: {barWidth}%"
+						></div>
+						<span class="relative z-10 text-green-400">{parseFloat(price).toFixed(4)}</span>
+						<span class="relative z-10 text-[#B0B0B0]">
+							{displayMode === 'size' ? parseFloat(size).toFixed(2) : amount.toFixed(2)}
+						</span>
 					</div>
 				{/each}
 			</div>
 		</div>
 	{:else}
-		<div class="flex h-64 items-center justify-center text-[#808080]">Loading order book...</div>
+		<div class="flex h-full items-center justify-center text-[#808080]">Loading order book...</div>
 	{/if}
 </div>

@@ -21,6 +21,13 @@ export interface Ticker {
 	index_price?: string;
 }
 
+export interface FundingRate {
+	funding_rate: string;
+	mark_price: string;
+	next_funding_time: number;
+	interval_hours: number;
+}
+
 export interface Trade {
 	trade_id: number;
 	price: string;
@@ -114,6 +121,20 @@ export const api = {
 			return data.markets;
 		}
 		throw new Error(data.message || 'Failed to fetch markets');
+	},
+
+	async getFundingRate(): Promise<FundingRate> {
+		const response = await fetch(`${BASE_URL}/v1/markets/${MARKET}/funding`);
+		const data = await response.json();
+		if (data.status === 'success') {
+			return {
+				funding_rate: data.funding_rate,
+				mark_price: data.mark_price,
+				next_funding_time: data.next_funding_time,
+				interval_hours: data.interval_hours
+			};
+		}
+		throw new Error(data.message || 'Failed to fetch funding rate');
 	}
 };
 
