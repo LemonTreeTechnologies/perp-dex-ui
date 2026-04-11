@@ -33,10 +33,23 @@ declare global {
 					publicKey: string;
 				};
 			}>;
+			signMessage: (options: { message: string }) => Promise<{
+				result?: {
+					signature: string;
+				};
+			}>;
 		};
 		crossmark?: {
 			methods?: {
 				signInAndWait: (options?: Record<string, unknown>) => Promise<CrossmarkSignInResponse>;
+				signMessage: (message: string) => Promise<{
+					signature?: string;
+					response?: {
+						data?: {
+							signature: string;
+						};
+					};
+				}>;
 				getAddress: () => string | undefined;
 				getUser: () => CrossmarkUser;
 				isConnected: () => boolean;
@@ -44,6 +57,21 @@ declare global {
 			session?: {
 				address?: string;
 				user?: CrossmarkUser;
+				sdk?: {
+					methods?: {
+						signInAndWait: (hash: string) => Promise<{
+							response?: {
+								data?: {
+									signature: string;
+								};
+							};
+							data?: {
+								signature: string;
+							};
+							signature?: string;
+						}>;
+					};
+				};
 			};
 		};
 		xaman?: unknown;
