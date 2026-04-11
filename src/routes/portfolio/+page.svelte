@@ -20,6 +20,7 @@
 	// Constants
 
 	const escrowAddress = 'r4rwwSM9PUu7VcvPRWdu9pmZpmhCZS9mmc';
+	const depositMemo = '2026040021';
 
 	// Computed values
 	const totalBalance = $derived(() => {
@@ -317,6 +318,23 @@
 									class="rounded-lg bg-[#2A2A2A] px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-[#404040]"
 									onclick={() => {
 										navigator.clipboard.writeText(escrowAddress);
+										alert('Address copied to clipboard!');
+									}}
+								>
+									Copy
+								</button>
+							</div>
+							<div class="mb-3 text-sm font-medium text-[#B0B0B0]">Deposit Memo</div>
+							<div class="flex items-center space-x-3">
+								<code
+									class="flex-1 rounded bg-[#0A0A0A] px-4 py-3 font-mono text-sm text-[#00AAE4]"
+								>
+									{depositMemo}
+								</code>
+								<button
+									class="rounded-lg bg-[#2A2A2A] px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-[#404040]"
+									onclick={() => {
+										navigator.clipboard.writeText(depositMemo);
 										alert('Address copied to clipboard!');
 									}}
 								>
