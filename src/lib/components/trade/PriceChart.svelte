@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { api, type FundingRate } from '$lib/api/client';
 
 	interface Candle {
 		time: number;
@@ -13,6 +14,16 @@
 	let chartData: Candle[] = $state([]);
 	let loading = $state(true);
 	let error = $state('');
+	let fundingRate: FundingRate | null = $state(null);
+
+	// Fetch funding rate
+	async function fetchFundingRate() {
+		try {
+			fundingRate = await api.getFundingRate();
+		} catch (err) {
+			console.error('Failed to fetch funding rate:', err);
+		}
+	}
 
 	// Fetch price data from Binance
 	async function fetchPriceData() {
@@ -52,8 +63,12 @@
 
 	onMount(() => {
 		fetchPriceData();
+		fetchFundingRate();
 		// Refresh every 30 seconds
-		const interval = setInterval(fetchPriceData, 30000);
+		const interval = setInterval(() => {
+			fetchPriceData();
+			fetchFundingRate();
+		}, 30000);
 		return () => clearInterval(interval);
 	});
 
@@ -71,10 +86,22 @@
 	let currentPrice = $derived(chartData.length > 0 ? chartData[chartData.length - 1].close : null);
 </script>
 
-<div class="space-y-4">
+<div class="flex h-full flex-col space-y-4">
 	<div class="flex items-center justify-between">
 		<h3 class="text-lg font-semibold text-white">Price Chart</h3>
 		<div class="flex items-center space-x-4">
+			{#if fundingRate}
+				<div class="flex flex-col items-end text-xs">
+					<span class="text-[#808080]">Funding Rate</span>
+					<span
+						class="font-mono font-semibold"
+						class:text-green-400={parseFloat(fundingRate.funding_rate) >= 0}
+						class:text-red-400={parseFloat(fundingRate.funding_rate) < 0}
+					>
+						{(parseFloat(fundingRate.funding_rate) * 100).toFixed(4)}%
+					</span>
+				</div>
+			{/if}
 			{#if currentPrice}
 				<div class="text-lg font-bold text-[#00AAE4]">
 					${currentPrice.toFixed(4)}
@@ -95,13 +122,13 @@
 	</div>
 
 	{#if loading}
-		<div class="flex h-64 items-center justify-center text-[#808080]">Loading chart data...</div>
+		<div class="flex flex-1 items-center justify-center text-[#808080]">Loading chart data...</div>
 	{:else if error}
-		<div class="flex h-64 items-center justify-center text-red-400">
+		<div class="flex flex-1 items-center justify-center text-red-400">
 			{error}
 		</div>
 	{:else if chartData.length > 0}
-		<div class="h-64 w-full">
+		<div class="w-full flex-1">
 			<svg class="h-full w-full" viewBox="0 0 800 256" preserveAspectRatio="none">
 				<!-- Grid lines -->
 				<defs>
@@ -150,7 +177,7 @@
 			<span>{new Date(chartData[chartData.length - 1].time).toLocaleTimeString()}</span>
 		</div>
 	{:else}
-		<div class="flex h-64 items-center justify-center text-[#808080]">
+		<div class="flex flex-1 items-center justify-center text-[#808080]">
 			Waiting for trade data...
 		</div>
 	{/if}

@@ -58,139 +58,149 @@
 	}
 </script>
 
-<div class="space-y-4">
+<div class="flex h-full flex-col space-y-4">
 	<h3 class="text-lg font-semibold text-white">Place Order</h3>
 
 	{#if !$walletStore.isConnected}
-		<div class="rounded-lg border border-[#2A2A2A] bg-[#1A1A1A] p-4 text-center text-[#B0B0B0]">
+		<div
+			class="flex flex-1 items-center justify-center rounded-lg border border-[#2A2A2A] bg-[#1A1A1A] p-4 text-center text-[#B0B0B0]"
+		>
 			Connect your wallet to start trading
 		</div>
 	{:else}
-		<!-- Order Type Tabs -->
-		<div class="flex space-x-2">
-			<button
-				class="flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors"
-				class:bg-[#00AAE4]={orderType === 'limit'}
-				class:text-white={orderType === 'limit'}
-				class:bg-[#1A1A1A]={orderType !== 'limit'}
-				class:text-[#B0B0B0]={orderType !== 'limit'}
-				onclick={() => (orderType = 'limit')}
-			>
-				Limit
-			</button>
-			<button
-				class="flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors"
-				class:bg-[#00AAE4]={orderType === 'market'}
-				class:text-white={orderType === 'market'}
-				class:bg-[#1A1A1A]={orderType !== 'market'}
-				class:text-[#B0B0B0]={orderType !== 'market'}
-				onclick={() => (orderType = 'market')}
-			>
-				Market
-			</button>
-		</div>
+		<div class="flex flex-1 flex-col space-y-4 overflow-y-auto">
+			<!-- Order Type Tabs -->
+			<div class="flex space-x-2">
+				<button
+					class="flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+					class:bg-[#00AAE4]={orderType === 'limit'}
+					class:text-white={orderType === 'limit'}
+					class:bg-[#1A1A1A]={orderType !== 'limit'}
+					class:text-[#B0B0B0]={orderType !== 'limit'}
+					onclick={() => (orderType = 'limit')}
+				>
+					Limit
+				</button>
+				<button
+					class="flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+					class:bg-[#00AAE4]={orderType === 'market'}
+					class:text-white={orderType === 'market'}
+					class:bg-[#1A1A1A]={orderType !== 'market'}
+					class:text-[#B0B0B0]={orderType !== 'market'}
+					onclick={() => (orderType = 'market')}
+				>
+					Market
+				</button>
+			</div>
 
-		<!-- Side Tabs -->
-		<div class="flex space-x-2">
-			<button
-				class="flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors"
-				class:bg-green-500={side === 'long'}
-				class:text-white={side === 'long'}
-				class:bg-[#1A1A1A]={side !== 'long'}
-				class:text-[#B0B0B0]={side !== 'long'}
-				onclick={() => (side = 'long')}
-			>
-				Long
-			</button>
-			<button
-				class="flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors"
-				class:bg-red-500={side === 'short'}
-				class:text-white={side === 'short'}
-				class:bg-[#1A1A1A]={side !== 'short'}
-				class:text-[#B0B0B0]={side !== 'short'}
-				onclick={() => (side = 'short')}
-			>
-				Short
-			</button>
-		</div>
+			<!-- Side Tabs -->
+			<div class="flex space-x-2">
+				<button
+					class="flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+					class:bg-green-500={side === 'long'}
+					class:text-white={side === 'long'}
+					class:bg-[#1A1A1A]={side !== 'long'}
+					class:text-[#B0B0B0]={side !== 'long'}
+					onclick={() => (side = 'long')}
+				>
+					Long
+				</button>
+				<button
+					class="flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+					class:bg-red-500={side === 'short'}
+					class:text-white={side === 'short'}
+					class:bg-[#1A1A1A]={side !== 'short'}
+					class:text-[#B0B0B0]={side !== 'short'}
+					onclick={() => (side = 'short')}
+				>
+					Short
+				</button>
+			</div>
 
-		<!-- Price Input (only for limit orders) -->
-		{#if orderType === 'limit'}
+			<!-- Price Input (only for limit orders) -->
+			{#if orderType === 'limit'}
+				<div>
+					<label class="mb-2 block text-sm font-medium text-[#B0B0B0]">Price (RLUSD)</label>
+					<input
+						type="number"
+						step="0.0001"
+						bind:value={price}
+						placeholder="0.0000"
+						class="w-full rounded-lg border border-[#2A2A2A] bg-[#1A1A1A] px-4 py-2 text-white placeholder-[#808080] focus:border-[#00AAE4] focus:outline-none"
+					/>
+				</div>
+			{/if}
+
+			<!-- Size Input -->
 			<div>
-				<label class="mb-2 block text-sm font-medium text-[#B0B0B0]">Price (RLUSD)</label>
+				<label class="mb-2 block text-sm font-medium text-[#B0B0B0]">Size (XRP)</label>
 				<input
 					type="number"
-					step="0.0001"
-					bind:value={price}
-					placeholder="0.0000"
+					step="0.01"
+					bind:value={size}
+					placeholder="0.00"
 					class="w-full rounded-lg border border-[#2A2A2A] bg-[#1A1A1A] px-4 py-2 text-white placeholder-[#808080] focus:border-[#00AAE4] focus:outline-none"
 				/>
 			</div>
-		{/if}
 
-		<!-- Size Input -->
-		<div>
-			<label class="mb-2 block text-sm font-medium text-[#B0B0B0]">Size (XRP)</label>
-			<input
-				type="number"
-				step="0.01"
-				bind:value={size}
-				placeholder="0.00"
-				class="w-full rounded-lg border border-[#2A2A2A] bg-[#1A1A1A] px-4 py-2 text-white placeholder-[#808080] focus:border-[#00AAE4] focus:outline-none"
-			/>
-		</div>
-
-		<!-- Leverage Slider -->
-		<div>
-			<label class="mb-2 block text-sm font-medium text-[#B0B0B0]">
-				Leverage: {leverage}x
-			</label>
-			<input type="range" min="1" max="20" bind:value={leverage} class="w-full accent-[#00AAE4]" />
-			<div class="mt-1 flex justify-between text-xs text-[#808080]">
-				<span>1x</span>
-				<span>20x</span>
-			</div>
-		</div>
-
-		<!-- Order Info -->
-		{#if size && (orderType === 'market' || price)}
-			{@const orderSize = parseFloat(size)}
-			{@const orderPrice = orderType === 'market' ? $currentPrice || 0 : parseFloat(price)}
-			{@const totalValue = orderSize * orderPrice}
-			{@const marginRequired = totalValue / leverage}
-
-			<div class="space-y-1 rounded-lg border border-[#2A2A2A] bg-[#1A1A1A] p-3 text-sm">
-				<div class="flex justify-between text-[#B0B0B0]">
-					<span>Total Value:</span>
-					<span class="font-mono text-white">${totalValue.toFixed(2)}</span>
-				</div>
-				<div class="flex justify-between text-[#B0B0B0]">
-					<span>Margin Required:</span>
-					<span class="font-mono text-white">${marginRequired.toFixed(2)}</span>
+			<!-- Leverage Slider -->
+			<div>
+				<label class="mb-2 block text-sm font-medium text-[#B0B0B0]">
+					Leverage: {leverage}x
+				</label>
+				<input
+					type="range"
+					min="1"
+					max="20"
+					bind:value={leverage}
+					class="w-full accent-[#00AAE4]"
+				/>
+				<div class="mt-1 flex justify-between text-xs text-[#808080]">
+					<span>1x</span>
+					<span>20x</span>
 				</div>
 			</div>
-		{/if}
 
-		<!-- Error Message -->
-		{#if error}
-			<div class="rounded-lg border border-red-500/50 bg-red-500/10 p-3 text-sm text-red-400">
-				{error}
-			</div>
-		{/if}
+			<!-- Order Info -->
+			{#if size && (orderType === 'market' || price)}
+				{@const orderSize = parseFloat(size)}
+				{@const orderPrice = orderType === 'market' ? $currentPrice || 0 : parseFloat(price)}
+				{@const totalValue = orderSize * orderPrice}
+				{@const marginRequired = totalValue / leverage}
 
-		<!-- Submit Button -->
-		<button
-			onclick={submitOrder}
-			disabled={isSubmitting}
-			class="w-full rounded-lg px-6 py-3 font-medium text-white transition-all disabled:opacity-50"
-			class:bg-green-500={side === 'long'}
-			class:hover:bg-green-600={side === 'long' && !isSubmitting}
-			class:bg-red-500={side === 'short'}
-			class:hover:bg-red-600={side === 'short' && !isSubmitting}
-		>
-			{isSubmitting
-				? 'Submitting...'
-				: `${side === 'long' ? 'Buy' : 'Sell'} / ${side.toUpperCase()}`}
-		</button>
+				<div class="space-y-1 rounded-lg border border-[#2A2A2A] bg-[#1A1A1A] p-3 text-sm">
+					<div class="flex justify-between text-[#B0B0B0]">
+						<span>Total Value:</span>
+						<span class="font-mono text-white">${totalValue.toFixed(2)}</span>
+					</div>
+					<div class="flex justify-between text-[#B0B0B0]">
+						<span>Margin Required:</span>
+						<span class="font-mono text-white">${marginRequired.toFixed(2)}</span>
+					</div>
+				</div>
+			{/if}
+
+			<!-- Error Message -->
+			{#if error}
+				<div class="rounded-lg border border-red-500/50 bg-red-500/10 p-3 text-sm text-red-400">
+					{error}
+				</div>
+			{/if}
+
+			<!-- Submit Button -->
+			<button
+				onclick={submitOrder}
+				disabled={isSubmitting}
+				class="w-full rounded-lg px-6 py-3 font-medium text-white transition-all disabled:opacity-50"
+				class:bg-green-500={side === 'long'}
+				class:hover:bg-green-600={side === 'long' && !isSubmitting}
+				class:bg-red-500={side === 'short'}
+				class:hover:bg-red-600={side === 'short' && !isSubmitting}
+			>
+				{isSubmitting
+					? 'Submitting...'
+					: `${side === 'long' ? 'Buy' : 'Sell'} / ${side.toUpperCase()}`}
+			</button>
+		</div>
 	{/if}
 </div>

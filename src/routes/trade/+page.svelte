@@ -14,6 +14,8 @@
 	onMount(() => {
 		// Connect to WebSocket for real-time data
 		marketDataStore.connect();
+		// Fetch initial orderbook data
+		marketDataStore.fetchInitialData();
 
 		// Subscribe to user channel if wallet is connected
 		if ($walletStore.isConnected && $walletStore.address) {
@@ -62,73 +64,73 @@
 
 	<!-- Main Trading Interface -->
 	<div class="grid grid-cols-12 gap-4">
-		<!-- Left Column: Chart + Order Book -->
-		<div class="col-span-8 space-y-4">
-			<!-- Price Chart -->
-			<div class="rounded-lg border border-[#2A2A2A] bg-[#121212] p-4">
+		<!-- Chart -->
+		<div class="col-span-5">
+			<div class="flex h-[600px] flex-col rounded-lg border border-[#2A2A2A] bg-[#121212] p-4">
 				<PriceChart />
-			</div>
-
-			<!-- Positions / Orders / Trades Tabs -->
-			<div class="rounded-lg border border-[#2A2A2A] bg-[#121212]">
-				<!-- Tabs -->
-				<div class="flex border-b border-[#2A2A2A]">
-					<button
-						class="px-6 py-3 text-sm font-medium transition-colors"
-						class:text-[#00AAE4]={activeTab === 'positions'}
-						class:border-b-2={activeTab === 'positions'}
-						class:border-[#00AAE4]={activeTab === 'positions'}
-						class:text-[#B0B0B0]={activeTab !== 'positions'}
-						onclick={() => (activeTab = 'positions')}
-					>
-						Positions
-					</button>
-					<button
-						class="px-6 py-3 text-sm font-medium transition-colors"
-						class:text-[#00AAE4]={activeTab === 'orders'}
-						class:border-b-2={activeTab === 'orders'}
-						class:border-[#00AAE4]={activeTab === 'orders'}
-						class:text-[#B0B0B0]={activeTab !== 'orders'}
-						onclick={() => (activeTab = 'orders')}
-					>
-						Open Orders
-					</button>
-					<button
-						class="px-6 py-3 text-sm font-medium transition-colors"
-						class:text-[#00AAE4]={activeTab === 'trades'}
-						class:border-b-2={activeTab === 'trades'}
-						class:border-[#00AAE4]={activeTab === 'trades'}
-						class:text-[#B0B0B0]={activeTab !== 'trades'}
-						onclick={() => (activeTab = 'trades')}
-					>
-						Trade History
-					</button>
-				</div>
-
-				<!-- Tab Content -->
-				<div class="p-4">
-					{#if activeTab === 'positions'}
-						<PositionsTable />
-					{:else if activeTab === 'orders'}
-						<OrdersTable />
-					{:else}
-						<TradesTable />
-					{/if}
-				</div>
 			</div>
 		</div>
 
-		<!-- Right Column: Order Form + Order Book -->
-		<div class="col-span-4 space-y-4">
-			<!-- Order Form -->
-			<div class="rounded-lg border border-[#2A2A2A] bg-[#121212] p-4">
-				<OrderForm />
-			</div>
-
-			<!-- Order Book -->
-			<div class="rounded-lg border border-[#2A2A2A] bg-[#121212] p-4">
+		<!-- Order Book -->
+		<div class="col-span-4">
+			<div class="flex h-[600px] flex-col rounded-lg border border-[#2A2A2A] bg-[#121212] p-4">
 				<OrderBook />
 			</div>
+		</div>
+
+		<!-- Order Form -->
+		<div class="col-span-3">
+			<div class="flex h-[600px] flex-col rounded-lg border border-[#2A2A2A] bg-[#121212] p-4">
+				<OrderForm />
+			</div>
+		</div>
+	</div>
+
+	<!-- Positions / Orders / Trades Tabs -->
+	<div class="rounded-lg border border-[#2A2A2A] bg-[#121212]">
+		<!-- Tabs -->
+		<div class="flex border-b border-[#2A2A2A]">
+			<button
+				class="px-6 py-3 text-sm font-medium transition-colors"
+				class:text-[#00AAE4]={activeTab === 'positions'}
+				class:border-b-2={activeTab === 'positions'}
+				class:border-[#00AAE4]={activeTab === 'positions'}
+				class:text-[#B0B0B0]={activeTab !== 'positions'}
+				onclick={() => (activeTab = 'positions')}
+			>
+				Positions
+			</button>
+			<button
+				class="px-6 py-3 text-sm font-medium transition-colors"
+				class:text-[#00AAE4]={activeTab === 'orders'}
+				class:border-b-2={activeTab === 'orders'}
+				class:border-[#00AAE4]={activeTab === 'orders'}
+				class:text-[#B0B0B0]={activeTab !== 'orders'}
+				onclick={() => (activeTab = 'orders')}
+			>
+				Open Orders
+			</button>
+			<button
+				class="px-6 py-3 text-sm font-medium transition-colors"
+				class:text-[#00AAE4]={activeTab === 'trades'}
+				class:border-b-2={activeTab === 'trades'}
+				class:border-[#00AAE4]={activeTab === 'trades'}
+				class:text-[#B0B0B0]={activeTab !== 'trades'}
+				onclick={() => (activeTab = 'trades')}
+			>
+				Trade History
+			</button>
+		</div>
+
+		<!-- Tab Content -->
+		<div class="p-4">
+			{#if activeTab === 'positions'}
+				<PositionsTable />
+			{:else if activeTab === 'orders'}
+				<OrdersTable />
+			{:else}
+				<TradesTable />
+			{/if}
 		</div>
 	</div>
 </div>
