@@ -68,7 +68,7 @@ style: |
 
 <!-- _class: lead -->
 
-<img src="../static/logo.svg" alt="XPerp" style="height: 160px; margin: 0 auto 1em;" />
+<img src="../static/logo.svg" alt="XPerp" style="height: 320px; display: block; margin: 0 auto 0.5em;" />
 
 **The First Perpetual Futures DEX on XRPL**
 
