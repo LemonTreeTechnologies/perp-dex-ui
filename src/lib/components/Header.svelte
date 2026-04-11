@@ -123,11 +123,6 @@
 					class="text-[#B0B0B0] transition-colors hover:text-[#00AAE4]">Vaults</a
 				>
 				<a
-					href="/markets"
-					data-sveltekit-preload-data
-					class="text-[#B0B0B0] transition-colors hover:text-[#00AAE4]">Markets</a
-				>
-				<a
 					href="/verify"
 					data-sveltekit-preload-data
 					class="text-[#B0B0B0] transition-colors hover:text-[#00AAE4]">Verify Enclave</a
