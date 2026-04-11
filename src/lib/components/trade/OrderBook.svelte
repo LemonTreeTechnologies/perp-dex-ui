@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import { marketDataStore } from '$lib/stores/marketData';
 	import { api } from '$lib/api/client';
 
@@ -25,6 +25,10 @@
 
 	// Fetch orderbook on mount as fallback if WebSocket hasn't populated it yet
 	onMount(async () => {
+		console.log('OrderBook component mounted, starting polling');
+		// Start polling orderbook every 1 second
+		marketDataStore.startPolling();
+		
 		if (!orderbook) {
 			try {
 				const data = await api.getOrderBook();
@@ -34,6 +38,12 @@
 				console.error('Failed to fetch orderbook:', err);
 			}
 		}
+	});
+
+	onDestroy(() => {
+		console.log('OrderBook component destroyed, stopping polling');
+		// Stop polling when component is destroyed
+		marketDataStore.stopPolling();
 	});
 </script>
 
