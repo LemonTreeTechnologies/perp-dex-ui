@@ -50,7 +50,7 @@
 			description:
 				'Maintain a delta neutral position while earning yield from spreads and funding rates. This vault minimizes exposure to price movements while maximizing fee income.',
 			apy: '15-25%',
-			tvl: '85,000 XRP',
+			tvl: '-',
 			riskLevel: 'Medium',
 			minDeposit: '250 XRP',
 			lockupPeriod: '7 days',
@@ -67,7 +67,7 @@
 				'Funding rate payments',
 				'Perpetual positions'
 			],
-			status: 'active'
+			status: 'coming-soon'
 		},
 		{
 			id: 'do-vault-1',
@@ -76,7 +76,7 @@
 			description:
 				'Leverage interest rate discrepancies between borrowing USD and perpetual funding rates. This vault borrows RLUSD, buys spot XRP, and shorts perpetuals to earn the rate differential.',
 			apy: '20-35%',
-			tvl: 'Coming Soon',
+			tvl: '-',
 			riskLevel: 'High',
 			minDeposit: '500 XRP',
 			lockupPeriod: '14 days',
@@ -251,28 +251,24 @@
 		<div class="grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
 			{#each vaults as vault (vault.id)}
 				<div
-					class="rounded-lg border border-[#2A2A2A] bg-[#121212] p-6 transition-all hover:border-[#00AAE4]/50"
+					class="relative rounded-lg border border-[#2A2A2A] bg-[#121212] p-6 transition-all hover:border-[#00AAE4]/50"
 					class:opacity-60={vault.status === 'coming-soon'}
 				>
-					<!-- Vault Header -->
-					<div class="mb-4 flex items-start justify-between">
-						<div>
-							<h3 class="mb-1 text-xl font-semibold text-white">{vault.name}</h3>
-							<div class="flex items-center space-x-2">
-								<span
-									class={`rounded border px-2 py-1 text-xs font-medium ${getRiskBgColor(vault.riskLevel)} ${getRiskColor(vault.riskLevel)}`}
-								>
-									{vault.riskLevel} Risk
-								</span>
-								{#if vault.status === 'coming-soon'}
-									<span
-										class="rounded border border-[#B0B0B0]/20 bg-[#2A2A2A] px-2 py-1 text-xs font-medium text-[#B0B0B0]"
-									>
-										Coming Soon
-									</span>
-								{/if}
-							</div>
+					{#if vault.status === 'coming-soon'}
+						<div
+							class="absolute top-3 right-3 rounded-full border border-[#00AAE4]/30 bg-[#00AAE4]/10 px-3 py-1 text-xs font-semibold text-[#00AAE4]"
+						>
+							Coming Soon
 						</div>
+					{/if}
+					<!-- Vault Header -->
+					<div class="mb-4">
+						<h3 class="mb-1 text-xl font-semibold text-white">{vault.name}</h3>
+						<span
+							class={`rounded border px-2 py-1 text-xs font-medium ${getRiskBgColor(vault.riskLevel)} ${getRiskColor(vault.riskLevel)}`}
+						>
+							{vault.riskLevel} Risk
+						</span>
 					</div>
 
 					<!-- Description -->

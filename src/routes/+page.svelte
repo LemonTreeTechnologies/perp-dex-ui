@@ -114,13 +114,54 @@
 			<p class="mt-2 text-[#B0B0B0]">Connect your XRPL wallet to start trading perpetual futures</p>
 		</div>
 	{:else}
-		<div
-			class="rounded-lg border border-[#00AAE4] bg-[#121212] p-8 shadow-[0_0_20px_rgba(0,170,228,0.2)]"
-		>
-			<h2 class="text-2xl font-semibold text-white">Welcome!</h2>
-			<p class="mt-2 text-[#B0B0B0]">
-				Your wallet is connected. Use the header to login and start trading.
-			</p>
+		<!-- Navigation cards -->
+		<div class="grid gap-4 sm:grid-cols-3 lg:grid-cols-5">
+			<a
+				href="/trade"
+				class="group rounded-lg border border-[#2A2A2A] bg-[#121212] p-6 text-center transition-all hover:border-[#00AAE4] hover:shadow-[0_0_20px_rgba(0,170,228,0.2)]"
+			>
+				<div class="mb-3 text-3xl">&#128200;</div>
+				<h3 class="font-semibold text-white group-hover:text-[#00AAE4]">Trade</h3>
+				<p class="mt-1 text-sm text-[#808080]">Open long/short positions with up to 20x leverage</p>
+			</a>
+			<a
+				href="/portfolio"
+				class="group rounded-lg border border-[#2A2A2A] bg-[#121212] p-6 text-center transition-all hover:border-[#00AAE4] hover:shadow-[0_0_20px_rgba(0,170,228,0.2)]"
+			>
+				<div class="mb-3 text-3xl">&#128188;</div>
+				<h3 class="font-semibold text-white group-hover:text-[#00AAE4]">Portfolio</h3>
+				<p class="mt-1 text-sm text-[#808080]">Balance, deposits, withdrawals, and positions</p>
+			</a>
+			<a
+				href="/vaults"
+				class="group rounded-lg border border-[#2A2A2A] bg-[#121212] p-6 text-center transition-all hover:border-[#00AAE4] hover:shadow-[0_0_20px_rgba(0,170,228,0.2)]"
+			>
+				<div class="mb-3 text-3xl">&#127974;</div>
+				<h3 class="font-semibold text-white group-hover:text-[#00AAE4]">Vaults</h3>
+				<p class="mt-1 text-sm text-[#808080]">
+					Earn yield from market making and delta-neutral strategies
+				</p>
+			</a>
+			<a
+				href="/verify"
+				class="group rounded-lg border border-[#2A2A2A] bg-[#121212] p-6 text-center transition-all hover:border-[#00AAE4] hover:shadow-[0_0_20px_rgba(0,170,228,0.2)]"
+			>
+				<div class="mb-3 text-3xl">&#128269;</div>
+				<h3 class="font-semibold text-white group-hover:text-[#00AAE4]">Verify Enclave</h3>
+				<p class="mt-1 text-sm text-[#808080]">
+					DCAP attestation — verify the SGX enclave is genuine
+				</p>
+			</a>
+			<a
+				href="/about"
+				class="group rounded-lg border border-[#2A2A2A] bg-[#121212] p-6 text-center transition-all hover:border-[#00AAE4] hover:shadow-[0_0_20px_rgba(0,170,228,0.2)]"
+			>
+				<div class="mb-3 text-3xl">&#9881;&#65039;</div>
+				<h3 class="font-semibold text-white group-hover:text-[#00AAE4]">How It Works</h3>
+				<p class="mt-1 text-sm text-[#808080]">
+					Architecture, multisig security, and XRPL settlement
+				</p>
+			</a>
 		</div>
 	{/if}
 </div>
