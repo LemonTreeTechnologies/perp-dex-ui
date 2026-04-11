@@ -438,17 +438,17 @@ Exploits interest rate discrepancy between borrowing USD and perpetual funding r
 
 ## Market Parameters (XRP-RLUSD-PERP)
 
-| Parameter           | Value                                                                 |
-| ------------------- | --------------------------------------------------------------------- |
-| Settlement          | RLUSD                                                                 |
-| Collateral          | RLUSD only (XRP collateral with 90% LTV planned, not yet implemented) |
-| Max leverage        | 20x                                                                   |
-| Taker fee           | 0.05%                                                                 |
-| Maker fee           | 0%                                                                    |
-| Maintenance margin  | 0.5%                                                                  |
-| Liquidation penalty | 0.5%                                                                  |
-| Funding interval    | 8 hours                                                               |
-| Funding rate cap    | ±0.05% per period                                                     |
+| Parameter           | Value                                                                                            |
+| ------------------- | ------------------------------------------------------------------------------------------------ |
+| Settlement          | XRP (native XRPL). RLUSD settlement planned for production (requires trustlines + issuer setup). |
+| Collateral          | XRP (native). RLUSD collateral planned for production.                                           |
+| Max leverage        | 20x                                                                                              |
+| Taker fee           | 0.05%                                                                                            |
+| Maker fee           | 0%                                                                                               |
+| Maintenance margin  | 0.5%                                                                                             |
+| Liquidation penalty | 0.5%                                                                                             |
+| Funding interval    | 8 hours                                                                                          |
+| Funding rate cap    | ±0.05% per period                                                                                |
 
 ### Formulas (for UI display)
 

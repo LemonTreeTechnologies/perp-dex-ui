@@ -67,13 +67,13 @@ GET /v1/attestation/commitment
 
 This endpoint is not implemented in the orchestrator. It is a leftover from the original SGX_project (Ethereum Sepolia on-chain state proof). Remove from documentation or mark as "not implemented".
 
-### 5. "Collateral: RLUSD (100% LTV) + XRP (90% LTV)" — XRP collateral not implemented
+### 5. Collateral and settlement — now XRP native (updated)
 
-**File:** `docs/BACKEND-API.md`, line 414
+**File:** `docs/BACKEND-API.md`, market parameters table
 
-Currently only RLUSD deposits are supported (send XRP Payment to escrow, credited as margin). XRP as a separate collateral type with 90% LTV haircut is planned but not yet implemented in the enclave.
+For the hackathon, both collateral and settlement use native XRP. This is simpler than RLUSD because it doesn't require trustlines or issuer setup. RLUSD settlement remains the plan for production.
 
-**Impact:** The UI should only show RLUSD deposit flow for now. Do not build XRP collateral UI yet.
+**Impact:** The UI deposit flow should reference XRP, not RLUSD. Fixed across all docs.
 
 ### 6. Vault REST API — not implemented (internal only)
 
@@ -99,7 +99,7 @@ The vault endpoints (`/vaults/*`) are documented as "planned" — this is correc
 
 **Not ready for UI yet:**
 
-- XRP collateral (only RLUSD works)
+- RLUSD collateral/settlement (requires trustlines — deferred to production)
 - Vault user deposits/withdrawals (no REST API)
 - Order encryption / anti-MEV
 - Attestation commitment (Sepolia proof)

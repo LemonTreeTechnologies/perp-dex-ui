@@ -24,7 +24,7 @@ shorts, hedging tools. The volume leaks to centralized exchanges and other chain
 
 XPerp is perpetual futures trading built directly on the XRP Ledger.
 
-Connect your XRPL wallet. Deposit RLUSD. Open leveraged long or short positions — up to 20x.
+Connect your XRPL wallet. Deposit XRP. Open leveraged long or short positions — up to 20x.
 Your assets stay on the ledger. Settlement in 3-5 seconds. Transaction costs under a cent.
 
 - No bridge risk
@@ -51,7 +51,7 @@ Intel SGX Enclave (hardware-secured)
       |
       v
 XRPL Testnet (mainnet planned)
-  - RLUSD settlement
+  - XRP native settlement (RLUSD planned for production)
   - 2-of-3 multisig escrow — no single operator controls funds
 ```
 
@@ -75,8 +75,8 @@ We're not porting an EVM perps protocol to yet another chain. We're building for
 
 - **Speed:** 3-5 second settlement, no block confirmation delays
 - **Cost:** Transaction fees under $0.01 — viable for active trading
-- **RLUSD:** Ripple's regulated stablecoin gives traders a stable margin asset without
-  leaving the ecosystem
+- **Native XRP collateral:** Trade with what you already hold — no token wrapping or
+  conversions. RLUSD stablecoin support planned for production
 - **Community:** One of the most loyal and largest communities in crypto, underserved by DeFi
 - **Native infrastructure:** XRPL has had a protocol-level DEX since 2012 — the ecosystem
   understands on-chain trading
@@ -144,7 +144,7 @@ Every major blockchain has its perps DEX.
 
 ## What's Live Today
 
-- Perpetual futures trading on XRPL Testnet (XRP-RLUSD-PERP)
+- Perpetual futures trading on XRPL Testnet (XRP-PERP, native XRP collateral)
 - Up to 20x leverage, limit and market orders
 - XRPL wallet integration (Crossmark, GemWallet)
 - Real-time order book, price chart, WebSocket feed
@@ -199,21 +199,21 @@ User (fiat)                      User (crypto)
 My Neobank                     XRPL Wallet
   - KYC/AML verified              - Crossmark / GemWallet
   - SEPA / SWIFT deposit          |
-  - EUR → RLUSD conversion        |
+  - EUR → XRP conversion          |
     |                              |
-    +--------- RLUSD ------------>-+
+    +---------- XRP ------------->-+
                                    |
                                    v
                               XPerp (trade)
                                    |
                                    v
-                              RLUSD profits
+                              XRP profits
                                    |
-    +--------< RLUSD <------------+
+    +---------< XRP <-------------+
     |
     v
 My Neobank
-  - RLUSD → EUR conversion
+  - XRP → EUR conversion
   - Withdraw to bank (SEPA Instant)
 ```
 

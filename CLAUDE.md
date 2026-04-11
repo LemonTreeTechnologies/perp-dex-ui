@@ -4,12 +4,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Frontend for a perpetual futures DEX on XRPL mainnet with TEE (Intel SGX) computation and RLUSD
+Frontend for a perpetual futures DEX on XRPL with TEE (Intel SGX) computation and native XRP
 settlement. Built with SvelteKit, Svelte 5 (runes mode), Tailwind CSS v4, and TypeScript strict mode.
 Uses Vite for bundling and `@sveltejs/adapter-static` for static site generation.
 
 **Backend:** [xrpl-perp-dex](https://github.com/77ph/xrpl-perp-dex) — Rust orchestrator + SGX enclave
-**API base:** `https://api-perp.ph18.io` | **Market:** `XRP-RLUSD-PERP` | **Network:** XRPL Testnet
+**API base:** `https://api-perp.ph18.io` | **Market:** `XRP-PERP` | **Network:** XRPL Testnet
 
 ## Key Documentation
 
@@ -74,7 +74,7 @@ Makefile shortcuts: `make fmt`, `make lint`, `make build`, `make all` (fmt + lin
 - **Deposits:** Users send XRPL Payment to escrow address. Orchestrator auto-credits balance. No deposit API call from UI.
 - **Leverage:** 1–20x. Order types: `limit`, `market`. Time in force: `gtc`, `ioc`, `fok`.
 - **Vaults:** Market Making (low risk), Delta Neutral (medium risk), Delta One (higher risk, not yet live). See [docs/BACKEND-API.md](docs/BACKEND-API.md#vault-api-planned).
-- **Market params:** XRP-RLUSD-PERP — max 20x leverage, 0.05% taker fee, 0% maker fee, 0.5% maintenance margin, 8h funding interval. See [docs/BACKEND-API.md](docs/BACKEND-API.md#market-parameters-xrp-rlusd-perp) for formulas.
+- **Market params:** XRP-PERP — max 20x leverage, 0.05% taker fee, 0% maker fee, 0.5% maintenance margin, 8h funding interval. Native XRP for collateral and settlement (RLUSD planned for production). See [docs/BACKEND-API.md](docs/BACKEND-API.md#market-parameters-xrp-rlusd-perp) for formulas.
 
 ## Upstream Documentation
 

@@ -1,6 +1,6 @@
 # perp-dex-ui
 
-Frontend for [xrpl-perp-dex](https://github.com/77ph/xrpl-perp-dex) — a perpetual futures DEX on XRPL mainnet with TEE (Intel SGX) computation and RLUSD settlement.
+Frontend for [xrpl-perp-dex](https://github.com/77ph/xrpl-perp-dex) — a perpetual futures DEX on XRPL with TEE (Intel SGX) computation and native XRP settlement.
 
 ## Quick Start
 
