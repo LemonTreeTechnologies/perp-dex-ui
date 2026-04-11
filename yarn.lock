@@ -737,6 +737,11 @@ cross-spawn@^7.0.6:
     shebang-command "^2.0.0"
     which "^2.0.1"
 
+crossmark@^0.0.0:
+  version "0.0.0"
+  resolved "https://registry.yarnpkg.com/crossmark/-/crossmark-0.0.0.tgz#4003c1ab90430071383e8d5c52a2671589cf83f5"
+  integrity sha512-SeUP5mPQcb6RMg/tYnHwQVNRrla4cwtktL0bpQdNJgRAGUrDOrmqp1yKE2rLXXWOg21eXUH740JaQkiPpjl1hw==
+
 cssesc@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/cssesc/-/cssesc-3.0.0.tgz#37741919903b868565e1c09ea747445cd18983ee"
