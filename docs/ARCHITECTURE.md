@@ -60,6 +60,7 @@ This document describes how the UI fits into the overall xrpl-perp-dex system.
 | -------------------------------------------- | ------------ | ----------------------------------------------------------- |
 | Wallet connect (GemWallet, Crossmark, Xaman) | `/`          | Done                                                        |
 | Verify Enclave (DCAP attestation)            | `/verify`    | Done                                                        |
+| How It Works (about page)                    | `/about`     | Done — architecture diagram, multisig, DCAP, escrow link    |
 | Trading page layout                          | `/trade`     | Done — 3-col layout (chart, orderbook, form) + bottom tabs  |
 | Price chart (Binance XRPUSDT candles)        | `/trade`     | Done — 500-min SVG chart, 30s refresh, funding rate display |
 | Order book (real-time bids/asks)             | `/trade`     | Done — top 10 levels, depth bars, size/value toggle         |

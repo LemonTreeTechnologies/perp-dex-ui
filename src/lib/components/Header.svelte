@@ -96,6 +96,11 @@
 					data-sveltekit-preload-data
 					class="text-[#B0B0B0] transition-colors hover:text-[#00AAE4]">Verify Enclave</a
 				>
+				<a
+					href="/about"
+					data-sveltekit-preload-data
+					class="text-[#B0B0B0] transition-colors hover:text-[#00AAE4]">How It Works</a
+				>
 			</nav>
 			<!-- Wallet Connection -->
 			<div class="flex items-center">

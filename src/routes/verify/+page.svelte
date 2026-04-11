@@ -125,8 +125,8 @@
 
 <div class="mx-auto max-w-3xl space-y-8">
 	<div class="text-center">
-		<h1 class="text-3xl font-bold text-gray-900">Verify Enclave</h1>
-		<p class="mt-2 text-gray-600">
+		<h1 class="text-3xl font-bold text-[#00AAE4]">Verify Enclave</h1>
+		<p class="mt-2 text-[#B0B0B0]">
 			Verify that the SGX enclave is running genuine, untampered code using Intel DCAP remote
 			attestation.
 		</p>
