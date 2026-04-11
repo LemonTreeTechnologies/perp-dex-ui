@@ -179,7 +179,9 @@ export const authApi = {
 
 	async login(headers: Record<string, string>): Promise<Order[]> {
 		console.log('Attempting login with headers:', headers);
+
 		const response = await fetch(`${BASE_URL}/v1/auth/login`, {
+			method: 'POST',
 			headers
 		});
 		console.log('Login response status:', response.status);

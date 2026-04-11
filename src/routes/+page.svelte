@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { walletStore } from '$lib/stores/wallet';
 	import { authApi } from '$lib/api/client';
-	import { generateGetAuthHeaders } from '$lib/utils/xrplAuth';
+	import { generatePostAuthHeaders } from '$lib/utils/xrplAuth';
 
 	let isLoggingIn = $state(false);
 	let loginError = $state('');
@@ -14,11 +14,11 @@
 
 		try {
 			// Generate auth headers for the login endpoint
-			const headers = await generateGetAuthHeaders('v1/auth/login');
-			
+			const headers = await generatePostAuthHeaders(null);
+
 			// Call the login function
 			await authApi.login(headers);
-			
+
 			loginSuccess = true;
 			console.log('Login successful!');
 		} catch (error) {
@@ -53,7 +53,7 @@
 		>
 			<h2 class="text-2xl font-semibold text-white">Welcome!</h2>
 			<p class="mt-2 text-[#B0B0B0]">Your wallet is connected.</p>
-			
+
 			<div class="mt-6 flex flex-col items-center gap-4">
 				<button
 					onclick={handleLogin}
@@ -62,11 +62,11 @@
 				>
 					{isLoggingIn ? 'Logging in...' : 'Login'}
 				</button>
-				
+
 				{#if loginSuccess}
 					<p class="text-green-400">Login successful!</p>
 				{/if}
-				
+
 				{#if loginError}
 					<p class="text-red-400">{loginError}</p>
 				{/if}
