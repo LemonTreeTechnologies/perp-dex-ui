@@ -56,19 +56,19 @@ This document describes how the UI fits into the overall xrpl-perp-dex system.
 
 ## Implementation status
 
-| Feature                                      | Route     | Status                                     |
-| -------------------------------------------- | --------- | ------------------------------------------ |
-| Wallet connect (GemWallet, Crossmark, Xaman) | `/`       | Done                                       |
-| Verify Enclave (DCAP attestation)            | `/verify` | Done                                       |
-| Trading page layout                          | `/trade`  | Done — UI scaffold with all panels         |
-| Price chart (Binance XRPUSDT candles)        | `/trade`  | Done — 500-min SVG chart, 30s auto-refresh |
-| Order book (real-time bids/asks)             | `/trade`  | Done — top 10 levels from WebSocket        |
-| Trade history (recent market trades)         | `/trade`  | Done — last 20 trades from WebSocket       |
-| Order form (long/short, limit/market)        | `/trade`  | Done — UI complete, **auth TODO**          |
-| Positions table                              | `/trade`  | Done — UI complete, **auth TODO**          |
-| Open orders table                            | `/trade`  | Done — UI complete, **auth TODO**          |
-| XRPL signature auth for trading endpoints    | —         | Not started                                |
-| Vault management                             | —         | Not started                                |
+| Feature                                      | Route     | Status                                                      |
+| -------------------------------------------- | --------- | ----------------------------------------------------------- |
+| Wallet connect (GemWallet, Crossmark, Xaman) | `/`       | Done                                                        |
+| Verify Enclave (DCAP attestation)            | `/verify` | Done                                                        |
+| Trading page layout                          | `/trade`  | Done — 3-col layout (chart, orderbook, form) + bottom tabs  |
+| Price chart (Binance XRPUSDT candles)        | `/trade`  | Done — 500-min SVG chart, 30s refresh, funding rate display |
+| Order book (real-time bids/asks)             | `/trade`  | Done — top 10 levels, depth bars, size/value toggle         |
+| Trade history (recent market trades)         | `/trade`  | Done — last 20 trades from WebSocket                        |
+| Order form (long/short, limit/market)        | `/trade`  | Done — UI complete, **auth TODO**                           |
+| Positions table                              | `/trade`  | Done — UI complete, **auth TODO**                           |
+| Open orders table                            | `/trade`  | Done — UI complete, **auth TODO**                           |
+| XRPL signature auth for trading endpoints    | —         | Not started                                                 |
+| Vault management                             | —         | Not started                                                 |
 
 ## Frontend architecture
 
@@ -76,7 +76,7 @@ This document describes how the UI fits into the overall xrpl-perp-dex system.
 
 Typed API client wrapping all backend endpoints:
 
-- **`api.*`** — public endpoints (no auth): `getOrderBook`, `getTicker`, `getTrades`, `getMarkets`
+- **`api.*`** — public endpoints (no auth): `getOrderBook`, `getTicker`, `getTrades`, `getMarkets`, `getFundingRate`
 - **`authApi.*`** — authenticated endpoints: `getBalance`, `getOrders`, `submitOrder`, `cancelOrder`, `cancelAllOrders`
 - **`createWebSocket()`** — WebSocket connection factory
 - **`toFP8()` / `fromFP8()`** — FP8 string conversion helpers
@@ -86,22 +86,22 @@ WebSocket: `VITE_WS_URL` env var or `wss://api-perp.ph18.io/ws` default.
 
 ### Stores
 
-| Store             | File                           | Purpose                                                                               |
-| ----------------- | ------------------------------ | ------------------------------------------------------------------------------------- |
-| `walletStore`     | `src/lib/stores/wallet.ts`     | Wallet connection state (address, publicKey, isConnected)                             |
-| `marketDataStore` | `src/lib/stores/marketData.ts` | WebSocket-driven real-time market data (ticker, trades, orderbook, connection status) |
-| `currentPrice`    | `src/lib/stores/marketData.ts` | Derived store — best available price (mark > mid > last trade)                        |
+| Store             | File                           | Purpose                                                                                                                                     |
+| ----------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `walletStore`     | `src/lib/stores/wallet.ts`     | Wallet connection state (address, publicKey, isConnected)                                                                                   |
+| `marketDataStore` | `src/lib/stores/marketData.ts` | WebSocket-driven real-time market data (ticker, trades, orderbook, connection status). Also fetches initial orderbook via REST as fallback. |
+| `currentPrice`    | `src/lib/stores/marketData.ts` | Derived store — best available price (mark > mid > last trade)                                                                              |
 
 ### Trade components (`src/lib/components/trade/`)
 
-| Component               | Data source                             | Auth required |
-| ----------------------- | --------------------------------------- | ------------- |
-| `PriceChart.svelte`     | Binance API (XRPUSDT klines, 30s poll)  | No            |
-| `OrderBook.svelte`      | `marketDataStore.orderbook` (WebSocket) | No            |
-| `TradesTable.svelte`    | `marketDataStore.trades` (WebSocket)    | No            |
-| `OrderForm.svelte`      | `walletStore` + `currentPrice`          | Yes (TODO)    |
-| `PositionsTable.svelte` | `authApi.getBalance`                    | Yes (TODO)    |
-| `OrdersTable.svelte`    | `authApi.getOrders`                     | Yes (TODO)    |
+| Component               | Data source                                                                | Auth required |
+| ----------------------- | -------------------------------------------------------------------------- | ------------- |
+| `PriceChart.svelte`     | Binance API (XRPUSDT klines) + `api.getFundingRate()`, 30s poll            | No            |
+| `OrderBook.svelte`      | `marketDataStore.orderbook` (WebSocket) + REST fallback, size/value toggle | No            |
+| `TradesTable.svelte`    | `marketDataStore.trades` (WebSocket)                                       | No            |
+| `OrderForm.svelte`      | `walletStore` + `currentPrice`                                             | Yes (TODO)    |
+| `PositionsTable.svelte` | `authApi.getBalance`                                                       | Yes (TODO)    |
+| `OrdersTable.svelte`    | `authApi.getOrders`                                                        | Yes (TODO)    |
 
 ### Theme
 
