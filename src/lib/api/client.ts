@@ -79,6 +79,16 @@ export interface OrderRequest {
 	client_order_id?: string;
 }
 
+export interface Transaction {
+	id: number;
+	type: 'deposit' | 'withdrawal';
+	amount: string;
+	status: 'pending' | 'completed' | 'failed';
+	txn_hash?: string;
+	timestamp: number;
+	destination?: string;
+}
+
 // Public API endpoints (no auth required)
 export const api = {
 	async getOrderBook(levels: number = 20): Promise<OrderBook> {
@@ -141,9 +151,14 @@ export const api = {
 // Authenticated API endpoints (require XRPL signature)
 export const authApi = {
 	async getBalance(userId: string, headers: Record<string, string>): Promise<Balance> {
-		const response = await fetch(`${BASE_URL}/v1/account/balance?user_id=${userId}`, {
+		console.log('Fetching balance with headers:', headers);
+		const url = `${BASE_URL}/v1/account/balance?user_id=${userId}`;
+		const response = await fetch(url, {
 			headers
 		});
+		console.log('Balance response status:', response.status);
+		console.log('Balance response headers:', response.headers);
+		console.log('Balance response body:', await response.clone().text());
 		const data = await response.json();
 		if (data.status === 'success') {
 			return data.data;
@@ -200,6 +215,42 @@ export const authApi = {
 			return data;
 		}
 		throw new Error(data.message || 'Failed to cancel all orders');
+	},
+
+	async withdraw(
+		userId: string,
+		amount: string,
+		destination: string,
+		headers: Record<string, string>
+	) {
+		const response = await fetch(`${BASE_URL}/v1/withdraw`, {
+			method: 'POST',
+			headers: {
+				...headers,
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				user_id: userId,
+				amount,
+				destination
+			})
+		});
+		const data = await response.json();
+		if (data.status === 'success') {
+			return data;
+		}
+		throw new Error(data.message || 'Failed to withdraw');
+	},
+
+	async getTransactions(userId: string, headers: Record<string, string>): Promise<Transaction[]> {
+		const response = await fetch(`${BASE_URL}/v1/account/transactions?user_id=${userId}`, {
+			headers
+		});
+		const data = await response.json();
+		if (data.status === 'success') {
+			return data.transactions || [];
+		}
+		throw new Error(data.message || 'Failed to fetch transactions');
 	}
 };
 

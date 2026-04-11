@@ -118,142 +118,42 @@ All trading endpoints (orders, balance, cancel) require XRPL signature authentic
 
 ## Implementation Examples
 
-### Python
-
-```python
-import hashlib
-import json
-import requests
-from ecdsa import SECP256k1, SigningKey
-from ecdsa.util import sigencode_der, sigdecode_der
-from xrpl.core.keypairs import derive_keypair, derive_classic_address
-
-# Your XRPL secret (secp256k1)
-SECRET = "YOUR_XRPL_SECRET"  # from xrpl_auth.py --generate
-
-# Derive keys
-pub_hex, priv_hex = derive_keypair(SECRET)
-address = derive_classic_address(pub_hex)
-
-# Build signing key (strip 00 prefix from XRPL private key)
-pk = priv_hex[2:] if len(priv_hex) == 66 else priv_hex
-sk = SigningKey.from_string(bytes.fromhex(pk), curve=SECP256k1)
-
-def sign_request(body_str):
-    """Sign a POST body, return auth headers."""
-    hash_bytes = hashlib.sha256(body_str.encode()).digest()
-    sig = sk.sign_digest(hash_bytes, sigencode=sigencode_der)
-
-    # Normalize to low-S
-    r, s = sigdecode_der(sig, SECP256k1.order)
-    if s > SECP256k1.order // 2:
-        s = SECP256k1.order - s
-    sig = sigencode_der(r, s, SECP256k1.order)
-
-    return {
-        "X-XRPL-Address": address,
-        "X-XRPL-PublicKey": pub_hex.lower(),
-        "X-XRPL-Signature": sig.hex(),
-        "Content-Type": "application/json",
-    }
-
-# Submit order
-body = json.dumps({
-    "user_id": address,
-    "side": "buy",
-    "type": "limit",
-    "price": "0.55000000",
-    "size": "100.00000000",
-    "leverage": 5,
-})
-
-resp = requests.post(
-    "http://YOUR_SERVER:3000/v1/orders",
-    headers=sign_request(body),
-    data=body,
-)
-print(resp.json())
-```
-
-### JavaScript (Node.js)
+### JS Example
 
 ```javascript
-const crypto = require('crypto');
-const secp256k1 = require('secp256k1'); // npm install secp256k1
-const fetch = require('node-fetch'); // npm install node-fetch
+import sdk from '@crossmarkio/sdk';
+import { sha256 } from '@noble/hashes/sha256';
+import { bytesToHex } from '@noble/hashes/utils';
 
-// Your keys (from xrpl_auth.py --generate)
-const PRIVATE_KEY = Buffer.from(
-	'FA8076D0FB53AA4182AB3AF2B58EEEA5776D983E6CD9EA8580A676D5B82563C0',
-	'hex'
-);
-const PUBLIC_KEY = Buffer.from(
-	'03c768238bf134803cf864767dbfbdfcc134d4dac8124f0686c1d83fcfb56c16dc',
-	'hex'
-);
-const ADDRESS = 'rBy1xSMqCesQ11Nh23KoddAfa5vBNHEK7';
+// 1. Connect wallet (once)
+const { response } = await sdk.async.signInAndWait();
+const address = response.data.address;
+const publicKey = response.data.publicKey;
 
-function signRequest(bodyStr) {
-	// SHA-256 hash of body
-	const hash = crypto.createHash('sha256').update(bodyStr, 'utf8').digest();
+// 2. For each request — build the message to sign
+const timestamp = Math.floor(Date.now() / 1000).toString();
+const bodyStr = JSON.stringify({ user_id: address, side: 'buy', ... });
+const hash = bytesToHex(sha256(new TextEncoder().encode(bodyStr + timestamp)));
 
-	// ECDSA sign (secp256k1 library returns low-S by default)
-	const sigObj = secp256k1.ecdsaSign(hash, PRIVATE_KEY);
+// 3. Sign with Crossmark (pass hash as hex — wallet applies SHA-512Half internally)
+const { response: sigResp } = await sdk.async.signInAndWait(hash);
 
-	// Convert to DER format
-	const derSig = secp256k1.signatureExport(sigObj.signature);
-
-	return {
-		'X-XRPL-Address': ADDRESS,
-		'X-XRPL-PublicKey': PUBLIC_KEY.toString('hex'),
-		'X-XRPL-Signature': Buffer.from(derSig).toString('hex'),
-		'Content-Type': 'application/json'
-	};
-}
-
-// Submit order
-const body = JSON.stringify({
-	user_id: ADDRESS,
-	side: 'buy',
-	type: 'limit',
-	price: '0.55000000',
-	size: '100.00000000',
-	leverage: 5
+// 4. Send request
+fetch('https://api-perp.ph18.io/v1/orders', {
+  method: 'POST',
+  headers: {
+    'X-XRPL-Address': address,
+    'X-XRPL-PublicKey': publicKey,
+    'X-XRPL-Signature': sigResp.data.signature,
+    'X-XRPL-Timestamp': timestamp,
+    'Content-Type': 'application/json',
+  },
+  body: bodyStr,
 });
 
-fetch('http://YOUR_SERVER:3000/v1/orders', {
-	method: 'POST',
-	headers: signRequest(body),
-	body: body
-})
-	.then((r) => r.json())
-	.then(console.log);
-```
-
-### JavaScript (Browser with ethers.js)
-
-```javascript
-// Using ethers.js (already common in web3 frontends)
-import { SigningKey, sha256 } from 'ethers';
-
-const PRIVATE_KEY = '0xFA8076D0FB53AA4182AB3AF2B58EEEA5776D983E6CD9EA8580A676D5B82563C0';
-const signingKey = new SigningKey(PRIVATE_KEY);
-const ADDRESS = 'rBy1xSMqCesQ11Nh23KoddAfa5vBNHEK7';
-
-function signRequest(bodyStr) {
-	const hash = sha256(new TextEncoder().encode(bodyStr));
-	const sig = signingKey.sign(hash);
-
-	// ethers returns { r, s, v } — need DER encoding
-	// For simplicity, send r+s as hex and let server parse
-	// Or use a DER encoding library
-
-	return {
-		'X-XRPL-Address': ADDRESS,
-		'X-XRPL-PublicKey': signingKey.compressedPublicKey.slice(2), // remove 0x
-		'X-XRPL-Signature': derEncode(sig.r, sig.s) // implement DER encoding
-	};
-}
+For GET requests (e.g. fetching orders/balance): same flow but sign the URI path instead of body:
+const path = `/v1/orders?user_id=${address}`;
+const hash = bytesToHex(sha256(new TextEncoder().encode(path + timestamp)));
 ```
 
 ---
