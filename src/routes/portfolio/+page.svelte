@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import { walletStore } from '$lib/stores/wallet';
+	import { authStore } from '$lib/stores/auth';
 	import { authApi, toFP8, fromFP8 } from '$lib/api/client';
-	import { generateAuthHeaders } from '$lib/utils/xrplAuth';
+	import { generateAuthHeaders, generateTokenHeaders } from '$lib/utils/xrplAuth';
 	import type { Balance, Transaction } from '$lib/api/client';
 
 	// State
@@ -10,6 +11,7 @@
 	let transactions: Transaction[] = $state([]);
 	let loading = $state(false);
 	let loadingTransactions = $state(false);
+	let loggingIn = $state(false);
 	let error = $state<string | null>(null);
 	let withdrawAmount = $state('');
 	let withdrawDestination = $state('');
@@ -17,6 +19,34 @@
 	let activeTab: 'deposit' | 'withdraw' = $state('deposit');
 	let activeCurrency: 'xrp' | 'rlusd' = $state('xrp');
 	let pollingInterval: ReturnType<typeof setInterval> | null = null;
+
+	// Login function - signs once and gets a token
+	async function login() {
+		if (!$walletStore.isConnected || !$walletStore.address) {
+			return;
+		}
+
+		loggingIn = true;
+		error = null;
+
+		try {
+			// Generate auth headers by signing with wallet
+			const headers = await generateAuthHeaders('POST', '');
+
+			// Call login endpoint to get token
+			const { token } = await authApi.login(headers);
+
+			// Store token
+			authStore.setToken(token);
+
+			console.log('Login successful, token stored');
+		} catch (err) {
+			console.error('Login failed:', err);
+			error = err instanceof Error ? err.message : 'Login failed';
+		} finally {
+			loggingIn = false;
+		}
+	}
 
 	// Computed values
 	const totalBalance = $derived(() => {
@@ -34,24 +64,35 @@
 		return ((pnl / margin) * 100).toFixed(2);
 	});
 
-	// Fetch balance data
+	// Fetch balance data using token
 	async function fetchBalance() {
 		if (!$walletStore.isConnected || !$walletStore.address) {
 			return;
+		}
+
+		// Check if we have a valid token, if not, login first
+		if (!authStore.isTokenValid($authStore)) {
+			await login();
+			if (!$authStore.token) {
+				error = 'Failed to authenticate';
+				return;
+			}
 		}
 
 		loading = true;
 		error = null;
 
 		try {
-			const headers = await generateAuthHeaders(
-				'GET',
-				`/v1/account/balance?user_id=${$walletStore.address}`
-			);
+			const headers = generateTokenHeaders($authStore.token!);
 			balance = await authApi.getBalance($walletStore.address, headers);
 		} catch (err) {
 			console.error('Failed to fetch balance:', err);
 			error = err instanceof Error ? err.message : 'Failed to fetch balance';
+
+			// If auth error, clear token and retry login
+			if (err instanceof Error && err.message.includes('401')) {
+				authStore.clearToken();
+			}
 		} finally {
 			loading = false;
 		}
@@ -160,13 +201,20 @@
 		<h1 class="text-3xl font-bold text-white">Portfolio</h1>
 
 		{#if $walletStore.isConnected}
-			<button
-				onclick={() => fetchBalance()}
-				disabled={loading}
-				class="rounded-lg bg-[#00AAE4] px-6 py-2 text-sm font-medium text-white transition-all hover:bg-[#0088B8] disabled:cursor-not-allowed disabled:opacity-50"
-			>
-				{loading ? 'Loading...' : 'Fetch Balance (Debug)'}
-			</button>
+			<div class="flex items-center gap-4">
+				{#if authStore.isTokenValid($authStore)}
+					<span class="text-sm text-green-400">✓ Authenticated</span>
+				{:else}
+					<span class="text-sm text-yellow-400">Not authenticated</span>
+				{/if}
+				<button
+					onclick={() => fetchBalance()}
+					disabled={loading || loggingIn}
+					class="rounded-lg bg-[#00AAE4] px-6 py-2 text-sm font-medium text-white transition-all hover:bg-[#0088B8] disabled:cursor-not-allowed disabled:opacity-50"
+				>
+					{loggingIn ? 'Logging in...' : loading ? 'Loading...' : 'Fetch Balance (Debug)'}
+				</button>
+			</div>
 		{/if}
 	</div>
 

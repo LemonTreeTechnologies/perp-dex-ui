@@ -150,6 +150,18 @@ export const api = {
 
 // Authenticated API endpoints (require XRPL signature)
 export const authApi = {
+	async login(headers: Record<string, string>): Promise<{ token: string }> {
+		const response = await fetch(`${BASE_URL}/v1/auth/login`, {
+			method: 'POST',
+			headers
+		});
+		const data = await response.json();
+		if (data.status === 'success' && data.token) {
+			return { token: data.token };
+		}
+		throw new Error(data.message || 'Failed to login');
+	},
+
 	async getBalance(userId: string, headers: Record<string, string>): Promise<Balance> {
 		console.log('Fetching balance with headers:', headers);
 		const url = `${BASE_URL}/v1/account/balance?user_id=${userId}`;

@@ -1,5 +1,8 @@
 <script lang="ts">
 	import { walletStore } from '$lib/stores/wallet';
+	import { authStore } from '$lib/stores/auth';
+	import { authApi } from '$lib/api/client';
+	import { generateAuthHeaders } from '$lib/utils/xrplAuth';
 
 	async function connectWallet() {
 		try {
@@ -12,6 +15,9 @@
 						publicKey: response.result.publicKey,
 						isConnected: true
 					});
+
+					// Auto-login after connection
+					await performLogin();
 					return;
 				}
 			}
@@ -28,6 +34,9 @@
 						publicKey: signInResponse.publicKey || '',
 						isConnected: true
 					});
+
+					// Auto-login after connection
+					await performLogin();
 					return;
 				} else if (signInResponse?.response?.data?.address) {
 					// Alternative response format
@@ -36,6 +45,9 @@
 						publicKey: signInResponse.response.data.publicKey || '',
 						isConnected: true
 					});
+
+					// Auto-login after connection
+					await performLogin();
 					return;
 				}
 			}
@@ -53,12 +65,26 @@
 		}
 	}
 
+	async function performLogin() {
+		try {
+			console.log('Performing auto-login...');
+			const headers = await generateAuthHeaders('POST', '');
+			const { token } = await authApi.login(headers);
+			authStore.setToken(token);
+			console.log('Auto-login successful');
+		} catch (error) {
+			console.error('Auto-login failed:', error);
+			// Don't show alert for auto-login failures
+		}
+	}
+
 	function disconnectWallet() {
 		walletStore.set({
 			address: null,
 			publicKey: null,
 			isConnected: false
 		});
+		authStore.clearToken();
 	}
 
 	function formatAddress(address: string): string {

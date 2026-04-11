@@ -4,7 +4,21 @@ import { get } from 'svelte/store';
 import { walletStore } from '$lib/stores/wallet';
 
 /**
- * Generate XRPL authentication headers for API requests
+ * Generate authentication headers - uses token if available, otherwise signs with wallet
+ * @param token - Optional bearer token
+ * @returns Headers object with either Authorization header or X-XRPL-* headers
+ */
+export function generateTokenHeaders(token?: string): Record<string, string> {
+	if (token) {
+		return {
+			Authorization: `Bearer ${token}`
+		};
+	}
+	throw new Error('No authentication token available');
+}
+
+/**
+ * Generate XRPL authentication headers for API requests (for login)
  * @param method - HTTP method (GET, POST, DELETE)
  * @param pathOrBody - For GET/DELETE: URI path with query params. For POST: JSON body string
  * @returns Headers object with X-XRPL-* headers
