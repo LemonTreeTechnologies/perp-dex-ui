@@ -2,33 +2,33 @@ name: Lint and Format Check
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   lint-and-format:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'yarn'
-      
+
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-      
+
       - name: Run formatting
         run: make fmt
-      
+
       - name: Run linting
         run: make lint
-      
+
       - name: Check for changes
         run: |
           if [ -n "$(git status --porcelain)" ]; then
