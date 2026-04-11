@@ -66,33 +66,33 @@
 	}
 </script>
 
-<header class="border-b border-gray-200 bg-white">
+<header class="border-b border-[#2A2A2A] bg-[#121212]">
 	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 		<div class="flex h-16 items-center justify-between">
 			<!-- Logo/Brand -->
 			<div class="flex items-center">
-				<h1 class="text-2xl font-bold text-gray-900">
-					<span class="text-blue-600">XRPL</span> Perp DEX
+				<h1 class="text-2xl font-bold text-white">
+					<span class="text-[#00AAE4] xrp-glow">XRPL</span> Perp DEX
 				</h1>
 			</div>
 
 			<!-- Navigation (placeholder for future menu items) -->
 			<nav class="hidden md:flex md:items-center md:space-x-8">
-				<button type="button" class="text-gray-700 hover:text-gray-900">Trade</button>
-				<button type="button" class="text-gray-700 hover:text-gray-900">Portfolio</button>
-				<button type="button" class="text-gray-700 hover:text-gray-900">Markets</button>
+				<button type="button" class="text-[#B0B0B0] hover:text-white transition-colors">Trade</button>
+				<button type="button" class="text-[#B0B0B0] hover:text-white transition-colors">Portfolio</button>
+				<button type="button" class="text-[#B0B0B0] hover:text-white transition-colors">Markets</button>
 			</nav>
 
 			<!-- Wallet Connection -->
 			<div class="flex items-center">
 				{#if $walletStore.isConnected && $walletStore.address}
 					<div class="flex items-center space-x-4">
-						<div class="rounded-lg bg-gray-100 px-4 py-2 font-mono text-sm text-gray-700">
+						<div class="rounded-lg bg-[#1A1A1A] border border-[#2A2A2A] px-4 py-2 font-mono text-sm text-[#00AAE4]">
 							{formatAddress($walletStore.address)}
 						</div>
 						<button
 							onclick={disconnectWallet}
-							class="rounded-lg bg-red-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-600"
+							class="rounded-lg bg-[#2A2A2A] hover:bg-[#404040] px-4 py-2 text-sm font-medium text-white transition-colors border border-[#404040]"
 						>
 							Disconnect
 						</button>
@@ -100,7 +100,7 @@
 				{:else}
 					<button
 						onclick={connectWallet}
-						class="rounded-lg bg-blue-600 px-6 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+						class="rounded-lg bg-[#00AAE4] px-6 py-2 text-sm font-medium text-white transition-all hover:bg-[#0088B8] hover:shadow-[0_0_20px_rgba(0,170,228,0.4)]"
 					>
 						Connect Wallet
 					</button>

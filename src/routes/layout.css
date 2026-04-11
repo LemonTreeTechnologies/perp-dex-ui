@@ -1,3 +1,66 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
+
+:root {
+	/* XRP Brand Colors */
+	--xrp-blue: #00AAE4;
+	--xrp-blue-dark: #0088B8;
+	--xrp-blue-light: #33BBEA;
+	--xrp-dark: #0A0A0A;
+	--xrp-dark-secondary: #121212;
+	--xrp-dark-tertiary: #1A1A1A;
+	--xrp-gray: #2A2A2A;
+	--xrp-gray-light: #404040;
+	--xrp-text-primary: #FFFFFF;
+	--xrp-text-secondary: #B0B0B0;
+	--xrp-text-muted: #808080;
+}
+
+* {
+	font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+		'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+}
+
+body {
+	background-color: var(--xrp-dark);
+	color: var(--xrp-text-primary);
+	font-feature-settings: 'cv11', 'ss01';
+	font-variant-numeric: tabular-nums;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+/* Monospace font for addresses and numbers */
+.font-mono,
+[class*='font-mono'] {
+	font-family: 'JetBrains Mono', 'Consolas', 'Monaco', 'Courier New', monospace !important;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+
+::-webkit-scrollbar-track {
+	background: var(--xrp-dark-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--xrp-gray);
+	border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: var(--xrp-gray-light);
+}
+
+/* Glow effects for XRP blue elements */
+.xrp-glow {
+	text-shadow: 0 0 10px rgba(0, 170, 228, 0.5);
+}
+
+.xrp-glow-box {
+	box-shadow: 0 0 20px rgba(0, 170, 228, 0.3);
+}
