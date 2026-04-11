@@ -44,6 +44,7 @@ Makefile shortcuts: `make fmt`, `make lint`, `make build`, `make all`.
 This project includes Docker support with automatic HTTPS via Caddy.
 
 **Production deployment:**
+
 ```sh
 # Build and run with automatic HTTPS
 docker-compose --profile prod up -d
@@ -53,11 +54,13 @@ make docker-prod
 ```
 
 **Development with Docker:**
+
 ```sh
 docker-compose --profile dev up
 ```
 
 The production deployment:
+
 - Serves at **xperp.fi** and **www.xperp.fi**
 - Automatic HTTPS with Let's Encrypt
 - Auto-renewing SSL certificates

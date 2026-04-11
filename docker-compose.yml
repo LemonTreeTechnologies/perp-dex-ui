@@ -8,7 +8,7 @@ services:
       target: development
     container_name: perp-dex-ui-dev
     ports:
-      - "5173:5173"
+      - '5173:5173'
     volumes:
       # Mount source code for hot reloading
       - ./src:/app/src
@@ -32,8 +32,8 @@ services:
       target: production
     container_name: perp-dex-ui-prod
     ports:
-      - "80:80"
-      - "443:443"
+      - '80:80'
+      - '443:443'
     volumes:
       # Persist Caddy data (certificates, etc.)
       - caddy_data:/data
