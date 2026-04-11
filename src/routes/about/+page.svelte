@@ -45,7 +45,7 @@
 							<div class="mt-1 text-xs font-medium text-white">API Gateway</div>
 						</div>
 					</div>
-					<div class="mt-2 text-center text-xs text-[#808080]">nginx :443</div>
+					<div class="mt-2 text-center text-xs text-[#808080]">Gateway</div>
 				</div>
 
 				<div class="flex flex-col items-center">
@@ -167,22 +167,12 @@
 						<span class="font-mono text-[#00AAE4]">MRENCLAVE</span> hash — a SHA-256 fingerprint of the
 						exact code running inside the enclave.
 					</p>
-					<div class="flex flex-col gap-3 sm:flex-row">
-						<a
-							href="/verify"
-							class="inline-flex items-center justify-center rounded-lg bg-[#00AAE4] px-5 py-2.5 text-sm font-medium text-white transition-all hover:bg-[#0088B8] hover:shadow-[0_0_20px_rgba(0,170,228,0.4)]"
-						>
-							Verify Enclave Now
-						</a>
-						<a
-							href="https://github.com/77ph/xrpl-perp-dex-enclave"
-							target="_blank"
-							rel="noopener noreferrer"
-							class="inline-flex items-center justify-center rounded-lg border border-[#2A2A2A] bg-[#1A1A1A] px-5 py-2.5 text-sm font-medium text-[#B0B0B0] transition-colors hover:border-[#00AAE4] hover:text-white"
-						>
-							View Enclave Source Code
-						</a>
-					</div>
+					<a
+						href="/verify"
+						class="inline-flex items-center justify-center rounded-lg bg-[#00AAE4] px-5 py-2.5 text-sm font-medium text-white transition-all hover:bg-[#0088B8] hover:shadow-[0_0_20px_rgba(0,170,228,0.4)]"
+					>
+						Verify Enclave Now
+					</a>
 				</div>
 			</div>
 		</div>
@@ -228,17 +218,14 @@
 					Rust trading engine — order book, price feed, P2P replication
 				</p>
 			</a>
-			<a
-				href="https://github.com/77ph/xrpl-perp-dex-enclave"
-				target="_blank"
-				rel="noopener noreferrer"
-				class="rounded-lg border border-[#2A2A2A] bg-[#121212] p-5 transition-colors hover:border-[#00AAE4]"
-			>
-				<h3 class="font-semibold text-white">SGX Enclave Repo</h3>
+			<div class="rounded-lg border border-[#2A2A2A] bg-[#121212] p-5">
+				<h3 class="font-semibold text-white">SGX Enclave</h3>
 				<p class="mt-1 text-sm text-[#808080]">
-					Margin engine, ECDSA key custody, DCAP attestation
+					Intel SGX trusted execution environment — margin engine, ECDSA key custody, DCAP
+					attestation. Code integrity verifiable via the
+					<a href="/verify" class="text-[#00AAE4] hover:underline">Verify Enclave</a> page.
 				</p>
-			</a>
+			</div>
 		</div>
 	</section>
 </div>
