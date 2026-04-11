@@ -219,10 +219,19 @@
 				</p>
 			</a>
 			<div class="rounded-lg border border-[#2A2A2A] bg-[#121212] p-5">
-				<h3 class="font-semibold text-white">SGX Enclave</h3>
+				<h3 class="font-semibold text-white">
+					SGX Enclave <span class="text-sm font-normal text-[#808080]">(private for now)</span>
+				</h3>
 				<p class="mt-1 text-sm text-[#808080]">
-					Intel SGX trusted execution environment — margin engine, ECDSA key custody, DCAP
-					attestation. Code integrity verifiable via the
+					Runs inside an Intel SGX
+					<a
+						href="https://en.wikipedia.org/wiki/Trusted_execution_environment"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="text-[#00AAE4] hover:underline">trusted execution environment (TEE)</a
+					>
+					— margin engine, ECDSA key custody, DCAP attestation. Code will be open-sourced; in the meantime,
+					integrity is verifiable via the
 					<a href="/verify" class="text-[#00AAE4] hover:underline">Verify Enclave</a> page.
 				</p>
 			</div>
