@@ -111,24 +111,16 @@ We target **perpetual futures** — a market **2,300x larger** ($92.9T vs $40B) 
 **XPerp: perpetual futures built directly on the XRP Ledger.**
 
 ```
-Your XRPL Wallet
-      │
-      ▼  (XRPL signature auth)
-XPerp Orchestrator (Rust)
-  ├── CLOB order book (price-time priority)
-  ├── Binance price feed (5s)
-  ├── Funding rates (8h) + liquidation scanner
-  └── WebSocket real-time feed
-      │
-      ▼  (hardware-isolated)
-Intel SGX Enclave
-  ├── Margin engine (checks every position)
-  ├── Private keys never leave the CPU
-  └── DCAP attestation (anyone can verify)
-      │
-      ▼  (2-of-3 multisig)
-XRPL Mainnet — native XRP settlement
+XRPL Wallet ──► Orchestrator (Rust) ──► SGX Enclave ──► XRPL Mainnet
+                  │ CLOB order book       │ Margin engine    │ XRP settlement
+                  │ Price feed (5s)       │ Key custody      │ 2-of-3 multisig
+                  │ Funding + liquidation │ DCAP attestation │ 3-5s finality
+                  └ WebSocket feed        └ Hardware-isolated
 ```
+
+- **Orchestrator:** matching engine, price feed, WebSocket — the "hot" layer
+- **SGX Enclave:** margin checks, signing, sealed state — the "trust" layer
+- **XRPL:** settlement, escrow, multisig — the "finality" layer
 
 ---
 
@@ -136,16 +128,15 @@ XRPL Mainnet — native XRP settlement
 
 **XRPL has no smart contracts. We use hardware instead.**
 
-|                   | Smart Contract DEX               | XPerp (XRPL + TEE)                         |
-| ----------------- | -------------------------------- | ------------------------------------------ |
-| Custody           | Bridge multisig (people)         | **XRPL escrow (processors)**               |
-| Code verification | Public Solidity                  | **DCAP attestation (Intel)**               |
-| Attack surface    | Logic exploits, MEV, flash loans | Hardware side-channels                     |
-| Settlement        | L2 → L1 (minutes to days)        | **3-5 sec on XRPL**                        |
-| Multisig signers  | Humans (social-engineerable)     | **SGX enclaves (not social-engineerable)** |
+|                | Smart Contract DEX               | XPerp (TEE)                  |
+| -------------- | -------------------------------- | ---------------------------- |
+| Custody        | Bridge multisig (people)         | **XRPL escrow (processors)** |
+| Verification   | Public Solidity                  | **DCAP attestation (Intel)** |
+| Attack surface | Logic exploits, MEV, flash loans | Hardware side-channels       |
+| Settlement     | L2 → L1 (minutes to days)        | **3-5 sec on XRPL**          |
+| Signers        | Humans (social-engineerable)     | **SGX enclaves (not)**       |
 
-> Smart contracts are public but exploitable.
-> **Our code is private but verifiable** — Intel DCAP attestation.
+> Smart contracts are public but exploitable. **Our code is private but verifiable.**
 
 ---
 
@@ -189,9 +180,8 @@ Revenue streams: spread earnings + fee rebates + funding rate payments.
 | DEX heritage     | Protocol-level order book since 2012          |
 | Community        | One of the largest and most loyal in crypto   |
 
-> _"A project that uses XRPL escrow, multisig, RLUSD natively scores higher than one that just processes a payment."_ — XRPL Commons
-
-**We use everything XRPL has, the way it was meant to be used.**
+**XRPL gives us native primitives that other chains simulate with smart contracts:**
+escrow, multisig (SignerListSet), sub-cent fees, 3-second finality. We use them directly.
 
 ---
 
@@ -234,18 +224,16 @@ Fiat (EUR) → My Neobank → XRP → XPerp (trade) → XRP profits → My Neoba
 
 # What's Live Today
 
-| Component                         | Tech                            | Status              |
-| --------------------------------- | ------------------------------- | ------------------- |
-| Perpetual futures (XRP-PERP, 20x) | Rust CLOB                       | **Live on mainnet** |
-| XRPL wallet auth                  | secp256k1 + Crossmark/GemWallet | **Live**            |
-| SGX margin engine                 | C/C++ in Intel SGX              | **Live**            |
-| 2-of-3 multisig withdrawal        | XRPL SignerListSet              | **Live**            |
-| DCAP attestation                  | Azure DCsv3                     | **Verified**        |
-| Market Making vault               | Automated strategy              | **Live**            |
-| Price feed                        | Binance XRP/USDT, 5s            | **Live**            |
-| WebSocket                         | Trades, orderbook, ticker       | **Live**            |
-| Funding rate + liquidation        | 8h intervals + 10s scan         | **Live**            |
-| Full web UI                       | SvelteKit + Tailwind            | **Live**            |
+| Component                                                           | Status              |
+| ------------------------------------------------------------------- | ------------------- |
+| Perpetual futures (XRP-PERP, up to 20x leverage)                    | **Live on mainnet** |
+| XRPL wallet auth (Crossmark, GemWallet)                             | **Live**            |
+| SGX margin engine + 2-of-3 multisig withdrawal                      | **Live**            |
+| DCAP remote attestation (Azure DCsv3)                               | **Verified**        |
+| Market Making vault                                                 | **Live**            |
+| Price feed (Binance, 5s) + funding rates (8h) + liquidation scanner | **Live**            |
+| WebSocket real-time feed (trades, orderbook, ticker)                | **Live**            |
+| Full web UI (SvelteKit) with portfolio, vaults, verify enclave      | **Live**            |
 
 **130 automated tests · 52 audit findings closed · Open source (BSL 1.1)**
 
@@ -255,7 +243,7 @@ Fiat (EUR) → My Neobank → XRP → XPerp (trade) → XRP profits → My Neoba
 
 **Innovation:** First perpetual DEX on XRPL. TEE instead of smart contracts — a new security paradigm.
 
-**Execution:** Not a prototype. Live API, live trading, live vaults. Deployed on mainnet with real infrastructure across 4 servers.
+**Execution:** Not a prototype. Live API, live trading, live vault. Deployed on mainnet across 3 independent servers (Hetzner + 2x Azure DCsv3).
 
 **Impact:** Unlocks leveraged trading for millions of XRP holders without leaving their chain.
 
@@ -273,6 +261,7 @@ Fiat (EUR) → My Neobank → XRP → XPerp (trade) → XRP profits → My Neoba
 
 Verify the enclave: [perp.ph18.io/verify](https://perp.ph18.io/verify)
 API: [api-perp.ph18.io](https://api-perp.ph18.io)
-Source: [github.com/77ph/xrpl-perp-dex](https://github.com/77ph/xrpl-perp-dex)
+UI: [github.com/LemonTreeTechnologies/perp-dex-ui](https://github.com/LemonTreeTechnologies/perp-dex-ui)
+Orchestrator: [github.com/77ph/xrpl-perp-dex](https://github.com/77ph/xrpl-perp-dex)
 
 _XPerp Team · Hack the Block Paris · April 2026_
