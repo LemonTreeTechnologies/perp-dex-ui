@@ -79,7 +79,7 @@ style: |
 
 **The First Perpetual Futures DEX on XRPL**
 
-Native XRP settlement · 2-of-3 SGX multisig · Live on mainnet
+Native XRP settlement · No bridges · No wrapped tokens · TEE
 
 _Hack the Block · Paris · April 2026_
 
