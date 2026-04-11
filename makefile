@@ -6,4 +6,5 @@ build:
 	yarn build
 dev: 
 	yarn dev
+
 all: fmt lint build
