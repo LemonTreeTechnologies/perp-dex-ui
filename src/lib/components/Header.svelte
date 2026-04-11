@@ -1,5 +1,36 @@
 <script lang="ts">
 	import { walletStore } from '$lib/stores/wallet';
+	import { authStore } from '$lib/stores/auth';
+	import { authApi } from '$lib/api/client';
+	import { generatePostAuthHeaders } from '$lib/utils/xrplAuth';
+
+	let isLoggingIn = $state(false);
+
+	async function handleLogin() {
+		isLoggingIn = true;
+
+		try {
+			// Generate auth headers for the login endpoint
+			const headers = await generatePostAuthHeaders(null);
+
+			// Call the login function to get the token
+			const token = await authApi.login(headers);
+
+			// Store the token in the auth store (expires in 1 hour by default)
+			authStore.setToken(token, 3600);
+
+			console.log('Login successful! Token stored.');
+		} catch (error) {
+			console.error('Login failed:', error);
+		} finally {
+			isLoggingIn = false;
+		}
+	}
+
+	function handleLogout() {
+		authStore.clearToken();
+		console.log('Logged out. Token cleared.');
+	}
 
 	async function connectWallet() {
 		try {
@@ -119,6 +150,22 @@
 								{formatAddress($walletStore.address)}
 							</span>
 						</div>
+						{#if $authStore.token}
+							<button
+								onclick={handleLogout}
+								class="rounded-lg border border-[#404040] bg-[#2A2A2A] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#404040]"
+							>
+								Logout
+							</button>
+						{:else}
+							<button
+								onclick={handleLogin}
+								disabled={isLoggingIn}
+								class="rounded-lg bg-[#00AAE4] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#0099CC] disabled:cursor-not-allowed disabled:opacity-50"
+							>
+								{isLoggingIn ? 'Logging in...' : 'Login'}
+							</button>
+						{/if}
 						<button
 							onclick={disconnectWallet}
 							class="rounded-lg border border-[#404040] bg-[#2A2A2A] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#404040]"
