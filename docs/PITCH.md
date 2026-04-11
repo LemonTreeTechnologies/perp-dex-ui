@@ -137,6 +137,66 @@ Every major blockchain has its perps DEX.
 **Live API:** `https://api-perp.ph18.io`
 **Verify Enclave:** `https://perp.ph18.io/verify`
 
+## Partnership: XPerp + My Neobank
+
+This collaboration started at Hack the Block Paris — two teams that found a natural fit between
+on-chain derivatives and off-chain money.
+
+XPerp solves the trading side. What it doesn't solve — and what no DEX solves well — is the
+bridge between fiat and crypto. That's where My Neobank (MYNB) comes in.
+
+### Fiat on-ramp / off-ramp
+
+Every DEX needs fiat rails and can't build them fast. XPerp users need to get EUR, USD, or GBP
+into crypto to trade, and back to fiat when they take profits. MYNB has this infrastructure
+already: SEPA, SEPA Instant, SWIFT, and crypto conversion. Users click "Deposit" on XPerp, land
+in MYNB, and money flows in seconds. No CEX middleman. XPerp doesn't need to build any fiat
+infrastructure.
+
+### Compliance-ready user base
+
+Every XPerp user who comes through MYNB is already KYC-verified (Sumsub), Travel Rule compliant,
+backed by a FINTRAC-registered entity. This gives XPerp credibility with regulators and
+institutional partners without building costly compliance infrastructure from scratch.
+
+### Custody and settlement
+
+Traders need somewhere to park profits between trades. MYNB provides a real IBAN account — EUR
+balance, card spending, the full neobank experience. Profits from XPerp settle directly into
+MYNB. Users stay in the ecosystem instead of withdrawing to a random exchange.
+
+### Development capacity
+
+MYNB's development partner, 4IRE (200+ engineers), can assist with the integration layer — fiat
+ramp API, wallet linking, settlement flow, and UX/UI.
+
+### What the integration looks like
+
+```
+User (fiat)                      User (crypto)
+    |                                |
+    v                                v
+My Neobank                     XRPL Wallet
+  - KYC/AML verified              - Crossmark / GemWallet
+  - SEPA / SWIFT deposit          |
+  - EUR → RLUSD conversion        |
+    |                              |
+    +--------- RLUSD ------------>-+
+                                   |
+                                   v
+                              XPerp (trade)
+                                   |
+                                   v
+                              RLUSD profits
+                                   |
+    +--------< RLUSD <------------+
+    |
+    v
+My Neobank
+  - RLUSD → EUR conversion
+  - Withdraw to bank (SEPA Instant)
+```
+
 ---
 
 _Sources:_
