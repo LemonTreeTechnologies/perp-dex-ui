@@ -25,6 +25,7 @@ function createMarketDataStore() {
 
 	let ws: WebSocket | null = null;
 	let reconnectTimeout: ReturnType<typeof setTimeout> | null = null;
+	let pollingInterval: ReturnType<typeof setInterval> | null = null;
 
 	function connect() {
 		if (ws?.readyState === WebSocket.OPEN) return;
@@ -113,6 +114,10 @@ function createMarketDataStore() {
 			clearTimeout(reconnectTimeout);
 			reconnectTimeout = null;
 		}
+		if (pollingInterval) {
+			clearInterval(pollingInterval);
+			pollingInterval = null;
+		}
 		if (ws) {
 			ws.close();
 			ws = null;
@@ -141,12 +146,49 @@ function createMarketDataStore() {
 		}
 	}
 
+	async function fetchOrderbook() {
+		try {
+			console.log('Polling orderbook...');
+			const orderbook = await api.getOrderBook();
+			console.log('Fetched orderbook:', orderbook);
+			update((state) => ({ ...state, orderbook }));
+		} catch (error) {
+			console.error('Failed to fetch orderbook:', error);
+		}
+	}
+
+	function startPolling() {
+		console.log('Starting orderbook polling (every 1 second)');
+		// Stop any existing polling
+		if (pollingInterval) {
+			clearInterval(pollingInterval);
+		}
+
+		// Fetch immediately first
+		fetchOrderbook();
+
+		// Poll orderbook every 1 second
+		pollingInterval = setInterval(() => {
+			fetchOrderbook();
+		}, 1000);
+	}
+
+	function stopPolling() {
+		console.log('Stopping orderbook polling');
+		if (pollingInterval) {
+			clearInterval(pollingInterval);
+			pollingInterval = null;
+		}
+	}
+
 	return {
 		subscribe,
 		connect,
 		disconnect,
 		subscribeToUser,
-		fetchInitialData
+		fetchInitialData,
+		startPolling,
+		stopPolling
 	};
 }
 

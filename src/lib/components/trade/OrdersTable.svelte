@@ -1,26 +1,29 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import { walletStore } from '$lib/stores/wallet';
-	import type { Order } from '$lib/api/client';
+	import { authApi, type Order } from '$lib/api/client';
+	import { generateAuthHeaders } from '$lib/utils/xrplAuth';
 
 	let orders: Order[] = $state([]);
-	let loading = $state(true);
+	let loading = $state(false);
 	let error = $state('');
 
-	onMount(async () => {
-		if ($walletStore.isConnected && $walletStore.address) {
-			await loadOrders();
-		}
-		loading = false;
-	});
-
 	async function loadOrders() {
+		if (!$walletStore.isConnected || !$walletStore.address) {
+			error = 'Please connect your wallet first';
+			return;
+		}
+
 		try {
 			loading = true;
-			// TODO: Implement authenticated API call with XRPL signature
-			// For now, show placeholder
-			orders = [];
+			error = '';
+
+			const headers = await generateAuthHeaders(
+				'GET',
+				`/v1/orders?user_id=${$walletStore.address}`
+			);
+			orders = await authApi.getOrders($walletStore.address, headers);
 		} catch (err) {
+			console.error('Failed to load orders:', err);
 			error = err instanceof Error ? err.message : 'Failed to load orders';
 		} finally {
 			loading = false;
@@ -28,25 +31,41 @@
 	}
 
 	async function cancelOrder(orderId: number) {
+		if (!$walletStore.isConnected || !$walletStore.address) {
+			return;
+		}
+
 		try {
-			// TODO: Implement authenticated API call with XRPL signature
-			console.log('Cancelling order:', orderId);
+			const headers = await generateAuthHeaders('DELETE', `/v1/orders/${orderId}`);
+			await authApi.cancelOrder(orderId, headers);
 			await loadOrders();
 		} catch (err) {
+			console.error('Failed to cancel order:', err);
 			error = err instanceof Error ? err.message : 'Failed to cancel order';
 		}
 	}
 </script>
 
 <div class="space-y-4">
+	<div class="flex items-center justify-between">
+		<h3 class="text-sm font-medium text-white">Open Orders</h3>
+		{#if $walletStore.isConnected}
+			<button
+				onclick={loadOrders}
+				disabled={loading}
+				class="rounded bg-[#00AAE4] px-3 py-1 text-xs font-medium text-white transition-all hover:bg-[#0088B8] disabled:cursor-not-allowed disabled:opacity-50"
+			>
+				{loading ? 'Loading...' : 'Fetch Orders'}
+			</button>
+		{/if}
+	</div>
+
 	{#if !$walletStore.isConnected}
 		<div class="text-center text-[#B0B0B0]">Connect your wallet to view orders</div>
-	{:else if loading}
-		<div class="text-center text-[#B0B0B0]">Loading orders...</div>
 	{:else if error}
 		<div class="text-center text-red-400">{error}</div>
-	{:else if orders.length === 0}
-		<div class="text-center text-[#B0B0B0]">No open orders</div>
+	{:else if orders.length === 0 && !loading}
+		<div class="text-center text-[#B0B0B0]">No open orders. Click "Fetch Orders" to load.</div>
 	{:else}
 		<div class="overflow-x-auto">
 			<table class="w-full">

@@ -15,11 +15,13 @@
 	let loading = $state(true);
 	let error = $state('');
 	let fundingRate: FundingRate | null = $state(null);
+	let isInitialLoad = $state(true);
 
 	// Fetch funding rate
 	async function fetchFundingRate() {
 		try {
 			fundingRate = await api.getFundingRate();
+			console.log('Fetched funding rate:', fundingRate);
 		} catch (err) {
 			console.error('Failed to fetch funding rate:', err);
 		}
@@ -28,8 +30,12 @@
 	// Fetch price data from Binance
 	async function fetchPriceData() {
 		try {
-			loading = true;
+			// Only show loading state on initial load
+			if (isInitialLoad) {
+				loading = true;
+			}
 			error = '';
+			console.log('Fetching price data from Binance...');
 			const response = await fetch(
 				'https://api.binance.com/api/v3/klines?symbol=XRPUSDT&interval=1m&limit=500'
 			);
@@ -53,23 +59,34 @@
 				close: parseFloat(candle[4]),
 				volume: parseFloat(candle[5])
 			}));
+			console.log(
+				`Fetched ${chartData.length} candles, latest price: ${chartData[chartData.length - 1]?.close}`
+			);
 		} catch (err) {
 			error = err instanceof Error ? err.message : 'Failed to load chart data';
 			console.error('Failed to fetch price data:', err);
 		} finally {
-			loading = false;
+			if (isInitialLoad) {
+				loading = false;
+				isInitialLoad = false;
+			}
 		}
 	}
 
 	onMount(() => {
+		console.log('PriceChart component mounted, starting polling');
 		fetchPriceData();
 		fetchFundingRate();
-		// Refresh every 30 seconds
+		// Refresh every 1 second
 		const interval = setInterval(() => {
+			console.log('Polling price chart data...');
 			fetchPriceData();
 			fetchFundingRate();
-		}, 30000);
-		return () => clearInterval(interval);
+		}, 1000);
+		return () => {
+			console.log('PriceChart component destroyed, stopping polling');
+			clearInterval(interval);
+		};
 	});
 
 	// Compute price change
