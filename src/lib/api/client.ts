@@ -332,6 +332,20 @@ export const authApi = {
 			return data.transactions || [];
 		}
 		throw new Error(data.message || 'Failed to fetch transactions');
+	},
+
+	/**
+	 * Get user trades - uses token if available, falls back to XRPL signature
+	 */
+	async getUserTrades(userId: string, xrplHeaders?: Record<string, string>): Promise<Trade[]> {
+		const headers = getAuthHeaders(xrplHeaders);
+		const response = await fetch(`${BASE_URL}/v1/account/trades?user_id=${userId}`, { headers });
+		const data = await response.json();
+
+		if (data.status === 'success') {
+			return data.trades || [];
+		}
+		throw new Error(data.message || 'Failed to fetch user trades');
 	}
 };
 

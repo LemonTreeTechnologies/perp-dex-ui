@@ -1,12 +1,52 @@
 <script lang="ts">
-	import { marketDataStore } from '$lib/stores/marketData';
+	import { walletStore } from '$lib/stores/wallet';
+	import { authApi, type Trade } from '$lib/api/client';
 
-	let trades = $derived($marketDataStore.trades.slice(0, 20));
+	let trades: Trade[] = $state([]);
+	let loading = $state(false);
+	let error = $state('');
+	let initialLoadDone = $state(false);
+
+	export async function loadTrades(silent = false) {
+		if (!$walletStore.isConnected || !$walletStore.address) {
+			error = 'Please connect your wallet first';
+			return;
+		}
+
+		try {
+			// Only show loading indicator on initial load, not on auto-refresh
+			if (!silent && !initialLoadDone) {
+				loading = true;
+			}
+			error = '';
+
+			// Use token-based auth - authApi will use stored token when available
+			trades = await authApi.getUserTrades($walletStore.address);
+			initialLoadDone = true;
+		} catch (err) {
+			console.error('Failed to load trades:', err);
+			error = err instanceof Error ? err.message : 'Failed to load trades';
+		} finally {
+			loading = false;
+		}
+	}
 </script>
 
 <div class="space-y-4">
-	{#if trades.length === 0}
-		<div class="text-center text-[#B0B0B0]">No recent trades</div>
+	<div class="flex items-center justify-between">
+		<h3 class="text-sm font-medium text-white">Trade History</h3>
+	</div>
+
+	{#if error}
+		<div class="rounded bg-red-500/10 p-3 text-sm text-red-400">{error}</div>
+	{:else if !$walletStore.isConnected}
+		<div class="text-center text-[#B0B0B0]">
+			Please connect your wallet to view your trade history
+		</div>
+	{:else if loading && !initialLoadDone}
+		<div class="text-center text-[#B0B0B0]">Loading trades...</div>
+	{:else if trades.length === 0}
+		<div class="text-center text-[#B0B0B0]">No trade history</div>
 	{:else}
 		<div class="overflow-x-auto">
 			<table class="w-full">
