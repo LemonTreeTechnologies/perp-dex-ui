@@ -12,6 +12,7 @@
 	let activeTab: 'positions' | 'orders' | 'trades' = $state('positions');
 	let positionsTableRef: PositionsTable | null = $state(null);
 	let ordersTableRef: OrdersTable | null = $state(null);
+	let tradesTableRef: TradesTable | null = $state(null);
 	let orderFormRef: OrderForm | null = $state(null);
 
 	function handlePriceClick(price: string) {
@@ -23,13 +24,16 @@
 			return;
 		}
 
-		// Refresh positions and orders silently (no loading flash)
+		// Refresh positions, orders, and trades silently (no loading flash)
 		const promises = [];
 		if (positionsTableRef) {
 			promises.push(positionsTableRef.loadPositions(true).catch(console.error));
 		}
 		if (ordersTableRef) {
 			promises.push(ordersTableRef.loadOrders(true).catch(console.error));
+		}
+		if (tradesTableRef) {
+			promises.push(tradesTableRef.loadTrades(true).catch(console.error));
 		}
 		await Promise.allSettled(promises);
 	}
@@ -58,6 +62,19 @@
 	$effect(() => {
 		if ($walletStore.isConnected && $walletStore.address) {
 			marketDataStore.subscribeToUser($walletStore.address);
+		}
+	});
+
+	// Load data when active tab changes or wallet connects
+	$effect(() => {
+		if ($walletStore.isConnected && $walletStore.address) {
+			if (activeTab === 'positions' && positionsTableRef) {
+				positionsTableRef.loadPositions();
+			} else if (activeTab === 'orders' && ordersTableRef) {
+				ordersTableRef.loadOrders();
+			} else if (activeTab === 'trades' && tradesTableRef) {
+				tradesTableRef.loadTrades();
+			}
 		}
 	});
 </script>
@@ -160,7 +177,7 @@
 			{:else if activeTab === 'orders'}
 				<OrdersTable bind:this={ordersTableRef} />
 			{:else}
-				<TradesTable />
+				<TradesTable bind:this={tradesTableRef} />
 			{/if}
 		</div>
 	</div>
