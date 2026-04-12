@@ -83,17 +83,20 @@ src/
 ## 🛠 Tech Stack
 
 ### Frontend
+
 - **[SvelteKit](https://kit.svelte.dev/)** — SSG with static adapter
 - **[Svelte 5](https://svelte.dev/)** — Runes API (`$state`, `$derived`, `$effect`)
 - **[Tailwind CSS v4](https://tailwindcss.com/)** — Utility-first styling
 - **TypeScript** — Strict mode with full type coverage
 
 ### Integrations
+
 - **[@crossmarkio/sdk](https://www.npmjs.com/package/@crossmarkio/sdk)** — Crossmark wallet support
 - **[@noble/hashes](https://www.npmjs.com/package/@noble/hashes)** — Cryptographic hashing for XRPL auth
 - **WebSocket API** — Real-time market data (trades, orderbook, ticker)
 
 ### Testing & Tooling
+
 - **Vitest** — Unit testing with browser mode
 - **Playwright** — E2E testing
 - **ESLint** + **Prettier** — Code quality and formatting
@@ -103,17 +106,18 @@ src/
 
 ## 📜 Available Commands
 
-| Command        | Description                              |
-|----------------|------------------------------------------|
-| `make install` | Install dependencies                     |
-| `make dev`     | Start development server                 |
-| `make build`   | Build static site for production         |
-| `make lint`    | Run ESLint + Prettier checks             |
-| `make fmt`     | Auto-format code with Prettier           |
-| `make all`     | Format, lint, and build                  |
-| `make docs`    | Generate presentation HTML               |
+| Command        | Description                      |
+| -------------- | -------------------------------- |
+| `make install` | Install dependencies             |
+| `make dev`     | Start development server         |
+| `make build`   | Build static site for production |
+| `make lint`    | Run ESLint + Prettier checks     |
+| `make fmt`     | Auto-format code with Prettier   |
+| `make all`     | Format, lint, and build          |
+| `make docs`    | Generate presentation HTML       |
 
 **Docker commands:**
+
 ```bash
 make docker-dev   # Run development server with Docker
 make docker-prod  # Build and deploy production with Docker
@@ -131,6 +135,7 @@ make docker-prod
 ```
 
 **Production features:**
+
 - Serves at **xperp.fi** and **www.xperp.fi**
 - Automatic HTTPS with Let's Encrypt SSL certificates
 - Auto-renewing certificates
@@ -183,6 +188,7 @@ make docker-dev
 5. **Settlement** — Withdrawals signed by 2-of-3 SGX enclaves, settled on XRPL in 3-5 seconds
 
 **Security guarantees:**
+
 - Private keys never exist in software — generated and stored inside Intel SGX CPU
 - No single operator can move user funds (2-of-3 threshold, master key disabled)
 - Anyone can verify enclave integrity via Intel DCAP remote attestation
@@ -192,23 +198,23 @@ make docker-dev
 
 ## 📚 Documentation
 
-| Document                                             | Description                                          |
-|------------------------------------------------------|------------------------------------------------------|
-| [**ARCHITECTURE.md**](docs/ARCHITECTURE.md)          | System design, component interaction, data flow      |
-| [**BACKEND-API.md**](docs/BACKEND-API.md)            | REST endpoints, WebSocket events, authentication     |
-| [**PITCH.md**](docs/PITCH.md)                        | Product vision, market opportunity, roadmap          |
-| [**PRESENTATION.md**](docs/PRESENTATION.md)          | Slide deck content and key messaging                 |
-| [**HACKATHON-APPLICATION.md**](docs/HACKATHON-APPLICATION.md) | Hackathon submission details           |
-| [**CLAUDE.md**](CLAUDE.md)                           | Developer guidance for AI-assisted coding            |
+| Document                                                      | Description                                      |
+| ------------------------------------------------------------- | ------------------------------------------------ |
+| [**ARCHITECTURE.md**](docs/ARCHITECTURE.md)                   | System design, component interaction, data flow  |
+| [**BACKEND-API.md**](docs/BACKEND-API.md)                     | REST endpoints, WebSocket events, authentication |
+| [**PITCH.md**](docs/PITCH.md)                                 | Product vision, market opportunity, roadmap      |
+| [**PRESENTATION.md**](docs/PRESENTATION.md)                   | Slide deck content and key messaging             |
+| [**HACKATHON-APPLICATION.md**](docs/HACKATHON-APPLICATION.md) | Hackathon submission details                     |
+| [**CLAUDE.md**](CLAUDE.md)                                    | Developer guidance for AI-assisted coding        |
 
 ---
 
 ## 🔗 Related Repositories
 
-| Repository                                                               | Description                                              |
-|--------------------------------------------------------------------------|----------------------------------------------------------|
+| Repository                                                                  | Description                                            |
+| --------------------------------------------------------------------------- | ------------------------------------------------------ |
 | [**xrpl-perp-dex**](https://github.com/LemonTreeTechnologies/xrpl-perp-dex) | Rust orchestrator — CLOB, price feeds, P2P replication |
-| **SGX Enclave** (private)                                                | Margin engine, ECDSA custody, DCAP attestation           |
+| **SGX Enclave** (private)                                                   | Margin engine, ECDSA custody, DCAP attestation         |
 
 ---
 
@@ -223,6 +229,7 @@ Contributions are welcome! Please follow these steps:
 5. Open a Pull Request
 
 **Code quality standards:**
+
 - TypeScript strict mode — no `any` types
 - All components must be properly typed
 - Run `make fmt` and `make lint` before committing
@@ -249,6 +256,6 @@ This project is private and proprietary to Lemon Tree Technologies.
 
 **Built with ❤️ for the XRP Ledger community**
 
-*Paris Blockchain Week XRPL Hackathon 2026*
+_Paris Blockchain Week XRPL Hackathon 2026_
 
 </div>
