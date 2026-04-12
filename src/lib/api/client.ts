@@ -346,6 +346,27 @@ export const authApi = {
 			return data.trades || [];
 		}
 		throw new Error(data.message || 'Failed to fetch user trades');
+	},
+
+	/**
+	 * Close position - uses token if available, falls back to XRPL signature
+	 */
+	async closePosition(positionId: number, xrplHeaders?: Record<string, string>) {
+		const headers = getAuthHeaders(xrplHeaders);
+		console.log('Closing position with headers:', headers);
+		console.log('Closing position ID:', positionId);
+		const response = await fetch(`${BASE_URL}/v1/positions/close/${positionId}`, {
+			method: 'POST',
+			headers: {
+				...headers,
+				'Content-Type': 'application/json'
+			}
+		});
+		const data = await response.json();
+		if (data.status === 'success') {
+			return data;
+		}
+		throw new Error(data.message || 'Failed to close position');
 	}
 };
 
