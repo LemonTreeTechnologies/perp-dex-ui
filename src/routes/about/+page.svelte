@@ -207,7 +207,7 @@
 		<h2 class="text-2xl font-semibold text-white">Learn More</h2>
 		<div class="grid gap-4 sm:grid-cols-2">
 			<a
-				href="https://github.com/77ph/xrpl-perp-dex"
+				href="https://github.com/LemonTreeTechnologies/xrpl-perp-dex"
 				target="_blank"
 				rel="noopener noreferrer"
 				class="rounded-lg border border-[#2A2A2A] bg-[#121212] p-5 transition-colors hover:border-[#00AAE4]"

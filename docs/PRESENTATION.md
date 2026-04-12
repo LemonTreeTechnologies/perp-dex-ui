@@ -89,23 +89,21 @@ _Hack the Block · Paris · April 2026_
 
 **XRP is a top-3 crypto asset. Zero perpetual futures on its own chain.**
 
-- Millions of XRP holders who want leverage → send assets to Binance, Bybit, OKX
-- Want to hedge? → Same — leave XRPL, trust a CEX, hope it's not the next FTX
+- Millions of XRP holders who want leverage → send assets off ledger
+- Want to hedge? → leave XRPL
 - Bridge to Ethereum? → Gas fees, MEV, bridge hacks, smart contract exploits
 
 > Drift Protocol (Solana) drained for **$280M** — not a code bug, but social engineering of multisig signers. Smart contract custody has a people problem.
 
-**The demand exists. The community is asking for it. The instrument doesn't exist.**
+**The demand exists, leaving the community no choice but to let their liquidity leave the ledger.**
 
 ---
 
 # Community Demand
 
-**The XRPL ecosystem is actively asking for derivatives.**
+As evidenced by [recent posts in XRP forums](https://u.today/new-xrp-ledger-sidechain-proposal-aims-to-bring-options-trading-to-xrpl), the community is desperate for derivatives.
 
-Denis Angell (XRPL Labs engineer) shared a sidechain proposal for options trading — called it _"Something big."_ ChartNerdTA on X posted: **"HUGEEE!"**
-
-That proposal targets **options** on a **new sidechain** with a bridge.
+There are solutions for **options** on a **new sidechain** with a bridge.
 
 We target **perpetual futures** — a market **2,300x larger** ($92.9T vs $40B) — and we're **already live on XRPL mainnet**. No sidechain. No bridge.
 
@@ -266,6 +264,6 @@ Fiat (EUR) → My Neobank → XRP → XPerp (trade) → XRP profits → My Neoba
 
 **<a href="https://xperp.fi" target="_blank">xperp.fi</a>**
 
-<a href="https://xperp.fi/verify" target="_blank">Verify the Enclave</a> · <a href="https://api-perp.ph18.io" target="_blank">API</a> · <a href="https://github.com/LemonTreeTechnologies/perp-dex-ui" target="_blank">Frontend and UI</a> · <a href="https://github.com/77ph/xrpl-perp-dex" target="_blank">Orchestrator</a>
+<a href="https://xperp.fi/verify" target="_blank">Verify the Enclave</a> · <a href="https://api-perp.ph18.io" target="_blank">API</a> · <a href="https://github.com/LemonTreeTechnologies/perp-dex-ui" target="_blank">Frontend and UI</a> · <a href="https://github.com/LemonTreeTechnologies/xrpl-perp-dex" target="_blank">Orchestrator</a>
 
 _XPerp Team · Hack the Block Paris · April 2026_

@@ -1,7 +1,7 @@
 # Backend API Reference
 
 This document describes the backend API that the UI consumes. The backend is a Rust orchestrator
-([xrpl-perp-dex](https://github.com/77ph/xrpl-perp-dex)) with an SGX enclave for margin
+([xrpl-perp-dex](https://github.com/LemonTreeTechnologies/xrpl-perp-dex)) with an SGX enclave for margin
 computation and key custody.
 
 **Production base URL:** `https://api-perp.ph18.io`
@@ -432,7 +432,7 @@ Exploits interest rate discrepancy between borrowing USD and perpetual funding r
 - **Share accounting:** How NAV is computed — cash only vs mark-to-market vs full accrual including funding
 - **Withdrawal timing:** Immediate at current NAV vs queued/epoch-based (to prevent NAV-spike front-running)
 - **Liquidation losses:** Pro-rata to share price vs absorbed by insurance fund first
-- See [vault-design-followup.md](https://github.com/77ph/xrpl-perp-dex/blob/master/docs/vault-design-followup.md) in the backend repo for full discussion
+- See [vault-design-followup.md](https://github.com/LemonTreeTechnologies/xrpl-perp-dex/blob/master/docs/vault-design-followup.md) in the backend repo for full discussion
 
 ---
 

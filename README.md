@@ -1,6 +1,6 @@
 # perp-dex-ui
 
-Frontend for [xrpl-perp-dex](https://github.com/77ph/xrpl-perp-dex) — a perpetual futures DEX on XRPL with TEE (Intel SGX) computation and native XRP settlement.
+Frontend for [xrpl-perp-dex](https://github.com/LemonTreeTechnologies/xrpl-perp-dex) — a perpetual futures DEX on XRPL with TEE (Intel SGX) computation and native XRP settlement.
 
 ## Quick Start
 
@@ -72,5 +72,5 @@ See [DOCKER.md](DOCKER.md) for detailed Docker documentation.
 
 | Repo                                                   | Description                                                              |
 | ------------------------------------------------------ | ------------------------------------------------------------------------ |
-| [xrpl-perp-dex](https://github.com/77ph/xrpl-perp-dex) | Rust orchestrator — trading API, order book, price feed, P2P replication |
+| [xrpl-perp-dex](https://github.com/LemonTreeTechnologies/xrpl-perp-dex) | Rust orchestrator — trading API, order book, price feed, P2P replication |
 | SGX Enclave (private)                                  | Margin engine, ECDSA key custody, DCAP attestation                       |

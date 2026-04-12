@@ -8,7 +8,7 @@ Frontend for a perpetual futures DEX on XRPL with TEE (Intel SGX) computation an
 settlement. Built with SvelteKit, Svelte 5 (runes mode), Tailwind CSS v4, and TypeScript strict mode.
 Uses Vite for bundling and `@sveltejs/adapter-static` for static site generation.
 
-**Backend:** [xrpl-perp-dex](https://github.com/77ph/xrpl-perp-dex) — Rust orchestrator + SGX enclave
+**Backend:** [xrpl-perp-dex](https://github.com/LemonTreeTechnologies/xrpl-perp-dex) — Rust orchestrator + SGX enclave
 **API base:** `https://api-perp.ph18.io` | **Market:** `XRP-PERP` | **Network:** XRPL Mainnet
 
 ## Key Documentation
@@ -78,10 +78,10 @@ Makefile shortcuts: `make fmt`, `make lint`, `make build`, `make all` (fmt + lin
 
 ## Upstream Documentation
 
-Backend docs in [xrpl-perp-dex](https://github.com/77ph/xrpl-perp-dex):
+Backend docs in [xrpl-perp-dex](https://github.com/LemonTreeTechnologies/xrpl-perp-dex):
 
-- [docs/frontend-api-guide.md](https://github.com/77ph/xrpl-perp-dex/blob/master/docs/frontend-api-guide.md) — canonical API guide with signing examples (Python, Node.js, browser)
-- [docs/vault-design-spec.md](https://github.com/77ph/xrpl-perp-dex/blob/master/docs/vault-design-spec.md) — vault type design, strategy parameters, revenue streams
-- [docs/vault-design-followup.md](https://github.com/77ph/xrpl-perp-dex/blob/master/docs/vault-design-followup.md) — open design questions (share accounting, DB sync, orderbook persistence)
-- [docs/vault-requirements.md](https://github.com/77ph/xrpl-perp-dex/blob/master/docs/vault-requirements.md) — vault API contract (user, operator, admin endpoints)
-- [DEPLOYMENT.md](https://github.com/77ph/xrpl-perp-dex/blob/master/DEPLOYMENT.md) — architecture overview, port summary, endpoint whitelist
+- [docs/frontend-api-guide.md](https://github.com/LemonTreeTechnologies/xrpl-perp-dex/blob/master/docs/frontend-api-guide.md) — canonical API guide with signing examples (Python, Node.js, browser)
+- [docs/vault-design-spec.md](https://github.com/LemonTreeTechnologies/xrpl-perp-dex/blob/master/docs/vault-design-spec.md) — vault type design, strategy parameters, revenue streams
+- [docs/vault-design-followup.md](https://github.com/LemonTreeTechnologies/xrpl-perp-dex/blob/master/docs/vault-design-followup.md) — open design questions (share accounting, DB sync, orderbook persistence)
+- [docs/vault-requirements.md](https://github.com/LemonTreeTechnologies/xrpl-perp-dex/blob/master/docs/vault-requirements.md) — vault API contract (user, operator, admin endpoints)
+- [DEPLOYMENT.md](https://github.com/LemonTreeTechnologies/xrpl-perp-dex/blob/master/DEPLOYMENT.md) — architecture overview, port summary, endpoint whitelist
