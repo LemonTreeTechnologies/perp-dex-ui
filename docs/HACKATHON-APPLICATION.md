@@ -1,12 +1,12 @@
 # Hackathon Application — XPerp
 
-**Presentation:** https://github.com/LemonTreeTechnologies/perp-dex-ui/blob/main/docs/presentation.html
-
 ## Short Description (200 chars max)
 
 XPerp is the first perpetual futures DEX on XRPL. Trade XRP with up to 20x leverage using your own wallet. Funds secured by 2-of-3 SGX multisig, settled natively on-chain. No bridges, no CEX custody.
 
 ## Description (5000 chars max)
+
+**Presentation:** https://github.com/LemonTreeTechnologies/perp-dex-ui/blob/main/docs/presentation.html
 
 XPerp brings perpetual futures trading to the XRP Ledger for the first time. Millions of XRP holders today have no way to trade leveraged derivatives on their own chain — they must send assets to centralized exchanges or bridge to other blockchains. XPerp eliminates both of those compromises by building directly on XRPL with native XRP settlement.
 
@@ -54,10 +54,8 @@ The complete system is deployed and running on XRPL Mainnet:
 - Funding rate mechanism (8-hour intervals) and liquidation engine
 - Full web UI at perp.ph18.io with "How It Works" and "Verify Enclave" pages
 
+_Andrey contributed remotely._
+
 ## Technical Description (1000 chars max)
 
 Three-layer architecture: SvelteKit frontend, Rust orchestrator, Intel SGX enclave. The orchestrator runs a CLOB with price-time priority, processes XRPL secp256k1 signature-authenticated orders, monitors XRPL for deposits (1s), fetches Binance prices (5s), applies funding (8h), broadcasts via WebSocket. The SGX enclave (C/C++) runs 11 ecalls: margin checks, position management, ECDSA key custody, XRPL multisig signing, sealed state, DCAP attestation. Funds in XRPL escrow with 2-of-3 SignerListSet across 3 independent enclaves (Hetzner + 2x Azure DCsv3), master key disabled. Settlement on XRPL Mainnet in native XRP — deposits via Payment tx, withdrawals via enclave-signed multisig tx. Dual-mode auth: SHA-256 (CLI) and SHA-512Half (browser wallets). P2P order replication via libp2p gossipsub for multi-operator failover. Market making vault provides CLOB liquidity (delta neutral + delta one planned). Frontend: Svelte 5, Tailwind CSS, TypeScript. 14MB Rust binary, ~5ms per ecall.
-
----
-
-_Note: Andrey has been contributing remotely due to personal circumstances._
