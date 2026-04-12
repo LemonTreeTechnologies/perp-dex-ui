@@ -74,7 +74,7 @@ style: |
 <!-- _class: lead -->
 
 <div style="text-align: center;">
-<img src="../static/logo.svg" alt="XPerp" width="480" />
+<img src="https://xperp.fi/logo.svg" alt="XPerp" width="480" />
 </div>
 
 **The First Perpetual Futures DEX on XRPL**
