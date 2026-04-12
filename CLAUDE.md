@@ -85,3 +85,4 @@ Backend docs in [xrpl-perp-dex](https://github.com/LemonTreeTechnologies/xrpl-pe
 - [docs/vault-design-followup.md](https://github.com/LemonTreeTechnologies/xrpl-perp-dex/blob/master/docs/vault-design-followup.md) — open design questions (share accounting, DB sync, orderbook persistence)
 - [docs/vault-requirements.md](https://github.com/LemonTreeTechnologies/xrpl-perp-dex/blob/master/docs/vault-requirements.md) — vault API contract (user, operator, admin endpoints)
 - [DEPLOYMENT.md](https://github.com/LemonTreeTechnologies/xrpl-perp-dex/blob/master/DEPLOYMENT.md) — architecture overview, port summary, endpoint whitelist
+- [docs/deployment-procedure.md](https://github.com/LemonTreeTechnologies/xrpl-perp-dex/blob/master/docs/deployment-procedure.md) — production 2-of-3 signed release procedure (threat model, reproducible builds, hardware keys, deploy agent, rotation)

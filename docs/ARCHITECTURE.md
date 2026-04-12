@@ -143,6 +143,12 @@ See [BACKEND-API.md](BACKEND-API.md#authentication) for full details and code ex
 
 Not started — see [BACKEND-API.md](BACKEND-API.md#vault-api-planned) for planned endpoints.
 
+## Operator trust model & deployment
+
+The three SGX nodes are run by three independent operators (Andrey, Alex, Tom) on separate infrastructure, with no shared SSH access. Production deployment follows a **2-of-3 signed release** procedure: every binary and MRENCLAVE hash must be approved by at least two operators via hardware key (YubiKey) signatures before any node will swap it, and each node cross-attests with its peers before rejoining the FROST signing quorum. This ensures that neither a single rogue operator nor a compromised CI can push code into production unilaterally.
+
+Full procedure (threat model, reproducible builds, release manifest, deploy agent, rotation, rollback) in the upstream repo: [deployment-procedure.md](https://github.com/LemonTreeTechnologies/xrpl-perp-dex/blob/master/docs/deployment-procedure.md). Status: draft — target architecture for production hardening post-hackathon.
+
 ## Related repositories
 
 | Repo                                                                    | Description                                        |
