@@ -6,6 +6,7 @@
 	let loading = $state(false);
 	let error = $state('');
 	let initialLoadDone = $state(false);
+	let closingPositions = $state<Set<number>>(new Set());
 
 	export async function loadPositions(silent = false) {
 		if (!$walletStore.isConnected || !$walletStore.address) {
@@ -41,6 +42,31 @@
 		const margin = parseFloat(position.margin);
 		return margin > 0 ? (pnl / margin) * 100 : 0;
 	}
+
+	async function handleClosePosition(positionId: number) {
+		if (!$walletStore.isConnected || !$walletStore.address) {
+			error = 'Please connect your wallet first';
+			return;
+		}
+
+		try {
+			closingPositions.add(positionId);
+			closingPositions = closingPositions; // Trigger reactivity
+			error = '';
+
+			let res = await authApi.closePosition(positionId);
+			console.log('Close position response:', res);
+
+			// Reload positions after successful close
+			await loadPositions(true);
+		} catch (err) {
+			console.error('Failed to close position:', err);
+			error = err instanceof Error ? err.message : 'Failed to close position';
+		} finally {
+			closingPositions.delete(positionId);
+			closingPositions = closingPositions; // Trigger reactivity
+		}
+	}
 </script>
 
 <div class="space-y-4">
@@ -65,12 +91,14 @@
 						<th class="pb-2 text-right">Margin</th>
 						<th class="pb-2 text-right">PnL</th>
 						<th class="pb-2 text-right">ROI</th>
+						<th class="pb-2 text-right">Actions</th>
 					</tr>
 				</thead>
 				<tbody>
 					{#each positions as position (position.position_id)}
 						{@const pnl = calculatePnL(position)}
 						{@const roi = calculateROI(position)}
+						{@const isClosing = closingPositions.has(position.position_id)}
 						<tr class="border-b border-[#2A2A2A] text-sm">
 							<td class="py-3">
 								<span
@@ -103,6 +131,15 @@
 								class:text-red-400={roi < 0}
 							>
 								{roi >= 0 ? '+' : ''}{roi.toFixed(2)}%
+							</td>
+							<td class="py-3 text-right">
+								<button
+									class="rounded bg-red-500/20 px-3 py-1 text-xs font-medium text-red-400 transition-colors hover:bg-red-500/30 disabled:cursor-not-allowed disabled:opacity-50"
+									onclick={() => handleClosePosition(position.position_id)}
+									disabled={isClosing}
+								>
+									{isClosing ? 'Closing...' : 'Close Position'}
+								</button>
 							</td>
 						</tr>
 					{/each}
