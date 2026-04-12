@@ -18,7 +18,7 @@ docker-dev:
 docker-prod:
 	docker compose --profile prod up -d --build
 
-.PHONY: install fmt lint build dev all docker-dev docker-prod
+.PHONY: install docs fmt lint build dev all docker-dev docker-prod
 
 docs:
 	npx @marp-team/marp-cli@latest docs/PRESENTATION.md --html --allow-local-files -o static/presentation.html
