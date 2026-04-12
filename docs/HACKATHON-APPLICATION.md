@@ -6,7 +6,7 @@ XPerp is the first perpetual futures DEX on XRPL. Trade XRP with up to 20x lever
 
 ## Description (5000 chars max)
 
-**Presentation:** https://github.com/LemonTreeTechnologies/perp-dex-ui/blob/main/docs/presentation.html
+[**Presentation**](https://xperp.fi/presentation.html)
 
 XPerp brings perpetual futures trading to the XRP Ledger for the first time. Millions of XRP holders today have no way to trade leveraged derivatives on their own chain — they must send assets to centralized exchanges or bridge to other blockchains. XPerp eliminates both of those compromises by building directly on XRPL with native XRP settlement.
 
@@ -30,7 +30,7 @@ XRPL native settlement means no bridges, no wrapped tokens, and no L2 withdrawal
 
 ### Automated market making
 
-An automated Market Making vault is running live on the platform, providing two-sided liquidity to the order book and earning spread plus fee rebates. A Delta Neutral vault (hedged positions, funding rate capture) and a Delta One vault (interest rate arbitrage) are planned. These vaults bootstrap exchange liquidity from day one.
+An automated Market Making vault is live, providing two-sided liquidity and earning spread plus fee rebates. A Delta Neutral vault (hedged positions, funding capture) and a Delta One vault (interest rate arbitrage) are planned. These bootstrap exchange liquidity from day one.
 
 ### Partnership with My Neobank
 
@@ -38,11 +38,11 @@ During the hackathon, we formed a partnership with My Neobank (MYNB) to solve th
 
 ### The market opportunity
 
-Perpetual futures are the largest product category in crypto — $92.9 trillion in volume in 2025. Decentralized perp DEX volume reached $6.7 trillion, growing 346% year over year. Every major blockchain has its perps DEX: Ethereum has dYdX, Solana has Jupiter, Hyperliquid built its own chain. XRPL — with its speed, low cost, and one of crypto's largest communities — has zero share of this market. XPerp captures it.
+Perpetual futures are the largest product category in crypto — $92.9 trillion in volume in 2025. Decentralized perp DEX volume reached $6.7 trillion, growing 346% year over year. Every major chain has its perps DEX — Ethereum (dYdX), Solana (Jupiter), Hyperliquid (own chain). XRPL — with its speed, low cost, and one of crypto's largest communities — has zero share of this market. XPerp captures it.
 
 ### What's live today
 
-The complete system is deployed and running on XRPL Mainnet:
+Live on XRPL Mainnet:
 
 - Perpetual futures trading (XRP-PERP, native XRP collateral, up to 20x leverage)
 - XRPL wallet integration with signature authentication (Crossmark, GemWallet)
@@ -52,7 +52,7 @@ The complete system is deployed and running on XRPL Mainnet:
 - 2-of-3 multisig escrow across 3 independent SGX enclaves
 - Market Making vault live (Delta Neutral and Delta One planned)
 - Funding rate mechanism (8-hour intervals) and liquidation engine
-- Full web UI at perp.ph18.io with "How It Works" and "Verify Enclave" pages
+- Full web UI at xperp.fi with "How It Works" and "Verify Enclave" pages
 
 _Andrey contributed remotely._
 

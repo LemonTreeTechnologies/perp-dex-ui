@@ -176,7 +176,7 @@ Every major blockchain has its perps DEX.
 - Liquidation engine
 
 **Live API:** `https://api-perp.ph18.io`
-**Verify Enclave:** `https://perp.ph18.io/verify`
+**Verify Enclave:** `https://xperp.fi/verify`
 
 ## Partnership: XPerp + My Neobank
 
