@@ -118,6 +118,10 @@ captures it.
 
 ## Community demand is real
 
+The crypto derivatives market is, as [U.Today](https://u.today/new-xrp-ledger-sidechain-proposal-aims-to-bring-options-trading-to-xrpl)
+put it, "almost entirely dominated by centralized exchanges and a handful of chains that were
+not built with derivatives in mind."
+
 The XRPL ecosystem is actively asking for derivatives. In March 2026, a sidechain proposal for
 options trading on XRPL was shared by Denis Angell (XRPL Labs engineer) with the caption
 "Something big." Community reaction was immediate — ChartNerdTA on X posted "HUGEEE!" and
@@ -125,12 +129,7 @@ the proposal generated significant engagement across XRP communities.
 
 That proposal targets _options_ and requires building an entirely new sidechain with a
 cross-chain bridge. XPerp targets _perpetual futures_ — a market 2,300x larger ($92.9T vs
-$40B) — and is already live on XRPL today. No sidechain needed, no bridge risk.
-
-The crypto derivatives market is, as [U.Today](https://u.today/new-xrp-ledger-sidechain-proposal-aims-to-bring-options-trading-to-xrpl)
-put it, "almost entirely dominated by centralized exchanges and a handful of chains that were
-not built with derivatives in mind." XRPL has zero derivatives infrastructure. The gap is
-acknowledged by the community itself. We're filling it.
+$40B) — and is already live on XRPL today.
 
 ## The Moat
 
