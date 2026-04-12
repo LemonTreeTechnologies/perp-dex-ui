@@ -226,9 +226,14 @@
 			<h3 class="text-sm font-semibold text-[#B0B0B0]">How to verify</h3>
 			<p class="mt-2 text-sm text-[#808080]">
 				The <strong class="text-white">MRENCLAVE</strong> is a SHA-256 hash of the exact code running
-				inside the SGX enclave. Compare it against the published enclave binary hash to confirm the enclave
-				is running authentic, unmodified code. The challenge nonce proves this quote is fresh and not
-				replayed.
+				inside the SGX enclave. Compare it against the hash printed during the
+				<a
+					href="https://github.com/LemonTreeTechnologies/xrpl-perp-dex/blob/master/docs/enclave_verification.md"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="text-[#00AAE4] hover:underline">published enclave build</a
+				> to confirm the enclave is running authentic, unmodified code. The challenge nonce proves this
+				quote is fresh and not replayed.
 			</p>
 		</div>
 	{/if}
