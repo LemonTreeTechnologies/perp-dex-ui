@@ -225,8 +225,8 @@
 		<div class="rounded-lg border border-gray-200 bg-gray-50 p-6">
 			<h3 class="text-sm font-semibold text-[#B0B0B0]">How to verify</h3>
 			<p class="mt-2 text-sm text-[#808080]">
-				The <strong class="text-white">MRENCLAVE</strong> is a SHA-256 hash of the exact code running
-				inside the SGX enclave. Compare it against the hash printed during the
+				The <strong class="text-white">MRENCLAVE</strong> is a SHA-256 hash of the exact code
+				running inside the SGX enclave. Compare it against the hash printed during the
 				<a
 					href="https://github.com/LemonTreeTechnologies/xrpl-perp-dex/blob/master/docs/enclave_verification.md"
 					target="_blank"
