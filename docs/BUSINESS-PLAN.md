@@ -4,13 +4,13 @@
 
 ## Budget allocation
 
-| Line item                  | Amount       | % of raise | Recoverable?                       |
-| -------------------------- | ------------ | ---------- | ---------------------------------- |
-| Salaries (3 founders)      | $75,000      | 30%        | No                                 |
-| Company setup & legal      | $25,000      | 10%        | No                                 |
-| Infrastructure (SGX hosts) | $25,000      | 10%        | No                                 |
-| **Vault seed liquidity**   | $100,000     | 40%        | **Yes** — withdrawable anytime     |
-| Marketing & growth         | $25,000      | 10%        | No                                 |
+| Line item                  | Amount       | % of raise | Recoverable?                        |
+| -------------------------- | ------------ | ---------- | ----------------------------------- |
+| Salaries (3 founders)      | $75,000      | 30%        | No                                  |
+| Company setup & legal      | $25,000      | 10%        | No                                  |
+| Infrastructure (SGX hosts) | $25,000      | 10%        | No                                  |
+| **Vault seed liquidity**   | $100,000     | 40%        | **Yes** — withdrawable anytime      |
+| Marketing & growth         | $25,000      | 10%        | No                                  |
 | **Total**                  | **$250,000** | 100%       | $150k true burn / $100k recoverable |
 
 **Effective cash burn over 6 months: ~$25k/month.** The $100k vault deposit remains the team's capital, redeployed as protocol-owned liquidity (POL) — it earns spread + funding + fee rebates rather than being spent.
@@ -30,7 +30,7 @@
 ## Milestones
 
 | Month | Milestone                                                                                        | Funded by             |
-| ----- |--------------------------------------------------------------------------------------------------| --------------------- |
+| ----- | ------------------------------------------------------------------------------------------------ | --------------------- |
 | 1     | Entity formed, ToS published, publish reproducible-build pipeline MM vault seeded with $100k POL | Legal + vault         |
 | 2     | Delta Neutral vault live, Public launch on XRPL Mainnet (already live in beta),                  | Marketing wave 1      |
 | 3     | Reach $1M cumulative trading volume;                                                             | Infra + dev           |
@@ -47,7 +47,7 @@
 
 ## Path to break-even
 
-At ~$25k/month true burn (excluding the recoverable vault), full break-even requires ~$50M of *monthly* trading volume at 0.05% taker fee. Month 6 targets $50M *cumulative* — meaning revenue at end-of-runway covers roughly half of monthly burn (infra + half of salary), with full break-even projected during the follow-on round window. Comparable benchmarks: Hyperliquid hit this in <3 months; Jupiter Perps in <6. Our advantage on XRPL is zero competition and an underserved community already vocal about wanting derivatives.
+At ~$25k/month true burn (excluding the recoverable vault), full break-even requires ~$50M of _monthly_ trading volume at 0.05% taker fee. Month 6 targets $50M _cumulative_ — meaning revenue at end-of-runway covers roughly half of monthly burn (infra + half of salary), with full break-even projected during the follow-on round window. Comparable benchmarks: Hyperliquid hit this in <3 months; Jupiter Perps in <6. Our advantage on XRPL is zero competition and an underserved community already vocal about wanting derivatives.
 
 ## Risk-adjusted downside
 
