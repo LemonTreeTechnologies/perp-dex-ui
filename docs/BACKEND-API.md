@@ -6,7 +6,7 @@ computation and key custody.
 
 **Production base URL:** `https://api-perp.ph18.io`
 **OpenAPI spec:** `GET /v1/openapi.json`
-**Market:** `XRP-RLUSD-PERP`
+**Market:** `XRP-USD-PERP`
 
 ---
 
@@ -134,7 +134,7 @@ Always send as strings — the server rejects numeric values.
 ### Order Book
 
 ```
-GET /v1/markets/XRP-RLUSD-PERP/orderbook?levels=20
+GET /v1/markets/XRP-USD-PERP/orderbook?levels=20
 ```
 
 Response: `{ bids: [["price", "size"], ...], asks: [...] }` — bids descending, asks ascending.
@@ -142,7 +142,7 @@ Response: `{ bids: [["price", "size"], ...], asks: [...] }` — bids descending,
 ### Ticker
 
 ```
-GET /v1/markets/XRP-RLUSD-PERP/ticker
+GET /v1/markets/XRP-USD-PERP/ticker
 ```
 
 Response: `{ best_bid, best_ask, mid_price }` — values are `null` if no orders on that side.
@@ -150,7 +150,7 @@ Response: `{ best_bid, best_ask, mid_price }` — values are `null` if no orders
 ### Recent Trades
 
 ```
-GET /v1/markets/XRP-RLUSD-PERP/trades
+GET /v1/markets/XRP-USD-PERP/trades
 ```
 
 Last 100 trades, most recent first. Each: `{ trade_id, price, size, taker_side, timestamp_ms }`.
@@ -158,7 +158,7 @@ Last 100 trades, most recent first. Each: `{ trade_id, price, size, taker_side, 
 ### Funding Rate
 
 ```
-GET /v1/markets/XRP-RLUSD-PERP/funding
+GET /v1/markets/XRP-USD-PERP/funding
 ```
 
 Response: `{ funding_rate, mark_price, next_funding_time, interval_hours }`.
@@ -436,7 +436,7 @@ Exploits interest rate discrepancy between borrowing USD and perpetual funding r
 
 ---
 
-## Market Parameters (XRP-RLUSD-PERP)
+## Market Parameters (XRP-USD-PERP)
 
 | Parameter           | Value                                                                                            |
 | ------------------- | ------------------------------------------------------------------------------------------------ |
