@@ -72,12 +72,6 @@
 						>
 							View on GitHub
 						</a>
-						<a
-							href="/verify"
-							class="rounded-lg border border-[#2A2A2A] bg-[#1A1A1A] px-8 py-3 font-medium text-white transition-all hover:bg-[#2A2A2A]"
-						>
-							Verify Security
-						</a>
 					</div>
 				</div>
 			</div>
