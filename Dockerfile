@@ -3,6 +3,10 @@
 # Stage 1: Build the application
 FROM node:20-alpine AS builder
 
+# Build arguments for environment-specific configuration
+ARG VITE_API_URL=https://api-dev.xperp.fi
+ARG VITE_WS_URL=wss://api-dev.xperp.fi/ws
+
 # Set working directory
 WORKDIR /app
 
@@ -14,6 +18,10 @@ RUN yarn install --frozen-lockfile
 
 # Copy source code
 COPY . .
+
+# Export build args as environment variables for Vite
+ENV VITE_API_URL=${VITE_API_URL}
+ENV VITE_WS_URL=${VITE_WS_URL}
 
 # Build the application
 RUN yarn build

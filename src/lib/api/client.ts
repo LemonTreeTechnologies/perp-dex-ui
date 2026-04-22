@@ -2,8 +2,8 @@
 import { get } from 'svelte/store';
 import { authStore } from '$lib/stores/auth';
 
-const BASE_URL = import.meta.env.VITE_API_URL || 'https://api-perp.ph18.io';
-const WS_URL = import.meta.env.VITE_WS_URL || 'wss://api-perp.ph18.io/ws';
+const BASE_URL = import.meta.env.VITE_API_URL || 'https://api-dev.xperp.fi';
+const WS_URL = import.meta.env.VITE_WS_URL || 'wss://api-dev.xperp.fi/ws';
 const MARKET = 'XRP-USD-PERP';
 
 /**
@@ -115,8 +115,36 @@ export interface Transaction {
 	destination?: string;
 }
 
+export interface SystemStatus {
+	network: 'testnet' | 'mainnet';
+	deposit_address: string;
+	is_in_maintenance: boolean;
+	market: string;
+	escrow_quorum: number | null;
+	escrow_signer_count: number | null;
+	version: string;
+}
+
 // Public API endpoints (no auth required)
 export const api = {
+	async getSystemStatus(): Promise<SystemStatus> {
+		const response = await fetch(`${BASE_URL}/v1/system/status`);
+		const data = await response.json();
+		if (data.status === 'success' || data.network) {
+			// API returns status directly without wrapping in success object
+			return {
+				network: data.network,
+				deposit_address: data.deposit_address,
+				is_in_maintenance: data.is_in_maintenance,
+				market: data.market,
+				escrow_quorum: data.escrow_quorum,
+				escrow_signer_count: data.escrow_signer_count,
+				version: data.version
+			};
+		}
+		throw new Error(data.message || 'Failed to fetch system status');
+	},
+
 	async getOrderBook(levels: number = 20): Promise<OrderBook> {
 		const response = await fetch(`${BASE_URL}/v1/markets/${MARKET}/orderbook?levels=${levels}`);
 		const data = await response.json();

@@ -2,6 +2,7 @@
 	import { onMount, onDestroy } from 'svelte';
 	import { marketDataStore, currentPrice } from '$lib/stores/marketData';
 	import { walletStore } from '$lib/stores/wallet';
+	import { systemStore } from '$lib/stores/system';
 	import PriceChart from '$lib/components/trade/PriceChart.svelte';
 	import OrderBook from '$lib/components/trade/OrderBook.svelte';
 	import OrderForm from '$lib/components/trade/OrderForm.svelte';
@@ -14,6 +15,10 @@
 	let ordersTableRef: OrdersTable | null = $state(null);
 	let tradesTableRef: TradesTable | null = $state(null);
 	let orderFormRef: OrderForm | null = $state(null);
+
+	// Get system status
+	const isInMaintenance = $derived($systemStore.status?.is_in_maintenance || false);
+	const isTestnet = $derived($systemStore.status?.network === 'testnet');
 
 	function handlePriceClick(price: string) {
 		orderFormRef?.setPrice(price);
@@ -80,10 +85,36 @@
 </script>
 
 <div class="space-y-4">
+	<!-- Maintenance Banner -->
+	{#if isInMaintenance}
+		<div class="rounded-lg border border-orange-500/20 bg-orange-500/10 p-4">
+			<div class="flex items-center space-x-2">
+				<svg class="h-6 w-6 text-orange-400" fill="currentColor" viewBox="0 0 20 20">
+					<path
+						fill-rule="evenodd"
+						d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+						clip-rule="evenodd"
+					/>
+				</svg>
+				<div>
+					<h3 class="text-sm font-medium text-orange-400">System Maintenance</h3>
+					<p class="text-sm text-orange-200/80">
+						Trading is temporarily disabled. Please check back later.
+					</p>
+				</div>
+			</div>
+		</div>
+	{/if}
+
 	<!-- Market Header -->
 	<div class="flex flex-wrap items-center justify-between gap-2">
 		<div class="flex flex-wrap items-center gap-2 sm:gap-4">
 			<h1 class="text-xl font-bold text-white sm:text-2xl">XRP-USD-PERP</h1>
+			{#if isTestnet}
+				<span class="rounded bg-yellow-500/20 px-2 py-1 text-xs font-medium text-yellow-400">
+					Testnet
+				</span>
+			{/if}
 			{#if $currentPrice}
 				<div class="text-3xl font-bold text-[#00AAE4]">
 					${$currentPrice.toFixed(4)}

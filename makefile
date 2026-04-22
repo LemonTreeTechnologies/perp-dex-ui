@@ -13,7 +13,7 @@ all: fmt lint build
 
 # Docker commands
 docker-dev:
-	docker compose --profile dev up
+	docker compose --profile dev up --build
 
 docker-prod:
 	docker compose --profile prod up -d --build

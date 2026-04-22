@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import { walletStore } from '$lib/stores/wallet';
+	import { systemStore } from '$lib/stores/system';
 	import { authApi, toFP8, fromFP8 } from '$lib/api/client';
 	import type { Balance } from '$lib/api/client';
 	import DepositWarningModal from '$lib/components/DepositWarningModal.svelte';
@@ -25,9 +26,15 @@
 		typeof window !== 'undefined' ? localStorage.getItem(WARNING_STORAGE_KEY) === 'true' : false
 	);
 
-	// Constants
+	// Get system status from store
+	const system = $derived($systemStore);
 
-	const escrowAddress = 'r4rwwSM9PUu7VcvPRWdu9pmZpmhCZS9mmc';
+	// Get deposit address from system status (fallback to empty string if not loaded)
+	const depositAddress = $derived(system.status?.deposit_address || '');
+	const isTestnet = $derived(system.status?.network === 'testnet');
+	const isInMaintenance = $derived(system.status?.is_in_maintenance || false);
+
+	// Constants
 	const depositMemo = '2026040021';
 
 	// Computed values
@@ -198,7 +205,33 @@
 <div class="container mx-auto px-4 py-8">
 	<div class="mb-6 flex items-center justify-between">
 		<h1 class="text-3xl font-bold text-white">Portfolio</h1>
+		{#if isTestnet}
+			<span class="rounded bg-yellow-500/20 px-3 py-1 text-sm font-medium text-yellow-400">
+				Testnet Mode
+			</span>
+		{/if}
 	</div>
+
+	<!-- Maintenance Banner -->
+	{#if isInMaintenance}
+		<div class="mb-6 rounded-lg border border-orange-500/20 bg-orange-500/10 p-4">
+			<div class="flex items-center space-x-2">
+				<svg class="h-6 w-6 text-orange-400" fill="currentColor" viewBox="0 0 20 20">
+					<path
+						fill-rule="evenodd"
+						d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+						clip-rule="evenodd"
+					/>
+				</svg>
+				<div>
+					<h3 class="text-sm font-medium text-orange-400">System Maintenance</h3>
+					<p class="text-sm text-orange-200/80">
+						The platform is currently under maintenance. Deposits and trading are temporarily disabled.
+					</p>
+				</div>
+			</div>
+		</div>
+	{/if}
 
 	{#if error}
 		<div class="mb-4 rounded-lg border border-red-900 bg-red-900/20 p-4">
@@ -361,42 +394,49 @@
 							</p>
 						</div>
 
-						<div class="rounded-lg border border-[#2A2A2A] bg-[#1A1A1A] p-6">
-							<div class="mb-3 text-sm font-medium text-[#B0B0B0]">Escrow Address</div>
-							<div class="flex items-center space-x-3">
-								<code
-									class="flex-1 rounded bg-[#0A0A0A] px-4 py-3 font-mono text-sm text-[#00AAE4]"
-								>
-									{escrowAddress}
-								</code>
-								<button
-									class="rounded-lg bg-[#2A2A2A] px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-[#404040]"
-									onclick={() => {
-										navigator.clipboard.writeText(escrowAddress);
-										alert('Address copied to clipboard!');
-									}}
-								>
-									Copy
-								</button>
+						{#if !depositAddress}
+							<div class="rounded-lg border border-yellow-500/20 bg-yellow-500/10 p-4">
+								<p class="text-sm text-yellow-400">Loading deposit address...</p>
 							</div>
-							<div class="mb-3 text-sm font-medium text-[#B0B0B0]">Deposit Memo</div>
-							<div class="flex items-center space-x-3">
-								<code
-									class="flex-1 rounded bg-[#0A0A0A] px-4 py-3 font-mono text-sm text-[#00AAE4]"
-								>
-									{depositMemo}
-								</code>
-								<button
-									class="rounded-lg bg-[#2A2A2A] px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-[#404040]"
-									onclick={() => {
-										navigator.clipboard.writeText(depositMemo);
-										alert('Address copied to clipboard!');
-									}}
-								>
-									Copy
-								</button>
+						{:else}
+							<div class="rounded-lg border border-[#2A2A2A] bg-[#1A1A1A] p-6">
+								<div class="mb-3 text-sm font-medium text-[#B0B0B0]">Escrow Address</div>
+								<div class="flex items-center space-x-3">
+									<code
+										class="flex-1 rounded bg-[#0A0A0A] px-4 py-3 font-mono text-sm text-[#00AAE4]"
+									>
+										{depositAddress}
+									</code>
+									<button
+										class="rounded-lg bg-[#2A2A2A] px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-[#404040] disabled:opacity-50 disabled:cursor-not-allowed"
+										onclick={() => {
+											navigator.clipboard.writeText(depositAddress);
+											alert('Address copied to clipboard!');
+										}}
+										disabled={isInMaintenance}
+									>
+										Copy
+									</button>
+								</div>
+								<div class="mb-3 text-sm font-medium text-[#B0B0B0]">Deposit Memo</div>
+								<div class="flex items-center space-x-3">
+									<code
+										class="flex-1 rounded bg-[#0A0A0A] px-4 py-3 font-mono text-sm text-[#00AAE4]"
+									>
+										{depositMemo}
+									</code>
+									<button
+										class="rounded-lg bg-[#2A2A2A] px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-[#404040]"
+										onclick={() => {
+											navigator.clipboard.writeText(depositMemo);
+											alert('Memo copied to clipboard!');
+										}}
+									>
+										Copy
+									</button>
+								</div>
 							</div>
-						</div>
+						{/if}
 						<div class="rounded-lg border border-yellow-500/20 bg-yellow-500/10 p-4">
 							<div class="mb-2 flex items-center space-x-2">
 								<svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
@@ -421,6 +461,13 @@
 							<ol class="ml-5 list-decimal space-y-2 text-sm text-[#B0B0B0]">
 								<li>Copy the escrow address above</li>
 								<li>Open your XRPL wallet (GemWallet, Crossmark, or Xaman)</li>
+								<li>
+									{#if isTestnet}
+										Make sure your wallet is set to <strong>testnet</strong> mode
+									{:else}
+										Send XRP from your mainnet wallet
+									{/if}
+								</li>
 								<li>Send XRP to the escrow address</li>
 								<li>Wait for confirmation (usually 4-5 seconds)</li>
 								<li>Your balance will update automatically</li>
@@ -502,9 +549,15 @@
 							<button
 								type="submit"
 								class="w-full rounded-lg bg-[#00AAE4] px-6 py-3 text-sm font-medium text-white transition-all hover:bg-[#0088B8] disabled:cursor-not-allowed disabled:opacity-50"
-								disabled={withdrawing || !withdrawAmount || !withdrawDestination}
+								disabled={withdrawing || !withdrawAmount || !withdrawDestination || isInMaintenance}
 							>
-								{withdrawing ? 'Processing...' : 'Withdraw'}
+								{#if isInMaintenance}
+									Maintenance Mode
+								{:else if withdrawing}
+									Processing...
+								{:else}
+									Withdraw
+								{/if}
 							</button>
 						</form>
 
@@ -513,7 +566,9 @@
 							<ul class="ml-5 list-disc space-y-2 text-sm text-[#B0B0B0]">
 								<li>Withdrawals require XRPL signature authentication</li>
 								<li>You can only withdraw from available margin (not used in positions)</li>
-								<li>Withdrawals are processed on XRPL mainnet within seconds</li>
+								<li>
+									Withdrawals are processed on XRPL {isTestnet ? 'testnet' : 'mainnet'} within seconds
+								</li>
 								<li>Network fees apply (typically ~0.00001 XRP)</li>
 							</ul>
 						</div>
@@ -586,100 +641,6 @@
 				</div>
 			</div>
 		{/if}
-
-		<!-- Transaction History -->
-		<!-- <div class="mt-6">
-			<h2 class="mb-4 text-xl font-semibold text-white">Transaction History</h2>
-			<div class="overflow-hidden rounded-lg border border-[#2A2A2A] bg-[#121212]">
-				{#if loadingTransactions}
-					<div class="p-8 text-center text-[#B0B0B0]">Loading transactions...</div>
-				{:else if transactions.length === 0}
-					<div class="p-8 text-center text-[#B0B0B0]">No transactions yet</div>
-				{:else}
-					<table class="w-full">
-						<thead class="border-b border-[#2A2A2A] bg-[#1A1A1A]">
-							<tr>
-								<th class="px-6 py-3 text-left text-xs font-medium text-[#B0B0B0] uppercase"
-									>Type</th
-								>
-								<th class="px-6 py-3 text-left text-xs font-medium text-[#B0B0B0] uppercase"
-									>Amount</th
-								>
-								<th class="px-6 py-3 text-left text-xs font-medium text-[#B0B0B0] uppercase"
-									>Status</th
-								>
-								<th class="px-6 py-3 text-left text-xs font-medium text-[#B0B0B0] uppercase"
-									>Destination</th
-								>
-								<th class="px-6 py-3 text-left text-xs font-medium text-[#B0B0B0] uppercase"
-									>Time</th
-								>
-								<th class="px-6 py-3 text-left text-xs font-medium text-[#B0B0B0] uppercase"
-									>TX Hash</th
-								>
-							</tr>
-						</thead>
-						<tbody class="divide-y divide-[#2A2A2A]">
-							{#each transactions as txn (txn.id)}
-								<tr>
-									<td class="px-6 py-4">
-										<span
-											class="inline-flex rounded px-2 py-1 text-xs font-medium"
-											class:bg-green-900={txn.type === 'deposit'}
-											class:text-green-400={txn.type === 'deposit'}
-											class:bg-blue-900={txn.type === 'withdrawal'}
-											class:text-blue-400={txn.type === 'withdrawal'}
-										>
-											{txn.type.toUpperCase()}
-										</span>
-									</td>
-									<td class="px-6 py-4 font-mono text-sm text-white">
-										{fromFP8(txn.amount).toFixed(2)} XRP
-									</td>
-									<td class="px-6 py-4">
-										<span
-											class="inline-flex rounded px-2 py-1 text-xs font-medium"
-											class:bg-yellow-900={txn.status === 'pending'}
-											class:text-yellow-400={txn.status === 'pending'}
-											class:bg-green-900={txn.status === 'completed'}
-											class:text-green-400={txn.status === 'completed'}
-											class:bg-red-900={txn.status === 'failed'}
-											class:text-red-400={txn.status === 'failed'}
-										>
-											{txn.status.toUpperCase()}
-										</span>
-									</td>
-									<td class="px-6 py-4 font-mono text-xs text-[#B0B0B0]">
-										{#if txn.destination}
-											{txn.destination.slice(0, 6)}...{txn.destination.slice(-4)}
-										{:else}
-											—
-										{/if}
-									</td>
-									<td class="px-6 py-4 text-sm text-[#B0B0B0]">
-										{new Date(txn.timestamp * 1000).toLocaleString()}
-									</td>
-									<td class="px-6 py-4">
-										{#if txn.txn_hash}
-											<a
-												href={`https://livenet.xrpl.org/transactions/${txn.txn_hash}`}
-												target="_blank"
-												rel="noopener noreferrer"
-												class="font-mono text-xs text-[#00AAE4] hover:underline"
-											>
-												{txn.txn_hash.slice(0, 8)}...
-											</a>
-										{:else}
-											<span class="text-sm text-[#B0B0B0]">—</span>
-										{/if}
-									</td>
-								</tr>
-							{/each}
-						</tbody>
-					</table>
-				{/if}
-			</div>
-		</div> -->
 	{/if}
 </div>
 

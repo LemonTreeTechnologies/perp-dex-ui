@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { walletStore } from '$lib/stores/wallet';
+	import { systemStore } from '$lib/stores/system';
 	import { currentPrice } from '$lib/stores/marketData';
 	import { authApi, toFP8, type OrderRequest } from '$lib/api/client';
 
@@ -11,6 +12,9 @@
 	let isSubmitting = $state(false);
 	let error = $state('');
 	let successMessage = $state('');
+
+	// Get system status
+	const isInMaintenance = $derived($systemStore.status?.is_in_maintenance || false);
 
 	// Expose method to set price from outside
 	export function setPrice(newPrice: string) {
@@ -215,6 +219,13 @@
 				</div>
 			{/if}
 
+			<!-- Maintenance Mode Warning -->
+			{#if isInMaintenance}
+				<div class="rounded-lg border border-orange-500/50 bg-orange-500/10 p-3 text-sm text-orange-400">
+					Trading is temporarily disabled due to system maintenance.
+				</div>
+			{/if}
+
 			<!-- Success Message -->
 			{#if successMessage}
 				<div
@@ -227,16 +238,20 @@
 			<!-- Submit Button -->
 			<button
 				onclick={submitOrder}
-				disabled={isSubmitting}
-				class="w-full rounded-lg px-6 py-3 font-medium text-white transition-all disabled:opacity-50"
+				disabled={isSubmitting || isInMaintenance}
+				class="w-full rounded-lg px-6 py-3 font-medium text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
 				class:bg-green-500={side === 'long'}
-				class:hover:bg-green-600={side === 'long' && !isSubmitting}
+				class:hover:bg-green-600={side === 'long' && !isSubmitting && !isInMaintenance}
 				class:bg-red-500={side === 'short'}
-				class:hover:bg-red-600={side === 'short' && !isSubmitting}
+				class:hover:bg-red-600={side === 'short' && !isSubmitting && !isInMaintenance}
 			>
-				{isSubmitting
-					? 'Submitting...'
-					: `${side === 'long' ? 'Buy' : 'Sell'} / ${side.toUpperCase()}`}
+				{#if isInMaintenance}
+					Maintenance Mode
+				{:else if isSubmitting}
+					Submitting...
+				{:else}
+					{side === 'long' ? 'Buy' : 'Sell'} / {side.toUpperCase()}
+				{/if}
 			</button>
 		</div>
 	{/if}

@@ -6,6 +6,9 @@ services:
     build:
       context: .
       target: development
+      args:
+        - VITE_API_URL=https://api-dev.xperp.fi
+        - VITE_WS_URL=wss://api-dev.xperp.fi/ws
     container_name: perp-dex-ui-dev
     ports:
       - '5173:5173'
@@ -20,6 +23,8 @@ services:
       - /app/node_modules
     environment:
       - NODE_ENV=development
+      - VITE_API_URL=https://api-dev.xperp.fi
+      - VITE_WS_URL=wss://api-dev.xperp.fi/ws
     networks:
       - perp-dex-network
     profiles:
@@ -30,6 +35,9 @@ services:
     build:
       context: .
       target: production
+      args:
+        - VITE_API_URL=https://api.xperp.fi
+        - VITE_WS_URL=wss://api.xperp.fi/ws
     container_name: perp-dex-ui-prod
     ports:
       - '80:80'
