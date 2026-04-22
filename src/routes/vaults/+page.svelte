@@ -333,15 +333,10 @@
 					<div class="flex space-x-2">
 						<button
 							onclick={() => openDepositModal(vault)}
-							disabled={vault.status === 'coming-soon'}
-							class="flex-1 rounded-lg px-4 py-3 text-sm font-medium transition-all disabled:cursor-not-allowed disabled:opacity-50"
-							class:bg-[#00AAE4]={vault.status === 'active'}
-							class:hover:bg-[#0088B8]={vault.status === 'active'}
-							class:hover:shadow-[0_0_20px_rgba(0,170,228,0.4)]={vault.status === 'active'}
-							class:bg-[#2A2A2A]={vault.status === 'coming-soon'}
-							class:text-white={true}
+							disabled={true}
+							class="flex-1 rounded-lg bg-[#2A2A2A] px-4 py-3 text-sm font-medium text-white transition-all disabled:cursor-not-allowed disabled:opacity-50"
 						>
-							{vault.status === 'active' ? 'Deposit' : 'Coming Soon'}
+							Deposit (Disabled)
 						</button>
 						<a
 							href="/vaults/{vault.id}"

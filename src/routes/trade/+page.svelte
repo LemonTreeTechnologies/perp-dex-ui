@@ -3,6 +3,7 @@
 	import { marketDataStore, currentPrice } from '$lib/stores/marketData';
 	import { walletStore } from '$lib/stores/wallet';
 	import { systemStore } from '$lib/stores/system';
+	import { IS_DEV_ENV } from '$lib/config';
 	import PriceChart from '$lib/components/trade/PriceChart.svelte';
 	import OrderBook from '$lib/components/trade/OrderBook.svelte';
 	import OrderForm from '$lib/components/trade/OrderForm.svelte';
@@ -18,7 +19,7 @@
 
 	// Get system status
 	const isInMaintenance = $derived($systemStore.status?.is_in_maintenance || false);
-	const isTestnet = $derived($systemStore.status?.network === 'testnet');
+	const isTestnet = IS_DEV_ENV;
 
 	function handlePriceClick(price: string) {
 		orderFormRef?.setPrice(price);

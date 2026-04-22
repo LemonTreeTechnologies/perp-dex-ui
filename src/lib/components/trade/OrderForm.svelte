@@ -221,7 +221,9 @@
 
 			<!-- Maintenance Mode Warning -->
 			{#if isInMaintenance}
-				<div class="rounded-lg border border-orange-500/50 bg-orange-500/10 p-3 text-sm text-orange-400">
+				<div
+					class="rounded-lg border border-orange-500/50 bg-orange-500/10 p-3 text-sm text-orange-400"
+				>
 					Trading is temporarily disabled due to system maintenance.
 				</div>
 			{/if}
@@ -239,7 +241,7 @@
 			<button
 				onclick={submitOrder}
 				disabled={isSubmitting || isInMaintenance}
-				class="w-full rounded-lg px-6 py-3 font-medium text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+				class="w-full rounded-lg px-6 py-3 font-medium text-white transition-all disabled:cursor-not-allowed disabled:opacity-50"
 				class:bg-green-500={side === 'long'}
 				class:hover:bg-green-600={side === 'long' && !isSubmitting && !isInMaintenance}
 				class:bg-red-500={side === 'short'}

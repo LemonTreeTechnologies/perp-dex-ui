@@ -1,6 +1,7 @@
 # Environment Configuration
 
 ## Overview
+
 The application supports environment-specific API URLs for development and production environments.
 
 ## Environment Variables
@@ -11,10 +12,12 @@ The application supports environment-specific API URLs for development and produ
 ## Default Values
 
 ### Development
+
 - `VITE_API_URL=https://api-dev.xperp.fi`
 - `VITE_WS_URL=wss://api-dev.xperp.fi/ws`
 
 ### Production
+
 - `VITE_API_URL=https://api.xperp.fi`
 - `VITE_WS_URL=wss://api.xperp.fi/ws`
 
@@ -23,6 +26,7 @@ The application supports environment-specific API URLs for development and produ
 ### Using Docker Compose
 
 #### Development Environment
+
 ```bash
 # Uses dev API URLs (set in docker-compose.yml as environment variables)
 make docker-dev
@@ -31,6 +35,7 @@ docker compose --profile dev up
 ```
 
 #### Production Environment
+
 ```bash
 # Uses prod API URLs (set in docker-compose.yml as build args)
 make docker-prod
@@ -41,6 +46,7 @@ docker compose --profile prod up -d --build
 ### Using Docker Build Directly
 
 #### Build for Development
+
 ```bash
 make docker-build-dev
 # or
@@ -51,6 +57,7 @@ docker build --target production \
 ```
 
 #### Build for Production
+
 ```bash
 make docker-build-prod
 # or
@@ -61,7 +68,9 @@ docker build --target production \
 ```
 
 ### Custom Environment
+
 To use custom API URLs:
+
 ```bash
 docker build --target production \
   --build-arg VITE_API_URL=https://your-custom-api.com \
@@ -72,17 +81,20 @@ docker build --target production \
 ## Local Development (Non-Docker)
 
 Create a `.env` file in the root directory (copy from `.env.example`):
+
 ```bash
 cp .env.example .env
 ```
 
 Then modify the values as needed:
+
 ```env
 VITE_API_URL=https://api-dev.xperp.fi
 VITE_WS_URL=wss://api-dev.xperp.fi/ws
 ```
 
 Run the development server:
+
 ```bash
 yarn dev
 ```

@@ -22,12 +22,14 @@
 {#if isOpen}
 	<!-- Modal Backdrop -->
 	<div
-		class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+		class="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/80 p-4 backdrop-blur-sm"
 		onclick={handleBackdropClick}
 		role="presentation"
 	>
 		<!-- Modal Content -->
-		<div class="relative mx-4 w-full max-w-2xl rounded-xl border border-[#2A2A2A] bg-[#121212] p-8">
+		<div
+			class="relative mx-4 my-8 w-full max-w-2xl rounded-xl border border-[#2A2A2A] bg-[#121212] p-8"
+		>
 			<!-- Warning Icon -->
 			<div class="mb-6 flex justify-center">
 				<div class="rounded-full bg-yellow-500/20 p-4">

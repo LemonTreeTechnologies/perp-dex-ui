@@ -3,6 +3,7 @@
 	import { authStore } from '$lib/stores/auth';
 	import { authApi } from '$lib/api/client';
 	import { generatePostAuthHeaders } from '$lib/utils/xrplAuth';
+	import { FEATURES } from '$lib/config/features';
 
 	let isLoggingIn = $state(false);
 	let mobileMenuOpen = $state(false);
@@ -106,115 +107,119 @@
 				<img src="/logo.svg" alt="XRPL Perp DEX Logo" class="h-40 w-40" />
 			</a>
 
-			<!-- Desktop Navigation -->
-			<nav class="hidden lg:flex lg:items-center lg:space-x-6">
-				<a
-					href="/trade"
-					data-sveltekit-preload-data
-					class="text-[#B0B0B0] transition-colors hover:text-[#00AAE4]">Trade</a
-				>
-				<a
-					href="/portfolio"
-					data-sveltekit-preload-data
-					class="text-[#B0B0B0] transition-colors hover:text-[#00AAE4]">Portfolio</a
-				>
-				<a
-					href="/vaults"
-					data-sveltekit-preload-data
-					class="text-[#B0B0B0] transition-colors hover:text-[#00AAE4]">Vaults</a
-				>
-				<a
-					href="/verify"
-					data-sveltekit-preload-data
-					class="text-[#B0B0B0] transition-colors hover:text-[#00AAE4]">Verify</a
-				>
-				<a
-					href="/about"
-					data-sveltekit-preload-data
-					class="text-[#B0B0B0] transition-colors hover:text-[#00AAE4]">About</a
-				>
-			</nav>
+			{#if FEATURES.ENABLE_TRADING}
+				<!-- Desktop Navigation -->
+				<nav class="hidden lg:flex lg:items-center lg:space-x-6">
+					<a
+						href="/trade"
+						data-sveltekit-preload-data
+						class="text-[#B0B0B0] transition-colors hover:text-[#00AAE4]">Trade</a
+					>
+					<a
+						href="/portfolio"
+						data-sveltekit-preload-data
+						class="text-[#B0B0B0] transition-colors hover:text-[#00AAE4]">Portfolio</a
+					>
+					<a
+						href="/vaults"
+						data-sveltekit-preload-data
+						class="text-[#B0B0B0] transition-colors hover:text-[#00AAE4]">Vaults</a
+					>
+					<a
+						href="/verify"
+						data-sveltekit-preload-data
+						class="text-[#B0B0B0] transition-colors hover:text-[#00AAE4]">Verify</a
+					>
+					<a
+						href="/about"
+						data-sveltekit-preload-data
+						class="text-[#B0B0B0] transition-colors hover:text-[#00AAE4]">About</a
+					>
+				</nav>
+			{/if}
 
-			<!-- Wallet + Mobile Menu -->
-			<div class="flex items-center space-x-2">
-				{#if $walletStore.isConnected && $walletStore.address}
-					<div class="hidden items-center space-x-2 sm:flex">
-						<div
-							class="flex items-center space-x-2 rounded-lg border border-[#2A2A2A] bg-[#1A1A1A] px-3 py-1.5"
-						>
-							<img src="/avatar.svg" alt="Wallet Avatar" class="h-5 w-5" />
+			{#if FEATURES.ENABLE_TRADING}
+				<!-- Wallet + Mobile Menu -->
+				<div class="flex items-center space-x-2">
+					{#if $walletStore.isConnected && $walletStore.address}
+						<div class="hidden items-center space-x-2 sm:flex">
+							<div
+								class="flex items-center space-x-2 rounded-lg border border-[#2A2A2A] bg-[#1A1A1A] px-3 py-1.5"
+							>
+								<img src="/avatar.svg" alt="Wallet Avatar" class="h-5 w-5" />
+								<span class="font-mono text-xs text-[#00AAE4]">
+									{formatAddress($walletStore.address)}
+								</span>
+							</div>
+							{#if $authStore.token}
+								<button
+									onclick={handleLogout}
+									class="rounded-lg border border-[#404040] bg-[#2A2A2A] px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-[#404040]"
+								>
+									Logout
+								</button>
+							{:else}
+								<button
+									onclick={handleLogin}
+									disabled={isLoggingIn}
+									class="rounded-lg bg-[#00AAE4] px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-[#0099CC] disabled:cursor-not-allowed disabled:opacity-50"
+								>
+									{isLoggingIn ? 'Logging in...' : 'Login'}
+								</button>
+							{/if}
+							<button
+								onclick={disconnectWallet}
+								class="rounded-lg border border-[#404040] bg-[#2A2A2A] px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-[#404040]"
+							>
+								Disconnect
+							</button>
+						</div>
+						<!-- Mobile: compact wallet -->
+						<div class="flex items-center space-x-2 sm:hidden">
 							<span class="font-mono text-xs text-[#00AAE4]">
 								{formatAddress($walletStore.address)}
 							</span>
 						</div>
-						{#if $authStore.token}
-							<button
-								onclick={handleLogout}
-								class="rounded-lg border border-[#404040] bg-[#2A2A2A] px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-[#404040]"
-							>
-								Logout
-							</button>
-						{:else}
-							<button
-								onclick={handleLogin}
-								disabled={isLoggingIn}
-								class="rounded-lg bg-[#00AAE4] px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-[#0099CC] disabled:cursor-not-allowed disabled:opacity-50"
-							>
-								{isLoggingIn ? 'Logging in...' : 'Login'}
-							</button>
-						{/if}
+					{:else}
 						<button
-							onclick={disconnectWallet}
-							class="rounded-lg border border-[#404040] bg-[#2A2A2A] px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-[#404040]"
+							onclick={connectWallet}
+							class="rounded-lg bg-[#00AAE4] px-4 py-2 text-sm font-medium text-white transition-all hover:bg-[#0088B8]"
 						>
-							Disconnect
+							Connect
 						</button>
-					</div>
-					<!-- Mobile: compact wallet -->
-					<div class="flex items-center space-x-2 sm:hidden">
-						<span class="font-mono text-xs text-[#00AAE4]">
-							{formatAddress($walletStore.address)}
-						</span>
-					</div>
-				{:else}
-					<button
-						onclick={connectWallet}
-						class="rounded-lg bg-[#00AAE4] px-4 py-2 text-sm font-medium text-white transition-all hover:bg-[#0088B8]"
-					>
-						Connect
-					</button>
-				{/if}
+					{/if}
 
-				<!-- Hamburger (mobile) -->
-				<button
-					onclick={() => (mobileMenuOpen = !mobileMenuOpen)}
-					class="rounded-lg p-2 text-[#B0B0B0] transition-colors hover:text-white lg:hidden"
-					aria-label="Toggle menu"
-				>
-					<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-						{#if mobileMenuOpen}
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M6 18L18 6M6 6l12 12"
-							/>
-						{:else}
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M4 6h16M4 12h16M4 18h16"
-							/>
-						{/if}
-					</svg>
-				</button>
-			</div>
+					<!-- Hamburger (mobile) -->
+					<button
+						onclick={() => (mobileMenuOpen = !mobileMenuOpen)}
+						class="rounded-lg p-2 text-[#B0B0B0] transition-colors hover:text-white lg:hidden"
+						aria-label="Toggle menu"
+					>
+						<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							{#if mobileMenuOpen}
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M6 18L18 6M6 6l12 12"
+								/>
+							{:else}
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M4 6h16M4 12h16M4 18h16"
+								/>
+							{/if}
+						</svg>
+					</button>
+				</div>
+			{/if}
 		</div>
 	</div>
 
 	<!-- Mobile Menu -->
-	{#if mobileMenuOpen}
+	{#if FEATURES.ENABLE_TRADING && mobileMenuOpen}
 		<div class="border-t border-[#2A2A2A] bg-[#121212] lg:hidden">
 			<nav class="mx-auto max-w-7xl space-y-1 px-4 py-3">
 				<a

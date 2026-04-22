@@ -3,6 +3,7 @@
 	import { walletStore } from '$lib/stores/wallet';
 	import { systemStore } from '$lib/stores/system';
 	import { authApi, toFP8, fromFP8 } from '$lib/api/client';
+	import { IS_DEV_ENV } from '$lib/config';
 	import type { Balance } from '$lib/api/client';
 	import DepositWarningModal from '$lib/components/DepositWarningModal.svelte';
 
@@ -31,7 +32,7 @@
 
 	// Get deposit address from system status (fallback to empty string if not loaded)
 	const depositAddress = $derived(system.status?.deposit_address || '');
-	const isTestnet = $derived(system.status?.network === 'testnet');
+	const isTestnet = IS_DEV_ENV;
 	const isInMaintenance = $derived(system.status?.is_in_maintenance || false);
 
 	// Constants
@@ -226,7 +227,8 @@
 				<div>
 					<h3 class="text-sm font-medium text-orange-400">System Maintenance</h3>
 					<p class="text-sm text-orange-200/80">
-						The platform is currently under maintenance. Deposits and trading are temporarily disabled.
+						The platform is currently under maintenance. Deposits and trading are temporarily
+						disabled.
 					</p>
 				</div>
 			</div>
@@ -408,7 +410,7 @@
 										{depositAddress}
 									</code>
 									<button
-										class="rounded-lg bg-[#2A2A2A] px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-[#404040] disabled:opacity-50 disabled:cursor-not-allowed"
+										class="rounded-lg bg-[#2A2A2A] px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-[#404040] disabled:cursor-not-allowed disabled:opacity-50"
 										onclick={() => {
 											navigator.clipboard.writeText(depositAddress);
 											alert('Address copied to clipboard!');
