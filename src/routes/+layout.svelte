@@ -4,8 +4,6 @@
 	import Header from '$lib/components/Header.svelte';
 	import { systemStore } from '$lib/stores/system';
 	import { api } from '$lib/api/client';
-	import { page } from '$app/state';
-	import { FEATURES } from '$lib/config/features';
 
 	let { children } = $props();
 
@@ -23,14 +21,13 @@
 	});
 </script>
 
-{#if FEATURES.SHOW_LANDING_PAGE && page.url.pathname === '/'}
-	<!-- The landing page carries its own header and full-width sections. -->
-	{@render children()}
-{:else}
-	<div class="min-h-screen bg-[#0A0A0A]">
-		<Header />
-		<main class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-			{@render children()}
-		</main>
-	</div>
-{/if}
+<!-- One shell for every page. When the landing page is inside it, layout.css hides the app
+     header and lets the page run full width (see ".app-shell:has(.xp)"). The test is on the
+     content, not the address: the server answers unknown paths such as /verify with the landing
+     page, and the client then reports that path as the current route. -->
+<div class="app-shell min-h-screen bg-[#0A0A0A]">
+	<div class="app-header"><Header /></div>
+	<main class="app-main mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+		{@render children()}
+	</main>
+</div>

@@ -75,3 +75,12 @@ body {
 .xrp-glow-box {
 	box-shadow: 0 0 20px rgba(0, 170, 228, 0.3);
 }
+
+/* The landing page (.xp) brings its own header and full-width sections. */
+.app-shell:has(.xp) .app-header {
+	display: none;
+}
+.app-shell:has(.xp) .app-main {
+	max-width: none;
+	padding: 0;
+}
