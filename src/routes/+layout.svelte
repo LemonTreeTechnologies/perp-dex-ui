@@ -4,6 +4,8 @@
 	import Header from '$lib/components/Header.svelte';
 	import { systemStore } from '$lib/stores/system';
 	import { api } from '$lib/api/client';
+	import { page } from '$app/state';
+	import { FEATURES } from '$lib/config/features';
 
 	let { children } = $props();
 
@@ -21,9 +23,14 @@
 	});
 </script>
 
-<div class="min-h-screen bg-[#0A0A0A]">
-	<Header />
-	<main class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-		{@render children()}
-	</main>
-</div>
+{#if FEATURES.SHOW_LANDING_PAGE && page.url.pathname === '/'}
+	<!-- The landing page carries its own header and full-width sections. -->
+	{@render children()}
+{:else}
+	<div class="min-h-screen bg-[#0A0A0A]">
+		<Header />
+		<main class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+			{@render children()}
+		</main>
+	</div>
+{/if}
